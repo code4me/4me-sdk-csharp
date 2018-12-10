@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <Authors>Klaas Vandeweerdt</Authors>
+    <Description></Description>
+    <Copyright>Copyright © Klaas Vandeweerdt 2018</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <RootNamespace>People_Sample</RootNamespace>
+    <AssemblyName>People Sample</AssemblyName>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Sdk4me">
+      <HintPath>..\Sdk4me\Sdk4me.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
