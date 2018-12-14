@@ -12,6 +12,22 @@ namespace Sdk4me
         private int maximumRecursiveRequests = 50;
 
         /// <summary>
+        /// Returns the 4me account identifier used during initialization.
+        /// </summary>
+        public string AccountID
+        {
+            get => accountID;
+        }
+
+        /// <summary>
+        /// Returns the 4me environment used during initialization.
+        /// </summary>
+        public EnvironmentType EnvironmentType
+        {
+            get => environmentType;
+        }
+
+        /// <summary>
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication object.</param>
