@@ -6,6 +6,7 @@ namespace Sdk4me
 {
     public class Site : BaseItem
     {
+        private Account account;
         private string address;
         private string city;
         private string country;
@@ -20,6 +21,17 @@ namespace Sdk4me
         private UIExtension uIExtension;
         private string zip;
         private CustomFieldCollection customFields;
+
+        #region account
+
+        [JsonProperty("account"), Sdk4meIgnoreInFieldSelection()]
+        public Account Account
+        {
+            get => account;
+            internal set => account = value;
+        }
+
+        #endregion
 
         #region address
 

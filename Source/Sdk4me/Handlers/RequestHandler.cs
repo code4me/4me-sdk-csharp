@@ -40,7 +40,7 @@ namespace Sdk4me
 
         #region configuration items
 
-        public List<ConfigurationItem> GetPeople(Request request, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Request request, params string[] attributeNames)
         {
             BaseHandler<ConfigurationItem> handler = new BaseHandler<ConfigurationItem>($"{URL}/{request.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);

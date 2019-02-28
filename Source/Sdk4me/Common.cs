@@ -15,7 +15,8 @@ namespace Sdk4me
             "productID",
             "supplier_requestID",
             "systemID",
-            "assetID"
+            "assetID",
+            "employeeID"
         };
 
         /// <summary>

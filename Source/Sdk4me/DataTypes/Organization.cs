@@ -6,6 +6,7 @@ namespace Sdk4me
 {
     public class Organization : BaseItem
     {
+        private Account account;
         private List<Address> addresses;
         private string businessUnit;
         private Organization businessUnitOrganization;
@@ -22,6 +23,17 @@ namespace Sdk4me
         private Person substitute;
         private UIExtension uIExtension;
         private CustomFieldCollection customFields;
+
+        #region account
+
+        [JsonProperty("account"), Sdk4meIgnoreInFieldSelection()]
+        public Account Account
+        {
+            get => account;
+            internal set => account = value;
+        }
+
+        #endregion
 
         #region addresses
 

@@ -11,6 +11,7 @@ namespace Sdk4me
         private List<Contact> contacts;
         private float? costPerHour;
         private bool disabled;
+        private string employeeID;
         private string information;
         private string jobTitle;
         private string locale;
@@ -93,6 +94,22 @@ namespace Sdk4me
                 if (disabled != value)
                     AddIncludedDuringSerialization("disabled");
                 disabled = value;
+            }
+        }
+
+        #endregion
+
+        #region employeeID
+
+        [JsonProperty("employeeID")]
+        public string EmployeeID
+        {
+            get => employeeID;
+            set
+            {
+                if (employeeID != value)
+                    AddIncludedDuringSerialization("employeeID");
+                employeeID = value;
             }
         }
 
