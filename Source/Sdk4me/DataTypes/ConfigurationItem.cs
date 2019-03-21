@@ -600,7 +600,15 @@ namespace Sdk4me
         [JsonIgnore(), Sdk4meIgnoreInFieldSelection()]
         public CustomFieldCollection CustomFields
         {
-            get => customFields;
+            get
+            {
+                if (customFields == null)
+                {
+                    customFields = new CustomFieldCollection();
+                    customFields.Changed += CustomFields_Changed;
+                }
+                return customFields;
+            }
         }
 
         private void CustomFields_Changed(object sender, EventArgs e)

@@ -128,11 +128,17 @@ namespace Sdk4me
             return keyValuePairs.GetEnumerator();
         }
 
+        internal CustomFieldCollection()
+        {
+            this.Clear();
+            changed = false;
+        }
+
         internal CustomFieldCollection(List<CustomField> customFields)
         {
+            this.Clear();
             if (customFields != null)
             {
-                this.Clear();
                 for (int i = 0; i < customFields.Count; i++)
                     this.Add(customFields[i].ID, customFields[i].Value);
             }
