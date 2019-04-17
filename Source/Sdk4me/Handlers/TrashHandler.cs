@@ -14,7 +14,7 @@
         public TrashHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
-            this.SortOrder = SortOrder.CreatedAtAndID;
+            this.SortOrder = SortOrder.CreatedAt;
         }
     }
 }

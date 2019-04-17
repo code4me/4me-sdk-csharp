@@ -21,8 +21,8 @@ namespace Sdk4me
         private Organization organization;
         private string pictureUri;
         private string primaryEmail;
-        private PeopleNotificationPreferenceType sendEmailNotifications;
-        private PeopleNotificationPreferenceType showNotificationPopup;
+        private PeopleEmailNotificationPreferenceType sendEmailNotifications;
+        private PeoplePopupNotificationPreferenceType showNotificationPopup;
         private Site site;
         private string source;
         private string sourceID;
@@ -274,7 +274,7 @@ namespace Sdk4me
         #region send_email_notifications
 
         [JsonProperty("send_email_notifications")]
-        public PeopleNotificationPreferenceType SendEmailNotifications
+        public PeopleEmailNotificationPreferenceType SendEmailNotifications
         {
             get => sendEmailNotifications;
             set
@@ -290,7 +290,7 @@ namespace Sdk4me
         #region show_notification_popup
 
         [JsonProperty("show_notification_popup")]
-        public PeopleNotificationPreferenceType ShowNotificationPopup
+        public PeoplePopupNotificationPreferenceType ShowNotificationPopup
         {
             get => showNotificationPopup;
             set

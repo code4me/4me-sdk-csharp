@@ -59,7 +59,7 @@ namespace Sdk4me
         public List<Note> GetNotes(ProjectTask projectTask, params string[] attributeNames)
         {
             BaseHandler<Note> handler = new BaseHandler<Note>($"{URL}/{projectTask.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.CreatedAtAndID;
+            handler.SortOrder = SortOrder.CreatedAt;
             return handler.Get(attributeNames);
         }
 

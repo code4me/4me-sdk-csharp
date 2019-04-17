@@ -19,7 +19,7 @@ namespace Sdk4me
         private string responseAttributeNames = null;
         private int itemsPerRequest = 100;
         private int maximumRecursiveRequests = 50;
-        private SortOrder responseSorting = SortOrder.UpdatedAtAndID;
+        private SortOrder responseSorting = SortOrder.UpdatedAt;
         private bool alwaysAsList = false;
         private int startTickCount = 0;
 
@@ -78,7 +78,7 @@ namespace Sdk4me
 
         /// <summary>
         /// <para>Gets or sets the web response sorting.</para>
-        /// <para>The default sorting is on the "updated_at" and "id" attributes.</para>
+        /// <para>The default sorting is on the "updated_at" attribute.</para>
         /// </summary>
         public SortOrder SortOrder
         {

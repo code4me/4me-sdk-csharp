@@ -1189,11 +1189,22 @@ namespace Sdk4me
     #region people
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum PeopleNotificationPreferenceType
+    public enum PeopleEmailNotificationPreferenceType
     {
         [EnumMember(Value = "always")]
         Always,
         [EnumMember(Value = "when_offline")]
+        WhenOffline,
+        [EnumMember(Value = "never")]
+        Never
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum PeoplePopupNotificationPreferenceType
+    {
+        [EnumMember(Value = "always")]
+        Always,
+        [EnumMember(Value = "important_only")]
         WhenOffline,
         [EnumMember(Value = "never")]
         Never
