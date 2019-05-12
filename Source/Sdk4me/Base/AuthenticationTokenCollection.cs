@@ -10,7 +10,7 @@ namespace Sdk4me
     public sealed class AuthenticationTokenCollection : IEnumerable<AuthenticationToken>
     {
         private readonly AuthenticationTokenSorter authenticationTokenSorter = new AuthenticationTokenSorter();
-        private List<AuthenticationToken> authenticationTokens = new List<AuthenticationToken>();
+        private readonly List<AuthenticationToken> authenticationTokens = new List<AuthenticationToken>();
 
         /// <summary>
         /// Create a new instance of an AuthenticationTokenCollection.
@@ -96,23 +96,21 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Returns the 4me authentication token with most request remaining.
+        /// Returns the 4me authentication token with most requests remaining.
         /// </summary>
         /// <returns></returns>
         public AuthenticationToken Get()
         {
-            switch (authenticationTokens.Count)
-            {
-                case 0:
-                    return null;
+            if (authenticationTokens.Count.Equals(0))
+                return null;
 
-                case 1:
-                    return authenticationTokens[0];
+            if (authenticationTokens.Count > 1)
+                authenticationTokens.Sort(authenticationTokenSorter);
 
-                default:
-                    authenticationTokens.Sort(authenticationTokenSorter);
-                    return authenticationTokens[0];
-            }
+            if (authenticationTokens[0].RequestsRemaining == 0 && authenticationTokens[0].RequestLimitReset > DateTime.Now)
+                throw new Sdk4meException("There are no remaining API requests for the provided authentication tokens.");
+
+            return authenticationTokens[0];
         }
 
         /// <summary>
@@ -134,19 +132,20 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Compares two 4me authentication tokens and sort them by request remaining API requests.
+        /// Compares two 4me authentication tokens and sort them by remaining API requests.
         /// </summary>
         private class AuthenticationTokenSorter : IComparer<AuthenticationToken>
         {
             /// <summary>
-            /// Compares two 4me authentication and returns sort them by request remaining API requests.
+            /// Compares two 4me authentication and returns sort them by remaining API requests and limit values.
             /// </summary>
             /// <param name="x">The first 4me authentication to compare.</param>
             /// <param name="y">The second 4me authentication to compare.</param>
             /// <returns>A signed integer that indicates the relative values of the first and second 4me authentication token.</returns>
             public int Compare(AuthenticationToken x, AuthenticationToken y)
             {
-                return y.RequestsRemaining.CompareTo(x.RequestsRemaining);
+                int sortValue = y.RequestsRemaining.CompareTo(x.RequestsRemaining);
+                return (sortValue == 0) ? x.RequestLimitReset.CompareTo(y.RequestLimitReset) : sortValue;
             }
         }
     }

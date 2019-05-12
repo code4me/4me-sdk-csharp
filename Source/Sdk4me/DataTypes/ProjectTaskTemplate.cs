@@ -28,7 +28,6 @@ namespace Sdk4me
         private string sourceID;
         private string subject;
         private Organization supplier;
-        private long? timesApplied;
         private UIExtension uIExtension;
         private bool workHoursAre24x7;
 
@@ -403,17 +402,6 @@ namespace Sdk4me
         private long? SupplierID
         {
             get => (supplier != null ? supplier.ID : (long?)null);
-        }
-
-        #endregion
-
-        #region times_applied
-
-        [JsonProperty("times_applied")]
-        public long? TimesApplied
-        {
-            get => timesApplied;
-            internal set => timesApplied = value;
         }
 
         #endregion

@@ -18,6 +18,8 @@ namespace Sdk4me
         private string name;
         private List<string> phrases;
         private UIExtensionVersion preparedVersion;
+        private string source;
+        private string sourceID;
         private string title;
 
         #region activate
@@ -183,6 +185,38 @@ namespace Sdk4me
         {
             get => preparedVersion;
             internal set => preparedVersion = value;
+        }
+
+        #endregion
+
+        #region source
+
+        [JsonProperty("source")]
+        public string Source
+        {
+            get => source;
+            set
+            {
+                if (source != value)
+                    AddIncludedDuringSerialization("source");
+                source = value;
+            }
+        }
+
+        #endregion
+
+        #region sourceID
+
+        [JsonProperty("sourceID")]
+        public string SourceID
+        {
+            get => sourceID;
+            set
+            {
+                if (sourceID != value)
+                    AddIncludedDuringSerialization("sourceID");
+                sourceID = value;
+            }
         }
 
         #endregion

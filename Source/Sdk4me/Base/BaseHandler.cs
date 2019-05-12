@@ -15,6 +15,7 @@ namespace Sdk4me
         private readonly int minimumDurationPerRequestInMiliseconds = 116;
         private readonly AuthenticationTokenCollection authenticationTokens = null;
         private readonly string accountID = null;
+        private readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private AuthenticationToken currentToken = null;
         private string responseAttributeNames = null;
         private int itemsPerRequest = 100;
@@ -116,9 +117,6 @@ namespace Sdk4me
             this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 100 : itemsPerRequest;
             this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 50 : maximumRecursiveRequests;
 
-            //SET TOKENS
-            currentToken = this.authenticationTokens.Get();
-
             //SET FIELD ATTRIBUTE (BASE ON ALL PROPERTIES OF T)
             this.allAttributeNames = (new T()).GetAllAttributeNames();
 
@@ -179,7 +177,7 @@ namespace Sdk4me
         /// <returns>The object that matches the specified identifier.</returns>
         private T GetByIdentifier(long ID)
         {
-            T retval = default(T);
+            T retval = default;
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}/{1}", url, ID);
@@ -734,13 +732,14 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Saves the current the web header value "x-ratelimit-limit" and "x-ratelimit-remaining" to the currently used token.
+        /// Saves the current the web header value "x-ratelimit-limit", "x-ratelimit-remaining" and "X-RateLimit-Reset" to the currently used token.
         /// </summary>
         /// <param name="webHeaders"></param>
         private void SetCurrentTokenValues(WebHeaderCollection webHeaders)
         {
             currentToken.RequestLimit = Convert.ToInt32(webHeaders["x-ratelimit-limit"]);
             currentToken.RequestsRemaining = Convert.ToInt32(webHeaders["x-ratelimit-remaining"]);
+            currentToken.RequestLimitReset = epoch.AddSeconds(Convert.ToInt64(webHeaders["X-RateLimit-Reset"])).ToLocalTime(); 
             currentToken.UpdatedAt = DateTime.Now;
         }
 

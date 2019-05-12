@@ -868,7 +868,9 @@ namespace Sdk4me
         [EnumMember(Value = "person")]
         Person,
         [EnumMember(Value = "site")]
-        Site
+        Site,
+        [EnumMember(Value = "problem")]
+        Problem
     }
 
     #endregion

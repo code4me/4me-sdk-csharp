@@ -9,7 +9,7 @@ namespace Sdk4me
     public class Trash : BaseItem
     {
         [JsonExtensionData]
-        private Dictionary<string, JToken> trashedDetails = null;
+        private readonly Dictionary<string, JToken> trashedDetails = null;
         private Person trashedBy;
         private string trashed;
 
@@ -37,7 +37,6 @@ namespace Sdk4me
         #endregion
 
         #region trashed details
-    
 
         [JsonIgnore, Sdk4meIgnoreInFieldSelection()]
         public TrashDetails TrashedDetails

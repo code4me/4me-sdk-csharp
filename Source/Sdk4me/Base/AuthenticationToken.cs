@@ -10,6 +10,7 @@ namespace Sdk4me
         private readonly string basicAuthenticationToken = null;
         private int requestLimit = 3600;
         private int requestsRemaining = 3600;
+        private DateTime requestReset = DateTime.MinValue;
         private DateTime updatedAt = DateTime.MinValue;
 
         /// <summary>
@@ -21,7 +22,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Get the total request amount.
+        /// The maximum number of requests permitted to make in the current rate limit window.
         /// </summary>
         public int RequestLimit
         {
@@ -30,13 +31,23 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Get the amount of requests available.
+        /// The number of requests remaining in the current rate limit window.
         /// </summary>
         public int RequestsRemaining
         {
             get => requestsRemaining;
             internal set => requestsRemaining = value;
         }
+
+        /// <summary>
+        /// The local time at which the current rate limit window resets.
+        /// </summary>
+        public DateTime RequestLimitReset
+        {
+            get => requestReset;
+            internal set => requestReset = value;
+        }
+
 
         /// <summary>
         /// Return the date and time when the request limit and remaining request values were updated.

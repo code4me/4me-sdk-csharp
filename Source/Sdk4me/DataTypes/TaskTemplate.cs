@@ -29,7 +29,6 @@ namespace Sdk4me
         private string subject;
         private Organization supplier;
         private Team team;
-        private int? timesApplied;
         private UIExtension uIExtension;
         private bool urgent;
 
@@ -447,17 +446,6 @@ namespace Sdk4me
         private long? TeamID
         {
             get => (team != null ? team.ID : (long?)null);
-        }
-
-        #endregion
-
-        #region times_applied
-
-        [JsonProperty("times_applied")]
-        public int? TimesApplied
-        {
-            get => timesApplied;
-            internal set => timesApplied = value;
         }
 
         #endregion

@@ -18,7 +18,6 @@ namespace Sdk4me
         private EffortClass taskEffortClass;
         private EffortClass timeAllocationEffortClass;
         private long? timeIncrement;
-        private bool trackCostOfTimeSpent;
         private TimesheetSettingsUnitType unit;
         private int workday;
         private int workweek;
@@ -272,22 +271,6 @@ namespace Sdk4me
                 if (timeIncrement != value)
                     AddIncludedDuringSerialization("time_increment");
                 timeIncrement = value;
-            }
-        }
-
-        #endregion
-
-        #region track_cost_of_time_spent
-
-        [JsonProperty("track_cost_of_time_spent")]
-        public bool TrackCostOfTimeSpent
-        {
-            get => trackCostOfTimeSpent;
-            set
-            {
-                if (trackCostOfTimeSpent != value)
-                    AddIncludedDuringSerialization("track_cost_of_time_spent");
-                trackCostOfTimeSpent = value;
             }
         }
 
