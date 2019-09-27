@@ -7,9 +7,11 @@ namespace Sdk4me
     {
         private bool correction;
         private Organization customer;
+        private float? cost;
         private DateTime? date;
         private bool deleted;
         private string description;
+        private EffortClass effortClass;
         private Organization organization;
         private Person person;
         private Problem problem;
@@ -53,6 +55,17 @@ namespace Sdk4me
         private long? CustomerID
         {
             get => (customer != null ? customer.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region cost
+
+        [JsonProperty("cost")]
+        public float? Cost
+        {
+            get => cost;
+            internal set => cost = value;
         }
 
         #endregion
@@ -101,6 +114,28 @@ namespace Sdk4me
                     AddIncludedDuringSerialization("description");
                 description = value;
             }
+        }
+
+        #endregion
+
+        #region effort_class
+
+        [JsonProperty("effort_class")]
+        public EffortClass EffortClass
+        {
+            get => effortClass;
+            set
+            {
+                if (effortClass?.ID != value?.ID)
+                    AddIncludedDuringSerialization("effort_class_id");
+                effortClass = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "effort_class_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TaskEffortClassID
+        {
+            get => (effortClass != null ? effortClass.ID : (long?)null);
         }
 
         #endregion
@@ -239,6 +274,7 @@ namespace Sdk4me
         internal override void ResetIncludedDuringSerialization()
         {
             customer?.ResetIncludedDuringSerialization();
+            effortClass?.ResetIncludedDuringSerialization();
             organization?.ResetIncludedDuringSerialization();
             person?.ResetIncludedDuringSerialization();
             problem?.ResetIncludedDuringSerialization();

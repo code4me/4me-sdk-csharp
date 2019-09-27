@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ProjectTaskHandler : BaseHandler<ProjectTask>
+    public class ProjectTaskHandler : BaseHandler<ProjectTask, PredefinedProjectTaskFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/project_tasks";
-        private static readonly string productionUrl = "https://api.4me.com/v1/project_tasks";
+        private const string qualityUrl = "https://api.4me.qa/v1/project_tasks";
+        private const string productionUrl = "https://api.4me.com/v1/project_tasks";
 
         public ProjectTaskHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,34 +21,40 @@ namespace Sdk4me
 
         public List<ProjectTaskAssignment> GetAssignments(ProjectTask projectTask, params string[] attributeNames)
         {
-            BaseHandler<ProjectTaskAssignment> handler = new BaseHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get(attributeNames);
         }
 
         public ProjectTaskAssignment AddAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
         {
-            BaseHandler<ProjectTaskAssignment> handler = new BaseHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Insert(assignment);
         }
 
         public ProjectTaskAssignment UpdateAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
         {
-            BaseHandler<ProjectTaskAssignment> handler = new BaseHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Update(assignment);
         }
 
         public bool RemoveAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
         {
-            BaseHandler<ProjectTaskAssignment> handler = new BaseHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Delete(assignment);
         }
 
         public bool RemoveAllAssignments(ProjectTask projectTask)
         {
-            BaseHandler<ProjectTaskAssignment> handler = new BaseHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.DeleteAll();
         }
 
@@ -58,8 +64,10 @@ namespace Sdk4me
 
         public List<Note> GetNotes(ProjectTask projectTask, params string[] attributeNames)
         {
-            BaseHandler<Note> handler = new BaseHandler<Note>($"{URL}/{projectTask.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.CreatedAt;
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{projectTask.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.CreatedAt
+            };
             return handler.Get(attributeNames);
         }
 
@@ -69,7 +77,7 @@ namespace Sdk4me
 
         public List<ProjectTask> GetPredecessors(ProjectTask projectTask, params string[] attributeNames)
         {
-            BaseHandler<ProjectTask> handler = new BaseHandler<ProjectTask>($"{URL}/{projectTask.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{URL}/{projectTask.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -94,7 +102,7 @@ namespace Sdk4me
 
         public List<ProjectTask> GetSuccessors(ProjectTask projectTask, params string[] attributeNames)
         {
-            BaseHandler<ProjectTask> handler = new BaseHandler<ProjectTask>($"{URL}/{projectTask.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{URL}/{projectTask.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

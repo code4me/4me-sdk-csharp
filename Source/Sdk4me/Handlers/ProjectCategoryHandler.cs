@@ -3,10 +3,10 @@
 
 namespace Sdk4me
 {
-    public class ProjectCategoryHandler : BaseHandler<ProjectCategory>
+    public class ProjectCategoryHandler : DefaultHandler<ProjectCategory>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/project_categories";
-        private static readonly string productionUrl = "https://api.4me.com/v1/project_categories";
+        private const string qualityUrl = "https://api.4me.qa/v1/project_categories";
+        private const string productionUrl = "https://api.4me.com/v1/project_categories";
 
         public ProjectCategoryHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)

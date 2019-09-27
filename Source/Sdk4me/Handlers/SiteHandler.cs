@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sdk4me
 {
-    public class SiteHandler : BaseHandler<Site>
+    public class SiteHandler : BaseHandler<Site, PredefinedSiteFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/sites";
-        private static readonly string productionUrl = "https://api.4me.com/v1/sites";
+        private const string qualityUrl = "https://api.4me.qa/v1/sites";
+        private const string productionUrl = "https://api.4me.com/v1/sites";
 
         public SiteHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -25,7 +25,7 @@ namespace Sdk4me
 
         public List<Person> GetPeople(Site site, params string[] attributeNames)
         {
-            BaseHandler<Person> handler = new BaseHandler<Person>($"{URL}/{site.ID}/people", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{URL}/{site.ID}/people", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

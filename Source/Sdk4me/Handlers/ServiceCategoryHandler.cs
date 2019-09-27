@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ServiceCategoryHandler : BaseHandler<ServiceCategory>
+    public class ServiceCategoryHandler : DefaultHandler<ServiceCategory>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/service_categories";
-        private static readonly string productionUrl = "https://api.4me.com/v1/service_categories";
+        private const string qualityUrl = "https://api.4me.qa/v1/service_categories";
+        private const string productionUrl = "https://api.4me.com/v1/service_categories";
 
         public ServiceCategoryHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<Service> GetServices(ServiceCategory serviceCategory, params string[] attributeNames)
         {
-            BaseHandler<Service> handler = new BaseHandler<Service>($"{URL}/{serviceCategory.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{URL}/{serviceCategory.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

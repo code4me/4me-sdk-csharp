@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ContractHandler : BaseHandler<Contract>
+    public class ContractHandler : BaseHandler<Contract, PredefinedContractFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/contracts";
-        private static readonly string productionUrl = "https://api.4me.com/v1/contracts";
+        private const string qualityUrl = "https://api.4me.qa/v1/contracts";
+        private const string productionUrl = "https://api.4me.com/v1/contracts";
 
         public ContractHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<ConfigurationItem> GetConfigurationItems(Contract contract, params string[] attributeNames)
         {
-            BaseHandler<ConfigurationItem> handler = new BaseHandler<ConfigurationItem>($"{URL}/{contract.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{URL}/{contract.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

@@ -3,10 +3,10 @@ using System;
 
 namespace Sdk4me
 {
-    public class Approval : BaseItem
+    public class TaskTemplateApproval : BaseItem
     {
         private Person approver;
-        private int? plannedEffort;
+        private int? plannedEffortInMinutes;
 
         #region created_at (override)
 
@@ -14,7 +14,7 @@ namespace Sdk4me
         public override DateTime? CreatedAt
         {
             get => base.CreatedAt;
-            internal set => base.CreatedAt = null;
+            internal set => base.CreatedAt = value;
         }
 
         #endregion
@@ -52,17 +52,17 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_effort
+        #region planned_effort_in_minutes
 
-        [JsonProperty("planned_effort")]
-        public int? PlannedEffort
+        [JsonProperty("planned_effort_in_minutes")]
+        public int? PlannedEffortInMinutes
         {
-            get => plannedEffort;
+            get => plannedEffortInMinutes;
             set
             {
-                if (plannedEffort != value)
-                    AddIncludedDuringSerialization("planned_effort");
-                plannedEffort = value;
+                if (plannedEffortInMinutes != value)
+                    AddIncludedDuringSerialization("planned_effort_in_minutes");
+                plannedEffortInMinutes = value;
             }
         }
 

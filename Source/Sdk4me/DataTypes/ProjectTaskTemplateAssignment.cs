@@ -6,7 +6,7 @@ namespace Sdk4me
     public class ProjectTaskTemplateAssignment : BaseItem
     {
         private Person assignee;
-        private int? plannedEffort;
+        private int? plannedEffortInMinutes;
 
         #region created_at (override)
 
@@ -54,15 +54,15 @@ namespace Sdk4me
 
         #region planned_effort
 
-        [JsonProperty("planned_effort")]
-        public int? PlannedEffort
+        [JsonProperty("planned_effort_in_minutes")]
+        public int? PlannedEffortInMinutes
         {
-            get => plannedEffort;
+            get => plannedEffortInMinutes;
             set
             {
-                if (plannedEffort != value)
-                    AddIncludedDuringSerialization("planned_effort");
-                plannedEffort = value;
+                if (plannedEffortInMinutes != value)
+                    AddIncludedDuringSerialization("planned_effort_in_minutes");
+                plannedEffortInMinutes = value;
             }
         }
 

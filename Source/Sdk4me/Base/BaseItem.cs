@@ -9,7 +9,7 @@ namespace Sdk4me
 {
     public class BaseItem : IBaseType
     {
-        private HashSet<string> includedDuringSerialization = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> includedDuringSerialization = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private string allAttributeNames = null;
 
 

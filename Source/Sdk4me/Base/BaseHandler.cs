@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Sdk4me
 {
-    public class BaseHandler<T> : IBaseHandler where T : BaseItem, new()
+    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : System.Enum
     {
         private readonly string url = null;
         private readonly string allAttributeNames = null;
@@ -143,31 +143,69 @@ namespace Sdk4me
         public List<T> Get(params string[] attributeNames)
         {
             SetResponseAttributes(attributeNames);
-            return Get(null, 1, this.maximumRecursiveRequests);
+            return Get(null, null, 1, this.maximumRecursiveRequests);
+        }
+
+        /// <summary>
+        /// Query the 4me web service.
+        /// </summary>
+        /// <param name="predefinedFilter">A predefined filter value.</param>
+        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <returns>A collection of objects.</returns>
+        public List<T> Get(X predefinedFilter, params string[] attributeNames)
+        {
+            SetResponseAttributes(attributeNames);
+            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), null, 1, this.maximumRecursiveRequests);
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
         /// <param name="filter">The filter for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
         /// <returns>A collection of objects.</returns>
         public List<T> Get(Filter filter, params string[] attributeNames)
         {
             SetResponseAttributes(attributeNames);
-            return Get(new FilterCollection() { filter }, 1, this.maximumRecursiveRequests);
+            return Get(null, new FilterCollection() { filter }, 1, this.maximumRecursiveRequests);
+        }
+
+        /// <summary>
+        /// Query the 4me web service.
+        /// </summary>
+        /// <param name="predefinedFilter">A predefined filter value.</param>
+        /// <param name="filter">The filter for the request.</param>
+        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <returns>A collection of objects.</returns>
+        public List<T> Get(X predefinedFilter, Filter filter, params string[] attributeNames)
+        {
+            SetResponseAttributes(attributeNames);
+            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), new FilterCollection() { filter }, 1, this.maximumRecursiveRequests);
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
         /// <param name="filters">The filters for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
         /// <returns>A collection of objects.</returns>
         public List<T> Get(FilterCollection filters, params string[] attributeNames)
         {
             SetResponseAttributes(attributeNames);
-            return Get(filters, 1, this.maximumRecursiveRequests);
+            return Get(null, filters, 1, this.maximumRecursiveRequests);
+        }
+
+        /// <summary>
+        /// Query the 4me web service.
+        /// </summary>
+        /// <param name="predefinedFilter">A predefined filter value.</param>
+        /// <param name="filters">The filters for the request.</param>
+        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <returns>A collection of objects.</returns>
+        public List<T> Get(X predefinedFilter, FilterCollection filters, params string[] attributeNames)
+        {
+            SetResponseAttributes(attributeNames);
+            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), filters, 1, this.maximumRecursiveRequests);
         }
 
         /// <summary>
@@ -223,11 +261,12 @@ namespace Sdk4me
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
+        /// <param name="predefinedFilter">A predefined filter value.</param>
         /// <param name="filters">The filters used during the request.</param>
         /// <param name="page">The current page for the request.</param>
         /// <param name="recursiveRequestCount">The amount of recursive requests.</param>
         /// <returns>A collection of items with a maximum count of (page * requestCount).</returns>
-        private List<T> Get(FilterCollection filters, int page, int recursiveRequestCount)
+        private List<T> Get(string predefinedFilter, FilterCollection filters, int page, int recursiveRequestCount)
         {
             List<T> retval = new List<T>();
             int totalRecords = 0;
@@ -241,6 +280,8 @@ namespace Sdk4me
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}?page={1}&per_page={2}", url, page, itemsPerRequest);
+            if (predefinedFilter != null)
+                requestURL = string.Format("{0}/{1}?page={2}&per_page={3}", url, predefinedFilter, page, itemsPerRequest);
             if (responseSorting != SortOrder.None)
                 requestURL += string.Format("&sort={0}", GetSortOrderStringValue(responseSorting));
             for (int i = 0; i < filters.Count; i++)
@@ -250,7 +291,6 @@ namespace Sdk4me
 
             //WRITE DEBUG
             DebugWriteLine("GET", requestURL);
-
 
             //BUILD WEB REQUEST
             try
@@ -303,7 +343,7 @@ namespace Sdk4me
 
             //CONTINUE NEXT REQUEST CYCLE
             if (page * itemsPerRequest < totalRecords)
-                retval.AddRange(Get(filters, page + 1, recursiveRequestCount - 1));
+                retval.AddRange(Get(predefinedFilter, filters, page + 1, recursiveRequestCount - 1));
 
             //RETURN RESULT
             return retval;
@@ -395,7 +435,7 @@ namespace Sdk4me
         public T Insert(T item)
         {
             //DEFINE DEFAULT VALUE
-            T retval = default(T);
+            T retval = default;
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}", url);
@@ -462,7 +502,7 @@ namespace Sdk4me
         public T Update(T item)
         {
             //DEFINE DEFAULT VALUE
-            T retval = default(T);
+            T retval = default;
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}/{1}", url, item.ID);
@@ -529,7 +569,7 @@ namespace Sdk4me
         /// <returns>A new object instance based upon the response.</returns>
         internal T CustomWebRequest(string appendToURL, string method)
         {
-            T retval = default(T);
+            T retval = default;
 
             //BUILD REQUEST URL
             if (appendToURL.StartsWith("/"))
@@ -583,7 +623,7 @@ namespace Sdk4me
 
             if (string.IsNullOrWhiteSpace(relationObjectType))
             {
-                DebugWriteLine("POST", $"relationObjectType is null or blank.");
+                DebugWriteLine("POST", "relationObjectType is null or blank.");
                 return false;
             }
 
@@ -631,7 +671,7 @@ namespace Sdk4me
 
             if (string.IsNullOrWhiteSpace(relationObjectType))
             {
-                DebugWriteLine("DELETE", $"relationObjectType is null or blank.");
+                DebugWriteLine("DELETE", "relationObjectType is null or blank.");
                 return false;
             }
 
@@ -677,7 +717,7 @@ namespace Sdk4me
 
             if (string.IsNullOrWhiteSpace(relationObjectType))
             {
-                DebugWriteLine("DELETE", $"relationObjectType is null or blank.");
+                DebugWriteLine("DELETE", "relationObjectType is null or blank.");
                 return false;
             }
 
@@ -762,7 +802,7 @@ namespace Sdk4me
             //THE TICKCOUNTER JUMPED BACK TO Int32.MinValue
             if (endTickCount <= startTickCount)
             {
-                DebugWriteLine(method, $"Response time: unknown");
+                DebugWriteLine(method, "Response time: unknown");
                 System.Threading.Thread.Sleep(minimumDurationPerRequestInMiliseconds);
             }
             else

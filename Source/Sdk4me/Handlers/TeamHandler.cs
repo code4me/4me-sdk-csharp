@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class TeamHandler : BaseHandler<Team>
+    public class TeamHandler : BaseHandler<Team, PredefinedTeamFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/teams";
-        private static readonly string productionUrl = "https://api.4me.com/v1/teams";
+        private const string qualityUrl = "https://api.4me.qa/v1/teams";
+        private const string productionUrl = "https://api.4me.com/v1/teams";
 
         public TeamHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetServiceInstances(Team team, params string[] attributeNames)
         {
-            BaseHandler<ServiceInstance> handler = new BaseHandler<ServiceInstance>($"{URL}/{team.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{team.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -31,7 +31,7 @@ namespace Sdk4me
 
         public List<Person> GetMembers(Team team, params string[] attributeNames)
         {
-            BaseHandler<Person> handler = new BaseHandler<Person>($"{URL}/{team.ID}/members", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{URL}/{team.ID}/members", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

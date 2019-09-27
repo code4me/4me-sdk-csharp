@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ShortUniformResourceLocatorHandler : BaseHandler<ShortUniformResourceLocator>
+    public class ShortUniformResourceLocatorHandler : DefaultHandler<ShortUniformResourceLocator>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/short_urls";
-        private static readonly string productionUrl = "https://api.4me.com/v1/short_urls";
+        private const string qualityUrl = "https://api.4me.qa/v1/short_urls";
+        private const string productionUrl = "https://api.4me.com/v1/short_urls";
 
         public ShortUniformResourceLocatorHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)

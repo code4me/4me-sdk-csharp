@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ProjectHandler : BaseHandler<Project>
+    public class ProjectHandler : BaseHandler<Project, PredefinedProjectFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/projects";
-        private static readonly string productionUrl = "https://api.4me.com/v1/projects";
+        private const string qualityUrl = "https://api.4me.qa/v1/projects";
+        private const string productionUrl = "https://api.4me.com/v1/projects";
 
         public ProjectHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<Change> GetChanges(Project project, params string[] attributeNames)
         {
-            BaseHandler<Change> handler = new BaseHandler<Change>($"{URL}/{project.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{URL}/{project.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -46,8 +46,10 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Project project, params string[] attributeNames)
         {
-            BaseHandler<Note> handler = new BaseHandler<Note>($"{URL}/{project.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.CreatedAt;
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{project.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.CreatedAt
+            };
             return handler.Get(attributeNames);
         }
 
@@ -57,8 +59,10 @@ namespace Sdk4me
 
         public List<ProjectPhase> GetProjectPhases(Project project, params string[] attributeNames)
         {
-            BaseHandler<ProjectPhase> handler = new BaseHandler<ProjectPhase>($"{URL}/{project.ID}/phases", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<ProjectPhase> handler = new DefaultHandler<ProjectPhase>($"{URL}/{project.ID}/phases", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get(attributeNames);
         }
 
@@ -83,7 +87,7 @@ namespace Sdk4me
 
         public List<Problem> GetProblems(Project project, params string[] attributeNames)
         {
-            BaseHandler<Problem> handler = new BaseHandler<Problem>($"{URL}/{project.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{URL}/{project.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
 
         }
@@ -109,7 +113,7 @@ namespace Sdk4me
 
         public List<ProjectTask> GetProjectTasks(Project project, params string[] attributeNames)
         {
-            BaseHandler<ProjectTask> handler = new BaseHandler<ProjectTask>($"{URL}/{project.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{URL}/{project.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -119,7 +123,7 @@ namespace Sdk4me
 
         public List<Request> GetRequests(Project project, params string[] attributeNames)
         {
-            BaseHandler<Request> handler = new BaseHandler<Request>($"{URL}/{project.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{URL}/{project.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

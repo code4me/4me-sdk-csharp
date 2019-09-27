@@ -20,11 +20,25 @@ namespace Sdk4me
         };
 
         /// <summary>
+        /// Converts a enumerator value to snake case string value; in case the filter is a Sdk4me.PredefinedEmptyFilter a null value will be returned.
+        /// </summary>
+        /// <typeparam name="T">A System.Enum compatible type.</typeparam>
+        /// <param name="filter">The System.Enum value.</param>
+        /// <returns>A snake case filter value; or null if T is Sdk4me.PredefinedEmptyFilter</returns>
+        public static string ConvertTo4mePredefinedFilter<T>(T filter) where T : System.Enum
+        {
+            if (typeof(T) == typeof(PredefinedDefaultFilter))
+                return null;
+
+            return ConvertTo4meAttributeName(filter.ToString());
+        }
+
+        /// <summary>
         /// Converts an attribute name to snake case attribute name; known exception such as sourceID and supportID will not be converted.
         /// </summary>
         /// <param name="attributeName">The attribute name to be converted.</param>
         /// <returns>A snake case attribute name value.</returns>
-        internal static string ConvertTo4meAttributeName(string attributeName)
+        public static string ConvertTo4meAttributeName(string attributeName)
         {
             //MAKE SURE IT IS NOT BLANK OR NULL
             if (string.IsNullOrWhiteSpace(attributeName))
@@ -54,7 +68,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="attributeNames">An array of attribute names to be converted.</param>
         /// <returns>An array of snake case attribute name values.</returns>
-        internal static string[] ConvertTo4meAttributeNames(string[] attributeNames)
+        public static string[] ConvertTo4meAttributeNames(string[] attributeNames)
         {
             if (attributeNames == null)
                 return null;

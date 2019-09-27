@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sdk4me
 {
-    public class ServiceInstanceHandler : BaseHandler<ServiceInstance>
+    public class ServiceInstanceHandler : BaseHandler<ServiceInstance, PredefinedServiceInstanceFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/service_instances";
-        private static readonly string productionUrl = "https://api.4me.com/v1/service_instances";
+        private const string qualityUrl = "https://api.4me.qa/v1/service_instances";
+        private const string productionUrl = "https://api.4me.com/v1/service_instances";
 
         public ServiceInstanceHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -26,13 +26,13 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetChildServiceInstances(ServiceInstance serviceInstance, params string[] attributeNames)
         {
-            BaseHandler<ServiceInstance> handler = new BaseHandler<ServiceInstance>($"{URL}/{serviceInstance.ID}/child_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{serviceInstance.ID}/child_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
         public List<ServiceInstance> GetParentServiceInstances(ServiceInstance serviceInstance, params string[] attributeNames)
         {
-            BaseHandler<ServiceInstance> handler = new BaseHandler<ServiceInstance>($"{URL}/{serviceInstance.ID}/parent_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{serviceInstance.ID}/parent_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -42,7 +42,7 @@ namespace Sdk4me
 
         public List<ConfigurationItem> GetConfigurationItems(ServiceInstance serviceInstance, params string[] attributeNames)
         {
-            BaseHandler<ConfigurationItem> handler = new BaseHandler<ConfigurationItem>($"{URL}/{serviceInstance.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{URL}/{serviceInstance.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -67,7 +67,7 @@ namespace Sdk4me
 
         public List<ServiceLevelAgreement> GetSLAs(ServiceInstance serviceInstance, params string[] attributeNames)
         {
-            BaseHandler<ServiceLevelAgreement> handler = new BaseHandler<ServiceLevelAgreement>($"{URL}/{serviceInstance.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceLevelAgreement> handler = new DefaultHandler<ServiceLevelAgreement>($"{URL}/{serviceInstance.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

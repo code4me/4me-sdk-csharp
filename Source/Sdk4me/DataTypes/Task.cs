@@ -18,8 +18,8 @@ namespace Sdk4me
         private Person manager;
         private Person member;
         private string note;
-        private int? plannedDuration;
-        private int? plannedEffort;
+        private int? plannedDurationInMinutes;
+        private int? plannedEffortInMinutes;
         private int? requiredApprovals;
         private string source;
         private string sourceID;
@@ -229,33 +229,33 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_duration
+        #region planned_duration_in_minutes
 
-        [JsonProperty("planned_duration")]
-        public int? PlannedDuration
+        [JsonProperty("planned_duration_in_minutes")]
+        public int? PlannedDurationInMinutes
         {
-            get => plannedDuration;
+            get => plannedDurationInMinutes;
             set
             {
-                if (plannedDuration != value)
-                    AddIncludedDuringSerialization("planned_duration");
-                plannedDuration = value;
+                if (plannedDurationInMinutes != value)
+                    AddIncludedDuringSerialization("planned_duration_in_minutes");
+                plannedDurationInMinutes = value;
             }
         }
 
         #endregion
 
-        #region planned_effort
+        #region planned_effort_in_minutes
 
-        [JsonProperty("planned_effort")]
-        public int? PlannedEffort
+        [JsonProperty("planned_effort_in_minutes")]
+        public int? PlannedEffortInMinutes
         {
-            get => plannedEffort;
+            get => plannedEffortInMinutes;
             set
             {
-                if (plannedEffort != value)
-                    AddIncludedDuringSerialization("planned_effort");
-                plannedEffort = value;
+                if (plannedEffortInMinutes != value)
+                    AddIncludedDuringSerialization("planned_effort_in_minutes");
+                plannedEffortInMinutes = value;
             }
         }
 

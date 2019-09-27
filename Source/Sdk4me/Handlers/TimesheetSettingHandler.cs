@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class TimesheetSettingHandler : BaseHandler<TimesheetSetting>
+    public class TimesheetSettingHandler : BaseHandler<TimesheetSetting, PredefinedTimesheetSettingFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/timesheet_settings";
-        private static readonly string productionUrl = "https://api.4me.com/v1/timesheet_settings";
+        private const string qualityUrl = "https://api.4me.qa/v1/timesheet_settings";
+        private const string productionUrl = "https://api.4me.com/v1/timesheet_settings";
 
         public TimesheetSettingHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -25,7 +21,7 @@ namespace Sdk4me
 
         public List<EffortClass> GetEffortClasses(TimesheetSetting timesheetSetting, params string[] attributeNames)
         {
-            BaseHandler<EffortClass> handler = new BaseHandler<EffortClass>($"{URL}/{timesheetSetting.ID}/effort_classes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<EffortClass> handler = new DefaultHandler<EffortClass>($"{URL}/{timesheetSetting.ID}/effort_classes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -50,7 +46,7 @@ namespace Sdk4me
 
         public List<Organization> GetOrganizations(TimesheetSetting timesheetSetting, params string[] attributeNames)
         {
-            BaseHandler<Organization> handler = new BaseHandler<Organization>($"{URL}/{timesheetSetting.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{URL}/{timesheetSetting.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

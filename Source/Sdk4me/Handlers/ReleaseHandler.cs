@@ -3,10 +3,10 @@
 
 namespace Sdk4me
 {
-    public class ReleaseHandler : BaseHandler<Release>
+    public class ReleaseHandler : BaseHandler<Release, PredefinedReleaseFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/releases";
-        private static readonly string productionUrl = "https://api.4me.com/v1/releases";
+        private const string qualityUrl = "https://api.4me.qa/v1/releases";
+        private const string productionUrl = "https://api.4me.com/v1/releases";
 
         public ReleaseHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -22,8 +22,10 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Release release, params string[] attributeNames)
         {
-            BaseHandler<Note> handler = new BaseHandler<Note>($"{URL}/{release.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.CreatedAt;
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{release.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.CreatedAt
+            };
             return handler.Get(attributeNames);
         }
 
@@ -33,7 +35,7 @@ namespace Sdk4me
 
         public List<Change> GetChanges(Release release, params string[] attributeNames)
         {
-            BaseHandler<Change> handler = new BaseHandler<Change>($"{URL}/{release.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{URL}/{release.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ServiceLevelAgreementHandler : BaseHandler<ServiceLevelAgreement>
+    public class ServiceLevelAgreementHandler : BaseHandler<ServiceLevelAgreement, PredefinedServiceLevelArgreementFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/slas";
-        private static readonly string productionUrl = "https://api.4me.com/v1/slas";
+        private const string qualityUrl = "https://api.4me.qa/v1/slas";
+        private const string productionUrl = "https://api.4me.com/v1/slas";
 
         public ServiceLevelAgreementHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<Organization> GetOrganizations(ServiceLevelAgreement serviceLevelAgreement, params string[] attributeNames)
         {
-            BaseHandler<Organization> handler = new BaseHandler<Organization>($"{URL}/{serviceLevelAgreement.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{URL}/{serviceLevelAgreement.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -46,7 +46,7 @@ namespace Sdk4me
 
         public List<Person> GetPeople(ServiceLevelAgreement serviceLevelAgreement, params string[] attributeNames)
         {
-            BaseHandler<Person> handler = new BaseHandler<Person>($"{URL}/{serviceLevelAgreement.ID}/people", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{URL}/{serviceLevelAgreement.ID}/people", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -71,7 +71,7 @@ namespace Sdk4me
 
         public List<Site> GetSites(ServiceLevelAgreement serviceLevelAgreement, params string[] attributeNames)
         {
-            BaseHandler<Site> handler = new BaseHandler<Site>($"{URL}/{serviceLevelAgreement.ID}/sites", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Site> handler = new DefaultHandler<Site>($"{URL}/{serviceLevelAgreement.ID}/sites", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

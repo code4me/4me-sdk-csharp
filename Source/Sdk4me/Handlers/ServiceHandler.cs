@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sdk4me
 {
-    public class ServiceHandler : BaseHandler<Service>
+    public class ServiceHandler : BaseHandler<Service, PredefinedServiceFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/services";
-        private static readonly string productionUrl = "https://api.4me.com/v1/services";
+        private const string qualityUrl = "https://api.4me.qa/v1/services";
+        private const string productionUrl = "https://api.4me.com/v1/services";
 
         public ServiceHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -25,7 +25,7 @@ namespace Sdk4me
 
         public List<ChangeTemplate> GetChangeTemplates(Service service, params string[] attributeNames)
         {
-            BaseHandler<ChangeTemplate> handler = new BaseHandler<ChangeTemplate>($"{URL}/{service.ID}/change_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ChangeTemplate> handler = new DefaultHandler<ChangeTemplate>($"{URL}/{service.ID}/change_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -35,7 +35,7 @@ namespace Sdk4me
 
         public List<RequestTemplate> GetRequestTemplates(Service service, params string[] attributeNames)
         {
-            BaseHandler<RequestTemplate> handler = new BaseHandler<RequestTemplate>($"{URL}/{service.ID}/request_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<RequestTemplate> handler = new DefaultHandler<RequestTemplate>($"{URL}/{service.ID}/request_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -45,7 +45,7 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetServiceInstances(Service service, params string[] attributeNames)
         {
-            BaseHandler<ServiceInstance> handler = new BaseHandler<ServiceInstance>($"{URL}/{service.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{service.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -55,7 +55,7 @@ namespace Sdk4me
 
         public List<ServiceLevelAgreement> GetServiceLevelAgreements(Service service, params string[] attributeNames)
         {
-            BaseHandler<ServiceLevelAgreement> handler = new BaseHandler<ServiceLevelAgreement>($"{URL}/{service.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceLevelAgreement> handler = new DefaultHandler<ServiceLevelAgreement>($"{URL}/{service.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -65,7 +65,7 @@ namespace Sdk4me
 
         public List<ServiceOffering> GetServiceOfferings(Service service, params string[] attributeNames)
         {
-            BaseHandler<ServiceOffering> handler = new BaseHandler<ServiceOffering>($"{URL}/{service.ID}/service_offerings", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceOffering> handler = new DefaultHandler<ServiceOffering>($"{URL}/{service.ID}/service_offerings", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

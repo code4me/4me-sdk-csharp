@@ -49,7 +49,7 @@ namespace Sdk4me
             JsonProperty property = base.CreateProperty(member, memberSerialization);
             property.ShouldSerialize = instance =>
             {
-                if (property.DeclaringType.GetCustomAttribute(typeof(Sdk4meSerializeAllPropertiesAttribute)) is Sdk4meSerializeAllPropertiesAttribute includeAllProperties)
+                if (property.DeclaringType.GetCustomAttribute(typeof(Sdk4meSerializeAllPropertiesAttribute)) is Sdk4meSerializeAllPropertiesAttribute)
                     return true;
 
                 return includedProperties.Contains(property.PropertyName);

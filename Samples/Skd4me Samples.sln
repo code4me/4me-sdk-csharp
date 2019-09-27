@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sdk4me", "Sdk4me", "{8A9AA755-11EF-4DF8-98AA-A9599C090585}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration Item", "Confi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "People", "People\People.csproj", "{E5E95C33-8305-45E4-9866-743A0CA57F82}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Request", "Request\Request.vbproj", "{1063D305-94A2-4FFD-B3CA-1033AD8B737B}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Request", "Request\Request.vbproj", "{1063D305-94A2-4FFD-B3CA-1033AD8B737B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

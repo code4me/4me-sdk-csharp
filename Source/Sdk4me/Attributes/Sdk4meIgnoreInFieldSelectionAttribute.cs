@@ -7,7 +7,7 @@ namespace Sdk4me
     /// <para>This does not replace the DataMember or the IgnoreDataMember attribute.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public class Sdk4meIgnoreInFieldSelectionAttribute : Attribute
+    public sealed class Sdk4meIgnoreInFieldSelectionAttribute : Attribute
     {
     }
 }

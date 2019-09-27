@@ -271,10 +271,18 @@ namespace Sdk4me
         Workaround,
         [EnumMember(Value = "gone")]
         Gone,
+        [EnumMember(Value = "duplicate")]
+        Duplicate,
         [EnumMember(Value = "withdrawn")]
         Withdrawn,
+        [EnumMember(Value = "no_reply")]
+        NoReply,
+        [EnumMember(Value = "rejected")]
+        Rejected,
         [EnumMember(Value = "conflict")]
         Conflict,
+        [EnumMember(Value = "declined")]
+        Declined,
         [EnumMember(Value = "unsolvable")]
         Unsolvable
     }
@@ -631,6 +639,25 @@ namespace Sdk4me
         Rejected,
         [EnumMember(Value = "completed")]
         Completed,
+        [EnumMember(Value = "approved")]
+        Approved,
+        [EnumMember(Value = "canceled")]
+        Canceled
+    }
+
+    #endregion
+
+    #region task approval
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum TaskApprovalStatus
+    {
+        [EnumMember(Value = "registered")]
+        Registered,
+        [EnumMember(Value = "assigned")]
+        Assigned,
+        [EnumMember(Value = "rejected")]
+        Rejected,
         [EnumMember(Value = "approved")]
         Approved,
         [EnumMember(Value = "canceled")]
@@ -1277,6 +1304,12 @@ namespace Sdk4me
         [EnumMember(Value = "sunday")]
         Sunday
     }
+
+    #endregion
+
+    #region predefined filters
+
+
 
     #endregion
 }

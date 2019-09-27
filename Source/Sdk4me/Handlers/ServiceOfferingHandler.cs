@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class ServiceOfferingHandler : BaseHandler<ServiceOffering>
+    public class ServiceOfferingHandler : BaseHandler<ServiceOffering, PredefinedServiceOfferingFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/service_offerings";
-        private static readonly string productionUrl = "https://api.4me.com/v1/service_offerings";
+        private const string qualityUrl = "https://api.4me.qa/v1/service_offerings";
+        private const string productionUrl = "https://api.4me.com/v1/service_offerings";
 
         public ServiceOfferingHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<StandardServiceRequest> GetStandardServiceRequests(ServiceOffering serviceOffering, params string[] attributeNames)
         {
-            BaseHandler<StandardServiceRequest> handler = new BaseHandler<StandardServiceRequest>($"{URL}/{serviceOffering.ID}/standard_service_requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<StandardServiceRequest> handler = new DefaultHandler<StandardServiceRequest>($"{URL}/{serviceOffering.ID}/standard_service_requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -46,7 +46,7 @@ namespace Sdk4me
     
         public List<ServiceLevelAgreement> GetServiceLevelAgreements(ServiceOffering serviceOffering, params string[] attributeNames)
         {
-            BaseHandler<ServiceLevelAgreement> handler = new BaseHandler<ServiceLevelAgreement>($"{URL}/{serviceOffering.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceLevelAgreement> handler = new DefaultHandler<ServiceLevelAgreement>($"{URL}/{serviceOffering.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

@@ -10,7 +10,7 @@ namespace Sdk4me
     /// Make sure the contract resolver serializes all properties of the class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class Sdk4meSerializeAllPropertiesAttribute : Attribute
+    public sealed class Sdk4meSerializeAllPropertiesAttribute : Attribute
     {
     }
 }

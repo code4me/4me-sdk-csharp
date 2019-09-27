@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class HolidayHandler : BaseHandler<Holiday>
+    public class HolidayHandler : DefaultHandler<Holiday>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/holidays";
-        private static readonly string productionUrl = "https://api.4me.com/v1/holidays";
+        private const string qualityUrl = "https://api.4me.qa/v1/holidays";
+        private const string productionUrl = "https://api.4me.com/v1/holidays";
 
         public HolidayHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<Calendar> GetCalendars(Holiday holiday, params string[] attributeNames)
         {
-            BaseHandler<Calendar> handler = new BaseHandler<Calendar>($"{URL}/{holiday.ID}/calendars", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Calendar> handler = new DefaultHandler<Calendar>($"{URL}/{holiday.ID}/calendars", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

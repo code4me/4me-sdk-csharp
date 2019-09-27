@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 
-
 namespace Sdk4me
 {
-    public class TimeAllocationHandler : BaseHandler<TimeAllocation>
+    public class TimeAllocationHandler : BaseHandler<TimeAllocation, PredefinedTimeAllocationFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/time_allocations";
-        private static readonly string productionUrl = "https://api.4me.com/v1/time_allocations";
+        private const string qualityUrl = "https://api.4me.qa/v1/time_allocations";
+        private const string productionUrl = "https://api.4me.com/v1/time_allocations";
 
         public TimeAllocationHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -22,7 +21,7 @@ namespace Sdk4me
 
         public List<Organization> GetCustomers(TimeAllocation timeAllocation, params string[] attributeNames)
         {
-            BaseHandler<Organization> handler = new BaseHandler<Organization>($"{URL}/{timeAllocation.ID}/customers", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{URL}/{timeAllocation.ID}/customers", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -47,7 +46,7 @@ namespace Sdk4me
 
         public List<Service> GetServices(TimeAllocation timeAllocation, params string[] attributeNames)
         {
-            BaseHandler<Service> handler = new BaseHandler<Service>($"{URL}/{timeAllocation.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{URL}/{timeAllocation.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -72,7 +71,7 @@ namespace Sdk4me
 
         public List<Organization> GetOrganizations(TimeAllocation timeAllocation, params string[] attributeNames)
         {
-            BaseHandler<Organization> handler = new BaseHandler<Organization>($"{URL}/{timeAllocation.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{URL}/{timeAllocation.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

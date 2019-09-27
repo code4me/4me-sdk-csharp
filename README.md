@@ -78,6 +78,14 @@ foreach (ConfigurationItem ci in cis)
 ```
 This will return all [configuration items](https://developer.4me.com/v1/configuration_items/) created before 1 January 2017 with a broken down status.
 
+```csharp
+var projectTaskTemplates = client.ProjectTaskTemplates.Get(PredefinedProjectTaskTemplateFilter.Enabled);
+foreach (ProjectTaskTemplate projectTaskTemplate in projectTaskTemplates)
+	Console.WriteLine(projectTaskTemplate.Subject);
+```
+
+This will return all enabled [project task templates](https://developer.4me.com/v1/project_task_templates/) using a predefined filter.
+
 ### Field selection
 ```csharp
 List<Person> people = client.People.Get("CustomFields", "Manager", "SourceID");

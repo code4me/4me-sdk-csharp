@@ -68,8 +68,10 @@ namespace Sdk4me
         /// <returns>The current Account object.</returns>
         public Account Get()
         {
-            BaseHandler<Account> handler = new BaseHandler<Account>($"{url}", authenticationTokens, accountID, 100, 1000);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<Account> handler = new DefaultHandler<Account>($"{url}", authenticationTokens, accountID, 100, 1000)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get()[0];
         }
 
@@ -81,8 +83,10 @@ namespace Sdk4me
         /// <returns>A list of billable users.</returns>
         public List<BillableUser> GetBillableUsers()
         {
-            BaseHandler<BillableUser> handler = new BaseHandler<BillableUser>($"{url}/billable_users", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<BillableUser> handler = new DefaultHandler<BillableUser>($"{url}/billable_users", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get("*");
         }
 
@@ -94,8 +98,10 @@ namespace Sdk4me
         /// <returns>A list of billable users for a specific month.</returns>
         public List<BillableUser> GetBillableUsers(int year, int month)
         {
-            BaseHandler<BillableUser> handler = new BaseHandler<BillableUser>($"{url}/billable_users?year={year}&month={month}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<BillableUser> handler = new DefaultHandler<BillableUser>($"{url}/billable_users?year={year}&month={month}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get("*");
         }
 
@@ -119,8 +125,10 @@ namespace Sdk4me
         /// <returns>A list of usage statements.</returns>
         public List<UsageStatement> GetUsageStatements()
         {
-            BaseHandler<UsageStatement> handler = new BaseHandler<UsageStatement>($"{url}/usage_statements", authenticationTokens, accountID, 100, 1000);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<UsageStatement> handler = new DefaultHandler<UsageStatement>($"{url}/usage_statements", authenticationTokens, accountID, 100, 1000)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get("*");
         }
 
@@ -132,8 +140,10 @@ namespace Sdk4me
         /// <returns>A list of billable users for a specific month.</returns>
         public List<UsageStatement> GetUsageStatements(int year, int month)
         {
-            BaseHandler<UsageStatement> handler = new BaseHandler<UsageStatement>($"{url}/usage_statements?year={year}&month={month}", authenticationTokens, accountID, 100, 1000);
-            handler.SortOrder = SortOrder.None;
+            DefaultHandler<UsageStatement> handler = new DefaultHandler<UsageStatement>($"{url}/usage_statements?year={year}&month={month}", authenticationTokens, accountID, 100, 1000)
+            {
+                SortOrder = SortOrder.None
+            };
             return handler.Get("*");
         }
 

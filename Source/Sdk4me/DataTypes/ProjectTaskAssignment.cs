@@ -7,7 +7,7 @@ namespace Sdk4me
     {
         private Person assignee;
         private Attachment attachment;
-        private int? plannedEffort;
+        private int? plannedEffortInMinutes;
         private AssignmentStatusType? status;
         private DateTime? waitingUntil;
 
@@ -66,17 +66,17 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_effort
+        #region planned_effort_in_minutes
 
-        [JsonProperty("planned_effort")]
-        public int? PlannedEffort
+        [JsonProperty("planned_effort_in_minutes")]
+        public int? PlannedEffortInMinutes
         {
-            get => plannedEffort;
+            get => plannedEffortInMinutes;
             set
             {
-                if (plannedEffort != value)
-                    AddIncludedDuringSerialization("planned_effort");
-                plannedEffort = value;
+                if (plannedEffortInMinutes != value)
+                    AddIncludedDuringSerialization("planned_effort_in_minutes");
+                plannedEffortInMinutes = value;
             }
         }
 

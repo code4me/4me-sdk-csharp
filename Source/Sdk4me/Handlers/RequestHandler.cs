@@ -2,10 +2,10 @@
 
 namespace Sdk4me
 {
-    public class RequestHandler : BaseHandler<Request>
+    public class RequestHandler : BaseHandler<Request, PredefinedRequestFilter>
     {
-        private static readonly string qualityUrl = "https://api.4me.qa/v1/requests";
-        private static readonly string productionUrl = "https://api.4me.com/v1/requests";
+        private const string qualityUrl = "https://api.4me.qa/v1/requests";
+        private const string productionUrl = "https://api.4me.com/v1/requests";
 
         public RequestHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
@@ -21,7 +21,7 @@ namespace Sdk4me
 
         public List<AffectedServiceLevelAgreement> GetAffectedServiceLevelAgreements(Request request, params string[] attributeNames)
         {
-            BaseHandler<AffectedServiceLevelAgreement> handler = new BaseHandler<AffectedServiceLevelAgreement>($"{URL}/{request.ID}/affected_slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<AffectedServiceLevelAgreement> handler = new DefaultHandler<AffectedServiceLevelAgreement>($"{URL}/{request.ID}/affected_slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -31,8 +31,10 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Request request, params string[] attributeNames)
         {
-            BaseHandler<Note> handler = new BaseHandler<Note>($"{URL}/{request.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            handler.SortOrder = SortOrder.CreatedAt;
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{request.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            {
+                SortOrder = SortOrder.CreatedAt
+            };
             return handler.Get(attributeNames);
         }
 
@@ -42,7 +44,7 @@ namespace Sdk4me
 
         public List<ConfigurationItem> GetConfigurationItems(Request request, params string[] attributeNames)
         {
-            BaseHandler<ConfigurationItem> handler = new BaseHandler<ConfigurationItem>($"{URL}/{request.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{URL}/{request.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -67,7 +69,7 @@ namespace Sdk4me
 
         public List<Request> GetGroupedRequests(Request request, params string[] attributeNames)
         {
-            BaseHandler<Request> handler = new BaseHandler<Request>($"{URL}/{request.ID}/grouped_requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{URL}/{request.ID}/grouped_requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
