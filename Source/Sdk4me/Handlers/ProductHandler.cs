@@ -8,16 +8,13 @@ namespace Sdk4me
 {
     public class ProductHandler : BaseHandler<Product, PredefinedProductFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/products";
-        private const string productionUrl = "https://api.4me.com/v1/products";
-
         public ProductHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/products", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public ProductHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/products", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

@@ -7,7 +7,7 @@ namespace Sdk4me
     {
         private ChangeCategoryType? category;
         private Person changeManager;
-        private ChangeType? changeType;
+        private string changeType;
         private bool disabled;
         private ChangeImpactType? impact;
         private string instructions;
@@ -61,7 +61,7 @@ namespace Sdk4me
         #region change_type
 
         [JsonProperty("change_type")]
-        public ChangeType? ChangeType
+        public string ChangeType
         {
             get => changeType;
             set

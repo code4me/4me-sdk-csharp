@@ -83,6 +83,16 @@ namespace Sdk4me
             }
         }
 
+        public ArchiveHandler Archive
+        {
+            get
+            {
+                if (!handlers.ContainsKey("archive"))
+                    handlers.Add("archive", new ArchiveHandler(authenticationTokens, accountID, environmentType, itemsPerRequest, maximumRecursiveRequests));
+                return (ArchiveHandler)handlers["archive"];
+            }
+        }
+
         public BroadcastHandler Broadcasts
         {
             get
@@ -110,6 +120,16 @@ namespace Sdk4me
                 if (!handlers.ContainsKey("changes"))
                     handlers.Add("changes", new ChangeHandler(authenticationTokens, accountID, environmentType, itemsPerRequest, maximumRecursiveRequests));
                 return (ChangeHandler)handlers["changes"];
+            }
+        }
+
+        public ChangeTypeHandler ChangeTypes
+        {
+            get
+            {
+                if (!handlers.ContainsKey("changeType"))
+                    handlers.Add("changeType", new ChangeTypeHandler(authenticationTokens, accountID, environmentType, itemsPerRequest, maximumRecursiveRequests));
+                return (ChangeTypeHandler)handlers["changeType"];
             }
         }
 

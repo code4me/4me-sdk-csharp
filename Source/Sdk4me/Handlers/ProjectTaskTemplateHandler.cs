@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class ProjectTaskTemplateHandler : BaseHandler<ProjectTaskTemplate, PredefinedProjectTaskTemplateFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/project_task_templates";
-        private const string productionUrl = "https://api.4me.com/v1/project_task_templates";
-
         public ProjectTaskTemplateHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/project_task_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public ProjectTaskTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/project_task_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

@@ -7,8 +7,6 @@ namespace Sdk4me
     {
         private readonly AuthenticationTokenCollection authenticationTokens = null;
         private readonly string accountID = null;
-        private readonly string qualityUrl = "https://api.4me.qa/v1/account";
-        private readonly string productionUrl = "https://api.4me.com/v1/account";
         private readonly string url = null;
         private int itemsPerRequest = 100;
         private int maximumRecursiveRequests = 50;
@@ -42,7 +40,7 @@ namespace Sdk4me
         {
             this.authenticationTokens = new AuthenticationTokenCollection(authenticationToken);
             this.accountID = accountID;
-            this.url = environmentType == EnvironmentType.Production ? productionUrl : qualityUrl;
+            this.url = $"{Common.GetBaseUrl(environmentType)}/v1/account";
             this.itemsPerRequest = itemsPerRequest;
             this.maximumRecursiveRequests = maximumRecursiveRequests;
         }
@@ -57,7 +55,7 @@ namespace Sdk4me
         {
             this.authenticationTokens = authenticationTokens;
             this.accountID = accountID;
-            this.url = environmentType == EnvironmentType.Production ? productionUrl : qualityUrl;
+            this.url = $"{Common.GetBaseUrl(environmentType)}/v1/account";
             this.itemsPerRequest = itemsPerRequest;
             this.maximumRecursiveRequests = maximumRecursiveRequests;
         }

@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class RequestTemplateHandler : BaseHandler<RequestTemplate, PredefinedRequestTemplateFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/request_templates";
-        private const string productionUrl = "https://api.4me.com/v1/request_templates";
-
         public RequestTemplateHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/request_templates",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public RequestTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/request_templates",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

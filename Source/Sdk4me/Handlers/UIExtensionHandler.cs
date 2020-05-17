@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class UIExtensionHandler : DefaultHandler<UIExtension>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/ui_extensions";
-        private const string productionUrl = "https://api.4me.com/v1/ui_extensions";
-
         public UIExtensionHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/ui_extensions",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public UIExtensionHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/ui_extensions",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

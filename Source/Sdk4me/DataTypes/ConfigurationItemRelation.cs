@@ -5,7 +5,7 @@ namespace Sdk4me
 {
     public class ConfigurationItemRelation : BaseItem
     {
-        private ConfigurationItem relatedConfigurationItemID;
+        private ConfigurationItem ci;
         private ConfigurationitemRelationType? relationType;
 
         #region created_at (override)
@@ -30,31 +30,31 @@ namespace Sdk4me
 
         #endregion
 
-        #region related_ci_id
+        #region ci and related_ci_id
 
-        [JsonProperty("related_ci_id"), Sdk4meIgnoreInFieldSelection()]
-        public ConfigurationItem RelatedConfigurationItemID
+        [JsonProperty("ci"), Sdk4meIgnoreInFieldSelection()]
+        public ConfigurationItem CI
         {
-            get => relatedConfigurationItemID;
+            get => ci;
             set
             {
-                if (relatedConfigurationItemID?.ID != value?.ID)
-                    AddIncludedDuringSerialization("related_ci_id_id");
-                relatedConfigurationItemID = value;
+                if (ci?.ID != value?.ID)
+                    AddIncludedDuringSerialization("related_ci_id");
+                ci = value;
             }
         }
 
-        [JsonProperty(PropertyName = "related_ci_id_id"), Sdk4meIgnoreInFieldSelection()]
-        private long? RelatedCiIdID
+        [JsonProperty(PropertyName = "related_ci_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? CIID
         {
-            get => (relatedConfigurationItemID != null ? relatedConfigurationItemID.ID : (long?)null);
+            get => (ci != null ? ci.ID : (long?)null);
         }
 
         #endregion
 
         #region relation_type
 
-        [JsonProperty("relation_type")]
+        [JsonProperty("relation_type"), Sdk4meIgnoreInFieldSelection()]
         public ConfigurationitemRelationType? RelationType
         {
             get => relationType;

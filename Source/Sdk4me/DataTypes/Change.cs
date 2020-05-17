@@ -8,7 +8,7 @@ namespace Sdk4me
     public class Change : BaseItem
     {
         private ChangeCategoryType? category;
-        private ChangeType? changeType;
+        private string changeType;
         private DateTime? completedAt;
         private ChangeCompletionReasonType? completionReason;
         private DateTime? completionTargetAt;
@@ -46,7 +46,7 @@ namespace Sdk4me
         #region change_type
 
         [JsonProperty("change_type")]
-        public ChangeType? ChangeType
+        public string ChangeType
         {
             get => changeType;
             set

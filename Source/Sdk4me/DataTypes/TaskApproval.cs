@@ -6,30 +6,8 @@ namespace Sdk4me
     public class TaskApproval : BaseItem
     {
         private Person approver;
-        private int? plannedEffortInMinutes;
+        private int? plannedEffort;
         private TaskApprovalStatus? status;
-
-        //#region created_at (override)
-
-        //[JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
-        //public override DateTime? CreatedAt
-        //{
-        //    get => base.CreatedAt;
-        //    internal set => base.CreatedAt = value;
-        //}
-
-        //#endregion
-
-        //#region updated_at (override)
-
-        //[JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
-        //public override DateTime? UpdatedAt
-        //{
-        //    get => base.UpdatedAt;
-        //    internal set => base.UpdatedAt = value;
-        //}
-
-        //#endregion
 
         #region approver
 
@@ -53,17 +31,17 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_effort_in_minutes
+        #region planned_effort
 
-        [JsonProperty("planned_effort_in_minutes")]
-        public int? PlannedEffortInMinutes
+        [JsonProperty("planned_effort")]
+        public int? PlannedEffort
         {
-            get => plannedEffortInMinutes;
+            get => plannedEffort;
             set
             {
-                if (plannedEffortInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_in_minutes");
-                plannedEffortInMinutes = value;
+                if (plannedEffort != value)
+                    AddIncludedDuringSerialization("planned_effort");
+                plannedEffort = value;
             }
         }
 

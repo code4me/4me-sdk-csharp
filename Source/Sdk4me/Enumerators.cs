@@ -11,7 +11,8 @@ namespace Sdk4me
     public enum EnvironmentType
     {
         Production,
-        Quality
+        Quality,
+        Demo
     }
 
     /// <summary>
@@ -304,6 +305,21 @@ namespace Sdk4me
         Other
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum MajorIncidentStatusType
+    {
+        [EnumMember(Value = "proposed")]
+        Proposed,
+        [EnumMember(Value = "rejected")]
+        Rejected,
+        [EnumMember(Value = "accepted")]
+        Accepted,
+        [EnumMember(Value = "resolved")]
+        Resolved,
+        [EnumMember(Value = "canceled")]
+        Canceled
+    }
+
     #endregion
 
     #region service instance
@@ -539,14 +555,14 @@ namespace Sdk4me
         Emergency
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ChangeType
-    {
-        [EnumMember(Value = "application_change")]
-        ApplicationChange,
-        [EnumMember(Value = "infrastructure_change")]
-        InfrastructureChange
-    }
+    //[JsonConverter(typeof(StringEnumConverter))]
+    //public enum ChangeType
+    //{
+    //    [EnumMember(Value = "application_change")]
+    //    ApplicationChange,
+    //    [EnumMember(Value = "infrastructure_change")]
+    //    InfrastructureChange
+    //}
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ChangeJustificationType
@@ -781,12 +797,12 @@ namespace Sdk4me
     [JsonConverter(typeof(StringEnumConverter))]
     public enum KnowledgeArticleStatusType
     {
-        [EnumMember(Value = "new")]
-        New,
-        [EnumMember(Value = "internal")]
-        Internal,
-        [EnumMember(Value = "public")]
-        Public,
+        [EnumMember(Value = "work_in_progres")]
+        WorkInProgress,
+        [EnumMember(Value = "not_validated")]
+        NotValidated,
+        [EnumMember(Value = "validated")]
+        Validated,
         [EnumMember(Value = "archived")]
         Archived
     }
@@ -1304,12 +1320,6 @@ namespace Sdk4me
         [EnumMember(Value = "sunday")]
         Sunday
     }
-
-    #endregion
-
-    #region predefined filters
-
-
 
     #endregion
 }

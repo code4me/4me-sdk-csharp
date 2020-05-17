@@ -2,7 +2,7 @@
 
 namespace Sdk4me
 {
-    public class TrashDetails
+    public class ActionDetails
     {
         private long id;
         private string hypertextReference;

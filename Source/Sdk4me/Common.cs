@@ -16,7 +16,8 @@ namespace Sdk4me
             "supplier_requestID",
             "systemID",
             "assetID",
-            "employeeID"
+            "employeeID",
+            "authenticationID"
         };
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Sdk4me
         /// <typeparam name="T">A System.Enum compatible type.</typeparam>
         /// <param name="filter">The System.Enum value.</param>
         /// <returns>A snake case filter value; or null if T is Sdk4me.PredefinedEmptyFilter</returns>
-        public static string ConvertTo4mePredefinedFilter<T>(T filter) where T : System.Enum
+        internal static string ConvertTo4mePredefinedFilter<T>(T filter) where T : System.Enum
         {
             if (typeof(T) == typeof(PredefinedDefaultFilter))
                 return null;
@@ -38,7 +39,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="attributeName">The attribute name to be converted.</param>
         /// <returns>A snake case attribute name value.</returns>
-        public static string ConvertTo4meAttributeName(string attributeName)
+        internal static string ConvertTo4meAttributeName(string attributeName)
         {
             //MAKE SURE IT IS NOT BLANK OR NULL
             if (string.IsNullOrWhiteSpace(attributeName))
@@ -68,7 +69,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="attributeNames">An array of attribute names to be converted.</param>
         /// <returns>An array of snake case attribute name values.</returns>
-        public static string[] ConvertTo4meAttributeNames(string[] attributeNames)
+        internal static string[] ConvertTo4meAttributeNames(string[] attributeNames)
         {
             if (attributeNames == null)
                 return null;
@@ -79,6 +80,26 @@ namespace Sdk4me
                 retval[i] = ConvertTo4meAttributeName(attributeNames[i]);
 
             return retval;
+        }
+
+        /// <summary>
+        /// Returns the base URL for a specific environment.
+        /// </summary>
+        /// <param name="environmentType">The environment type.</param>
+        /// <returns>The base URL for the specified environment.</returns>
+        internal static string GetBaseUrl(EnvironmentType environmentType)
+        {
+            switch (environmentType)
+            {
+                case EnvironmentType.Quality:
+                    return "https://api.4me.qa";
+
+                case EnvironmentType.Demo:
+                    return "https://api.4me-demo.com";
+
+                default:
+                    return "https://api.4me.com";
+            }
         }
     }
 }

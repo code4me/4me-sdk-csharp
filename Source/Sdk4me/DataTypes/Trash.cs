@@ -9,10 +9,9 @@ namespace Sdk4me
     public class Trash : BaseItem
     {
         [JsonExtensionData]
-        private readonly Dictionary<string, JToken> trashedDetails = null;
+        private readonly Dictionary<string, JToken> trashedDetails = new Dictionary<string, JToken>();
         private Person trashedBy;
         private string trashed;
-
 
         #region updated_at (override)
 
@@ -39,9 +38,9 @@ namespace Sdk4me
         #region trashed details
 
         [JsonIgnore, Sdk4meIgnoreInFieldSelection()]
-        public TrashDetails TrashedDetails
+        public ActionDetails Details
         {
-            get => JsonConvert.DeserializeObject<TrashDetails>(trashedDetails.First().Value.ToString());
+            get => trashedDetails.ContainsKey(trashed) ? JsonConvert.DeserializeObject<ActionDetails>(trashedDetails[trashed].ToString()) : null;
         }
 
         #endregion

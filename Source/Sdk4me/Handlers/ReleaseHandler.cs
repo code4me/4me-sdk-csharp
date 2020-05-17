@@ -5,16 +5,13 @@ namespace Sdk4me
 {
     public class ReleaseHandler : BaseHandler<Release, PredefinedReleaseFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/releases";
-        private const string productionUrl = "https://api.4me.com/v1/releases";
-
         public ReleaseHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public ReleaseHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

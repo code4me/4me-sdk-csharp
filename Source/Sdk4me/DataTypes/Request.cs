@@ -25,6 +25,7 @@ namespace Sdk4me
         private RequestImpactType? impact;
         private string internalNote;
         private KnowledgeArticle knowledgeArticle;
+        private MajorIncidentStatusType? majorIncidentStatus;
         private Person member;
         private bool newAssignment;
         private string nextTargetAt;
@@ -348,6 +349,22 @@ namespace Sdk4me
         private long? KnowledgeArticleID
         {
             get => (knowledgeArticle != null ? knowledgeArticle.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region major_incident_status
+
+        [JsonProperty("major_incident_status")]
+        public MajorIncidentStatusType? MajorIncidentStatus
+        {
+            get => majorIncidentStatus;
+            set
+            {
+                if (majorIncidentStatus != value)
+                    AddIncludedDuringSerialization("major_incident_status");
+                majorIncidentStatus = value;
+            }
         }
 
         #endregion

@@ -4,18 +4,41 @@ namespace Sdk4me
 {
     public class KnowledgeArticleHandler : BaseHandler<KnowledgeArticle, PredefinedKnowledgeArticleFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/knowledge_articles";
-        private const string productionUrl = "https://api.4me.com/v1/knowledge_articles";
-
         public KnowledgeArticleHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/knowledge_articles", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public KnowledgeArticleHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/knowledge_articles", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
+
+        #region service instance
+
+        public List<ServiceInstance> GetServiceInstances(KnowledgeArticle knowledgeArticle, params string[] attributeNames)
+        {
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{knowledgeArticle.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            return handler.Get(attributeNames);
+        }
+
+        public bool AddServiceInstance(KnowledgeArticle knowledgeArticle, ServiceInstance serviceInstance)
+        {
+            return CreateRelation(knowledgeArticle, "service_instances", serviceInstance);
+        }
+
+        public bool RemoveServiceInstance(KnowledgeArticle knowledgeArticle, ServiceInstance serviceInstance)
+        {
+            return DeleteRelation(knowledgeArticle, "service_instances", serviceInstance);
+        }
+
+        public bool RemoveAllServiceInstances(KnowledgeArticle knowledgeArticle)
+        {
+            return DeleteAllRelations(knowledgeArticle, "service_instances");
+        }
+
+
+        #endregion
 
         #region requests
 

@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class ServiceOfferingHandler : BaseHandler<ServiceOffering, PredefinedServiceOfferingFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/service_offerings";
-        private const string productionUrl = "https://api.4me.com/v1/service_offerings";
-
         public ServiceOfferingHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/service_offerings",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public ServiceOfferingHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/service_offerings",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

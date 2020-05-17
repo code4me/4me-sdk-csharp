@@ -4,8 +4,13 @@ namespace Sdk4me
 {
     public class KnowledgeArticle : BaseItem
     {
+        private bool coveredSpecialists;
+        private Person createdBy;
         private string description;
+        private bool endUsers;
         private string instructions;
+        private bool internalSpecialists;
+        private bool keyContacts;
         private string keywords;
         private string locale;
         private Service service;
@@ -14,6 +19,33 @@ namespace Sdk4me
         private KnowledgeArticleStatusType? status;
         private string subject;
         private int timesApplied;
+
+        #region covered_specialists
+
+        [JsonProperty("covered_specialists")]
+        public bool CoveredSpecialists
+        {
+            get => coveredSpecialists;
+            set
+            {
+                if (coveredSpecialists != value)
+                    AddIncludedDuringSerialization("disabled");
+                coveredSpecialists = value;
+            }
+        }
+
+        #endregion
+
+        #region created_by
+
+        [JsonProperty("created_by")]
+        public Person CreatedBy
+        {
+            get => createdBy;
+            internal set => createdBy = value;
+        }
+
+        #endregion
 
         #region description
 
@@ -31,6 +63,22 @@ namespace Sdk4me
 
         #endregion
 
+        #region end_users
+
+        [JsonProperty("end_users")]
+        public bool EndUsers
+        {
+            get => endUsers;
+            set
+            {
+                if (endUsers != value)
+                    AddIncludedDuringSerialization("disabled");
+                endUsers = value;
+            }
+        }
+
+        #endregion
+
         #region instructions
 
         [JsonProperty("instructions")]
@@ -42,6 +90,38 @@ namespace Sdk4me
                 if (instructions != value)
                     AddIncludedDuringSerialization("instructions");
                 instructions = value;
+            }
+        }
+
+        #endregion
+
+        #region internal_specialists
+
+        [JsonProperty("internal_specialists")]
+        public bool InternalSpecialists
+        {
+            get => internalSpecialists;
+            set
+            {
+                if (internalSpecialists != value)
+                    AddIncludedDuringSerialization("disabled");
+                internalSpecialists = value;
+            }
+        }
+
+        #endregion
+
+        #region key_contacts
+
+        [JsonProperty("key_contacts")]
+        public bool KeyContacts
+        {
+            get => keyContacts;
+            set
+            {
+                if (keyContacts != value)
+                    AddIncludedDuringSerialization("disabled");
+                keyContacts = value;
             }
         }
 

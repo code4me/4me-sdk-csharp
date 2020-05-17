@@ -17,8 +17,8 @@ namespace Sdk4me
         private Person manager;
         private string note;
         private ProjectPhase phase;
-        private int? plannedDurationInMinutes;
-        private int? plannedEffortInMinutes;
+        private int? plannedDuration;
+        private int? plannedEffort;
         private Project project;
         private int? requiredApprovals;
         private string source;
@@ -28,6 +28,7 @@ namespace Sdk4me
         private string subject;
         private Organization supplier;
         private string supplierRequestID;
+        private Team team;
         private ProjectTaskTemplate template;
         private bool urgent;
         private bool workHoursAre24x7;
@@ -179,33 +180,33 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_duration_in_minutes
+        #region planned_duration
 
-        [JsonProperty("planned_duration_in_minutes")]
-        public int? PlannedDurationInMinutes
+        [JsonProperty("planned_duration")]
+        public int? PlannedDuration
         {
-            get => plannedDurationInMinutes;
+            get => plannedDuration;
             set
             {
-                if (plannedDurationInMinutes != value)
-                    AddIncludedDuringSerialization("planned_duration_in_minutes");
-                plannedDurationInMinutes = value;
+                if (plannedDuration != value)
+                    AddIncludedDuringSerialization("planned_duration");
+                plannedDuration = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_in_minutes
+        #region planned_effort
 
-        [JsonProperty("planned_effort_in_minutes")]
-        public int? PlannedEffortInMinutes
+        [JsonProperty("planned_effort")]
+        public int? PlannedEffort
         {
-            get => plannedEffortInMinutes;
+            get => plannedEffort;
             set
             {
-                if (plannedEffortInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_in_minutes");
-                plannedEffortInMinutes = value;
+                if (plannedEffort != value)
+                    AddIncludedDuringSerialization("planned_effort");
+                plannedEffort = value;
             }
         }
 
@@ -363,6 +364,28 @@ namespace Sdk4me
                     AddIncludedDuringSerialization("supplier_requestID");
                 supplierRequestID = value;
             }
+        }
+
+        #endregion
+
+        #region team
+
+        [JsonProperty("team")]
+        public Team Team
+        {
+            get => team;
+            set
+            {
+                if (team?.ID != value?.ID)
+                    AddIncludedDuringSerialization("team_id");
+                team = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "team_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TeamID
+        {
+            get => (team != null ? team.ID : (long?)null);
         }
 
         #endregion

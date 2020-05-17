@@ -8,9 +8,12 @@ namespace Sdk4me
     {
         private Account account;
         private List<Address> addresses;
+        private string authenticationID;
+        private bool autoTranslation;
         private List<Contact> contacts;
         private float? costPerHour;
         private bool disabled;
+        private string doNotTranslateLanguages;
         private string employeeID;
         private string information;
         private string jobTitle;
@@ -56,6 +59,38 @@ namespace Sdk4me
 
         #endregion
 
+        #region authenticationID
+
+        [JsonProperty("authenticationID")]
+        public string AuthenticationID
+        {
+            get => authenticationID;
+            set
+            {
+                if (authenticationID != value)
+                    AddIncludedDuringSerialization("authenticationID");
+                authenticationID = value;
+            }
+        }
+
+        #endregion
+
+        #region auto_translation
+
+        [JsonProperty("auto_translation")]
+        public bool AutoTranslation
+        {
+            get => autoTranslation;
+            set
+            {
+                if (autoTranslation != value)
+                    AddIncludedDuringSerialization("auto_translation");
+                autoTranslation = value;
+            }
+        }
+
+        #endregion
+
         #region contacts
 
         [JsonProperty("contacts")]
@@ -78,6 +113,22 @@ namespace Sdk4me
                 if (costPerHour != value)
                     AddIncludedDuringSerialization("cost_per_hour");
                 costPerHour = value;
+            }
+        }
+
+        #endregion
+
+        #region do_not_translate_languages
+
+        [JsonProperty("do_not_translate_languages")]
+        public string DoNotTranslateLanguages
+        {
+            get => doNotTranslateLanguages;
+            set
+            {
+                if (doNotTranslateLanguages != value)
+                    AddIncludedDuringSerialization("do_not_translate_languages");
+                doNotTranslateLanguages = value;
             }
         }
 

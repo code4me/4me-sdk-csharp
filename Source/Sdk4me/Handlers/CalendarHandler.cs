@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class CalendarHandler : BaseHandler<Calendar, PredefinedCalendarFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/calendars";
-        private const string productionUrl = "https://api.4me.com/v1/calendars";
-
         public CalendarHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/calendars", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public CalendarHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/calendars", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

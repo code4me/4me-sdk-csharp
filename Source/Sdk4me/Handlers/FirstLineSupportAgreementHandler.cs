@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class FirstLineSupportAgreementHandler : BaseHandler<FirstLineSupportAgreement, PredefinedFirstLineSupportArgreementFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/flsas";
-        private const string productionUrl = "https://api.4me.com/v1/flsas";
-
         public FirstLineSupportAgreementHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/flsas", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public FirstLineSupportAgreementHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/flsas", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

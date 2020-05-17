@@ -4,16 +4,13 @@ namespace Sdk4me
 {
     public class ConfigurationItemHandler : BaseHandler<ConfigurationItem, PredefinedConfigurationItemFilter>
     {
-        private const string qualityUrl = "https://api.4me.qa/v1/cis";
-        private const string productionUrl = "https://api.4me.com/v1/cis";
-
         public ConfigurationItemHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
         public ConfigurationItemHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base(environmentType == EnvironmentType.Production ? productionUrl : qualityUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+            base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

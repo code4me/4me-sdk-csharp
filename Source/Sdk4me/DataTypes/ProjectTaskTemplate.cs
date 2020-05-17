@@ -17,12 +17,13 @@ namespace Sdk4me
         private EffortClass effortClass;
         private string instructions;
         private string note;
-        private int? plannedDurationInMinutes;
-        private int? plannedEffortProjectManagerInMinutes;
-        private int? plannedEffortRequesterInMinutes;
-        private int? plannedEffortRequesterBusinessUnitManagerInMinutes;
-        private int? plannedEffortRequesterManagerInMinutes;
-        private int? plannedEffortServiceOwnerInMinutes;
+        private int? plannedDuration;
+        private int? plannedEffort;
+        private int? plannedEffortProjectManager;
+        private int? plannedEffortRequester;
+        private int? plannedEffortRequesterBusinessUnitManager;
+        private int? plannedEffortRequesterManager;
+        private int? plannedEffortServiceOwner;
         private int? requiredApprovals;
         private string source;
         private string sourceID;
@@ -30,6 +31,7 @@ namespace Sdk4me
         private Organization supplier;
         private UIExtension uIExtension;
         private bool workHoursAre24x7;
+        private Team team;
 
         #region assign_to_project_manager
 
@@ -224,97 +226,113 @@ namespace Sdk4me
 
         #endregion
 
-        #region planned_duration_in_minutes
+        #region planned_duration
 
-        [JsonProperty("planned_duration_in_minutes")]
-        public int? PlannedDurationInMinutes
+        [JsonProperty("planned_duration")]
+        public int? PlannedDuration
         {
-            get => plannedDurationInMinutes;
+            get => plannedDuration;
             set
             {
-                if (plannedDurationInMinutes != value)
-                    AddIncludedDuringSerialization("planned_duration_in_minutes");
-                plannedDurationInMinutes = value;
+                if (plannedDuration != value)
+                    AddIncludedDuringSerialization("planned_duration");
+                plannedDuration = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_project_manager_in_minutes
+        #region planned_duration
 
-        [JsonProperty("planned_effort_project_manager_in_minutes")]
-        public int? PlannedEffortProjectManagerInMinutes
+        [JsonProperty("planned_effort")]
+        public int? PlannedEffort
         {
-            get => plannedEffortProjectManagerInMinutes;
+            get => plannedEffort;
             set
             {
-                if (plannedEffortProjectManagerInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_project_manager_in_minutes");
-                plannedEffortProjectManagerInMinutes = value;
+                if (plannedEffort != value)
+                    AddIncludedDuringSerialization("planned_duration");
+                plannedEffort = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_requester_in_minutes
+        #region planned_effort_project_manager
 
-        [JsonProperty("planned_effort_requester_in_minutes")]
-        public int? PlannedEffortRequesterInMinutes
+        [JsonProperty("planned_effort_project_manager")]
+        public int? PlannedEffortProjectManager
         {
-            get => plannedEffortRequesterInMinutes;
+            get => plannedEffortProjectManager;
             set
             {
-                if (plannedEffortRequesterInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_requester_in_minutes");
-                plannedEffortRequesterInMinutes = value;
+                if (plannedEffortProjectManager != value)
+                    AddIncludedDuringSerialization("planned_effort_project_manager");
+                plannedEffortProjectManager = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_requester_business_unit_manager_in_minutes
+        #region planned_effort_requester
 
-        [JsonProperty("planned_effort_requester_business_unit_manager_in_minutes")]
-        public int? PlannedEffortRequesterBusinessUnitManagerInMinutes
+        [JsonProperty("planned_effort_requester")]
+        public int? PlannedEffortRequester
         {
-            get => plannedEffortRequesterBusinessUnitManagerInMinutes;
+            get => plannedEffortRequester;
             set
             {
-                if (plannedEffortRequesterBusinessUnitManagerInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_requester_business_unit_manager_in_minutes");
-                plannedEffortRequesterBusinessUnitManagerInMinutes = value;
+                if (plannedEffortRequester != value)
+                    AddIncludedDuringSerialization("planned_effort_requester");
+                plannedEffortRequester = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_requester_manager_in_minutes
+        #region planned_effort_requester_business_unit_manager
 
-        [JsonProperty("planned_effort_requester_manager_in_minutes")]
-        public int? PlannedEffortRequesterManagerInMinutes
+        [JsonProperty("planned_effort_requester_business_unit_manager")]
+        public int? PlannedEffortRequesterBusinessUnitManager
         {
-            get => plannedEffortRequesterManagerInMinutes;
+            get => plannedEffortRequesterBusinessUnitManager;
             set
             {
-                if (plannedEffortRequesterManagerInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_requester_manager_in_minutes");
-                plannedEffortRequesterManagerInMinutes = value;
+                if (plannedEffortRequesterBusinessUnitManager != value)
+                    AddIncludedDuringSerialization("planned_effort_requester_business_unit_manager");
+                plannedEffortRequesterBusinessUnitManager = value;
             }
         }
 
         #endregion
 
-        #region planned_effort_service_owner_in_minutes
+        #region planned_effort_requester_manager
 
-        [JsonProperty("planned_effort_service_owner_in_minutes")]
-        public int? PlannedEffortServiceOwnerInMinutes
+        [JsonProperty("planned_effort_requester_manager")]
+        public int? PlannedEffortRequesterManager
         {
-            get => plannedEffortServiceOwnerInMinutes;
+            get => plannedEffortRequesterManager;
             set
             {
-                if (plannedEffortServiceOwnerInMinutes != value)
-                    AddIncludedDuringSerialization("planned_effort_service_owner_in_minutes");
-                plannedEffortServiceOwnerInMinutes = value;
+                if (plannedEffortRequesterManager != value)
+                    AddIncludedDuringSerialization("planned_effort_requester_manager");
+                plannedEffortRequesterManager = value;
+            }
+        }
+
+        #endregion
+
+        #region planned_effort_service_owner
+
+        [JsonProperty("planned_effort_service_owner")]
+        public int? PlannedEffortServiceOwner
+        {
+            get => plannedEffortServiceOwner;
+            set
+            {
+                if (plannedEffortServiceOwner != value)
+                    AddIncludedDuringSerialization("planned_effort_service_owner");
+                plannedEffortServiceOwner = value;
             }
         }
 
@@ -402,6 +420,28 @@ namespace Sdk4me
         private long? SupplierID
         {
             get => (supplier != null ? supplier.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region team
+
+        [JsonProperty("team")]
+        public Team Team
+        {
+            get => team;
+            set
+            {
+                if (team?.ID != value?.ID)
+                    AddIncludedDuringSerialization("team_id");
+                team = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "team_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TeamID
+        {
+            get => (team != null ? team.ID : (long?)null);
         }
 
         #endregion
