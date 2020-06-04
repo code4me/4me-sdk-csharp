@@ -94,7 +94,17 @@ namespace Sdk4me
         /// <summary>
         /// Greater than or equal to given value (not for enumerable values, strings and booleans)
         /// </summary>
-        GreaterThanOrEqualsTo
+        GreaterThanOrEqualsTo,
+
+        /// <summary>
+        /// Contains a value (not null)
+        /// </summary>
+        Present,
+
+        /// <summary>
+        /// Has no value 
+        /// </summary>
+        Empty
     }
 
     #region permissions

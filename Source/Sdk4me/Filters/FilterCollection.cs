@@ -104,6 +104,17 @@ namespace Sdk4me
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
+        public void Add(string attributeName, FilterCondition filter, Enum attributeValue)
+        {
+            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+        }
+
+        /// <summary>
+        /// Adds an object to the end of the collection.
+        /// </summary>
         /// <param name="item">The object to be added to the end of the collection.</param>
         public void Add(Filter item)
         {
@@ -225,6 +236,18 @@ namespace Sdk4me
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
         public void Insert(int index, string attributeName, FilterCondition filter, bool attributeValue)
+        {
+            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+        }
+
+        /// <summary>
+        /// Inserts an element into the collection at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which item should be inserted.</param>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
+        public void Insert(int index, string attributeName, FilterCondition filter, Enum attributeValue)
         {
             filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
         }

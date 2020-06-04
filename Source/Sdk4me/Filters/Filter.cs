@@ -143,6 +143,12 @@ namespace Sdk4me
                 case FilterCondition.NotIn:
                     return string.Format("{0}{1}{2}", Uri.EscapeDataString(this.AttributeName), "=!", Uri.EscapeDataString(this.AttributeValue));
 
+                case FilterCondition.Present:
+                    return string.Format("{0}{1}", Uri.EscapeDataString(this.AttributeName), "=!");
+
+                case FilterCondition.Empty:
+                    return string.Format("{0}{1}", Uri.EscapeDataString(this.AttributeName), "=");
+
                 default:
                     return string.Format("{0}{1}{2}", Uri.EscapeDataString(this.AttributeName), "=", Uri.EscapeDataString(this.AttributeValue));
             }
