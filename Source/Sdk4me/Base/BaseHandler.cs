@@ -8,7 +8,7 @@ using Newtonsoft.Json.Schema;
 
 namespace Sdk4me
 {
-    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : System.Enum
+    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
     {
         private readonly string url = null;
         private readonly string allAttributeNames = null;

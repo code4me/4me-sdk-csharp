@@ -1332,4 +1332,28 @@ namespace Sdk4me
     }
 
     #endregion
+
+    #region search
+
+    public enum SearchType
+    {
+        [EnumMember(Value = "ci")]
+        ConfigurationItem,
+        [EnumMember(Value = "knowledge-article")]
+        KnowledgeArticle,
+        [EnumMember(Value = "project-task")]
+        ProjectTask,
+        [EnumMember(Value = "request")]
+        Request,
+        [EnumMember(Value = "request-template")]
+        RequestTemplate,
+        [EnumMember(Value = "service")]
+        Service,
+        [EnumMember(Value = "service-instance")]
+        ServiceInstance,
+        [EnumMember(Value = "task")]
+        Task
+    }
+
+    #endregion
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Sdk4me
 {
@@ -8,7 +10,7 @@ namespace Sdk4me
         /// <summary>
         /// A list of hard coded conversion values.
         /// </summary>
-        private static readonly string[] hardCodedConversions = new string[] 
+        private static readonly string[] hardCodedConversions = new string[]
         {
             "sourceID",
             "supportID",
@@ -49,7 +51,7 @@ namespace Sdk4me
             for (int i = 0; i <= hardCodedConversions.GetUpperBound(0); i++)
                 if (attributeName.Equals(hardCodedConversions[i], StringComparison.InvariantCultureIgnoreCase))
                     return hardCodedConversions[i];
-       
+
             //CONVERT TO SNAKE CASE
             string retval = "";
             for (int i = 0; i < attributeName.Length; i++)
@@ -100,6 +102,14 @@ namespace Sdk4me
                 default:
                     return "https://api.4me.com";
             }
+        }
+
+        internal static string GetStringEnumValue<T>(T value) where T : Enum
+        {
+            var enumType = typeof(T);
+            var name = Enum.GetName(enumType, value);
+            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+            return enumMemberAttribute.Value;
         }
     }
 }
