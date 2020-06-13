@@ -32,7 +32,7 @@ namespace Sdk4me
         public int MaximumRecursiveRequests
         {
             get => maximumRecursiveRequests;
-            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 50 : value;
+            set => maximumRecursiveRequests = (value < 1 || value > 100) ? 5 : value;
         }
 
         /// <summary>
@@ -64,6 +64,40 @@ namespace Sdk4me
             this.itemsPerRequest = itemsPerRequest;
             this.maximumRecursiveRequests = maximumRecursiveRequests;
         }
+
+
+        public List<SearchResult> Get(string text, string onBehalfOf, string page, int recursiveRequestCount, params SearchType[] searchTypes)
+        {
+            //RETURN VALUE
+            List<SearchResult> retval = new List<SearchResult>();
+
+            //GET FILTERS
+            List<string> filters = new List<string>();
+            foreach (SearchType searchFilter in searchTypes)
+                filters.Add(Common.GetStringEnumValue(searchFilter));
+
+            //BUILD REQUEST URL
+            string requestURL = url;
+            if (string.IsNullOrWhiteSpace(page))
+                requestURL += string.Format("?per_page={0}", itemsPerRequest);
+            else
+                requestURL += string.Format("?page={0}&per_page={1}", page, itemsPerRequest);
+            requestURL += string.Format("&q={0}", Uri.EscapeDataString(text));
+            if (filters.Count > 0)
+                requestURL += string.Format("&types={0]", string.Join(",", filters));
+            if (!string.IsNullOrWhiteSpace(onBehalfOf))
+                requestURL += string.Format("&on_behalf_of={0]", Uri.EscapeDataString(onBehalfOf));
+
+
+            
+
+
+
+            //RETURN RESULT
+            return retval;
+        }
+
+
 
         /// <summary>
         /// Search for something.
