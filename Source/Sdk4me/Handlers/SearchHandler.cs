@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sdk4me
 {
@@ -66,104 +62,13 @@ namespace Sdk4me
         }
 
 
-        public List<SearchResult> Get(string text, string onBehalfOf, string page, int recursiveRequestCount, params SearchType[] searchTypes)
-        {
-            //RETURN VALUE
-            List<SearchResult> retval = new List<SearchResult>();
-
-            //GET FILTERS
-            List<string> filters = new List<string>();
-            foreach (SearchType searchFilter in searchTypes)
-                filters.Add(Common.GetStringEnumValue(searchFilter));
-
-            //BUILD REQUEST URL
-            string requestURL = url;
-            if (string.IsNullOrWhiteSpace(page))
-                requestURL += string.Format("?per_page={0}", itemsPerRequest);
-            else
-                requestURL += string.Format("?page={0}&per_page={1}", page, itemsPerRequest);
-            requestURL += string.Format("&q={0}", Uri.EscapeDataString(text));
-            if (filters.Count > 0)
-                requestURL += string.Format("&types={0]", string.Join(",", filters));
-            if (!string.IsNullOrWhiteSpace(onBehalfOf))
-                requestURL += string.Format("&on_behalf_of={0]", Uri.EscapeDataString(onBehalfOf));
-
-
-            
-
-
-
-            //RETURN RESULT
-            return retval;
-        }
-
-
-
-        /// <summary>
-        /// Search for something.
-        /// </summary>
-        /// <param name="text">The search filter.</param>
-        /// <param name="searchTypes">The search types.</param>
-        /// <returns>A search result collection.</returns>
         public List<SearchResult> Get(string text, params SearchType[] searchTypes)
         {
-            return Search(text, null, searchTypes);
-        }
+            if (authenticationTokens.Count() != 1)
+                throw new Sdk4meException("Search functionality with multiple tokens is not supported");
 
-        /// <summary>
-        /// Search for something.
-        /// </summary>
-        /// <param name="text">The search filter.</param>
-        /// <param name="onBehalfOf">Search on behalf of.</param>
-        /// <param name="searchTypes">The search types.</param>
-        /// <returns>A search result collection.</returns>
-        public List<SearchResult> Get(string text, Person onBehalfOf, params SearchType[] searchTypes)
-        {
-            if (onBehalfOf == null)
-                throw new ArgumentNullException(nameof(onBehalfOf));
-            return Search(text, onBehalfOf.ID.ToString(), searchTypes);
-        }
-
-        /// <summary>
-        /// Search for something.
-        /// </summary>
-        /// <param name="text">The search filter.</param>
-        /// <param name="onBehalfOf">Search on behalf of.</param>
-        /// <param name="searchTypes">The search types.</param>
-        /// <returns>A search result collection.</returns>
-        public List<SearchResult> Get(string text, string identifierOrPrimaryEmailAddress, params SearchType[] searchTypes)
-        {
-            if (string.IsNullOrWhiteSpace(identifierOrPrimaryEmailAddress))
-                throw new ArgumentException("Value cannot be null or blank", nameof(identifierOrPrimaryEmailAddress));
-            return Search(text, identifierOrPrimaryEmailAddress, searchTypes);
-        }
-
-        //TODO: Custom Serialization for search results - response header is different
-
-        private List<SearchResult> Search(string text, string onBehalfOf, params SearchType[] searchTypes)
-        {
-            string url = $"{this.url}?q={Uri.EscapeDataString(text)}";
-            List<string> filters = new List<string>();
-
-            if (searchTypes.GetUpperBound(0) == -1)
-            {
-                foreach (SearchType searchFilter in Enum.GetValues(typeof(SearchType)))
-                    filters.Add(Common.GetStringEnumValue(searchFilter));
-            }
-            else
-            {
-                foreach (SearchType searchFilter in searchTypes)
-                    filters.Add(Common.GetStringEnumValue(searchFilter));
-            }
-            url += "&types=" + string.Join(",", filters);
-
-            //if (!string.IsNullOrWhiteSpace(onBehalfOf))
-            //    url += "&on_behalf_of=" + Uri.EscapeDataString(onBehalfOf);
-
-            DefaultHandler <SearchResult> handler = new DefaultHandler<SearchResult>(url, authenticationTokens, accountID, 100, 1000);
-            handler.AlwaysAsList = true;
-
-            return handler.Get();
+            DefaultHandler<SearchResult> handler = new DefaultHandler<SearchResult>(url, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
+            return handler.Search(text, searchTypes);
         }
     }
 }

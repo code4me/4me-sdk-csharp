@@ -148,6 +148,8 @@ namespace Sdk4me
         ChatSlack,
         [EnumMember(Value = "chat_workchat")]
         ChatWorkChat,
+        [EnumMember(Value = "chat_teams")]
+        ChatTeams,
         [EnumMember(Value = "fax")]
         Fax,
         [EnumMember(Value = "home")]
