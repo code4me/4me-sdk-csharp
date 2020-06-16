@@ -21,7 +21,7 @@ namespace Sdk4me
         private string poNr;
         private Product product;
         private float? purchaseValue;
-        private float? rate;
+        private int? rate;
         private string remarks;
         private ConfigurationItemRuleSetType? ruleSet;
         private float? salvageValue;
@@ -280,7 +280,7 @@ namespace Sdk4me
         #region rate
 
         [JsonProperty("rate")]
-        public float? Rate
+        public int? Rate
         {
             get => rate;
             set

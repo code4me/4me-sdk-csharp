@@ -148,6 +148,8 @@ namespace Sdk4me
         ChatSlack,
         [EnumMember(Value = "chat_workchat")]
         ChatWorkChat,
+        [EnumMember(Value = "chat_teams")]
+        ChatTeams,
         [EnumMember(Value = "fax")]
         Fax,
         [EnumMember(Value = "home")]
@@ -1329,6 +1331,32 @@ namespace Sdk4me
         Saturday,
         [EnumMember(Value = "sunday")]
         Sunday
+    }
+
+    #endregion
+
+    #region search
+
+    public enum SearchType
+    {
+        [EnumMember(Value = "ci")]
+        ConfigurationItem,
+        [EnumMember(Value = "knowledge-article")]
+        KnowledgeArticle,
+        [EnumMember(Value = "project-task")]
+        ProjectTask,
+        [EnumMember(Value = "request")]
+        Request,
+        [EnumMember(Value = "request-template")]
+        RequestTemplate,
+        [EnumMember(Value = "service")]
+        Service,
+        [EnumMember(Value = "service-instance")]
+        ServiceInstance,
+        [EnumMember(Value = "task")]
+        Task,
+        [EnumMember(Value = "approval")]
+        Approval
     }
 
     #endregion

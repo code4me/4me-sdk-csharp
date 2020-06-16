@@ -13,7 +13,7 @@ namespace Sdk4me
         private string name;
         private string pictureUri;
         private string productID;
-        private float? rate;
+        private int? rate;
         private string remarks;
         private ProductRuleSetType? ruleSet;
         private Service service;
@@ -177,7 +177,7 @@ namespace Sdk4me
         #region rate
 
         [JsonProperty("rate")]
-        public float? Rate
+        public int? Rate
         {
             get => rate;
             set

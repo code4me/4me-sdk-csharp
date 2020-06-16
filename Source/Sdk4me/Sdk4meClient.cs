@@ -483,6 +483,16 @@ namespace Sdk4me
             }
         }
 
+        public SearchHandler Search
+        {
+            get
+            {
+                if (!handlers.ContainsKey("search"))
+                    handlers.Add("search", new SearchHandler(authenticationTokens, accountID, environmentType, itemsPerRequest, maximumRecursiveRequests));
+                return (SearchHandler)handlers["search"];
+            }
+        }
+
         /// <summary>
         /// Sets the amount of items returned in one request.
         /// </summary>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Sdk4me
 {
@@ -8,7 +10,7 @@ namespace Sdk4me
         /// <summary>
         /// A list of hard coded conversion values.
         /// </summary>
-        private static readonly string[] hardCodedConversions = new string[] 
+        private static readonly string[] hardCodedConversions = new string[]
         {
             "sourceID",
             "supportID",
@@ -26,12 +28,39 @@ namespace Sdk4me
         /// <typeparam name="T">A System.Enum compatible type.</typeparam>
         /// <param name="filter">The System.Enum value.</param>
         /// <returns>A snake case filter value; or null if T is Sdk4me.PredefinedEmptyFilter</returns>
-        internal static string ConvertTo4mePredefinedFilter<T>(T filter) where T : System.Enum
+        internal static string ConvertTo4mePredefinedFilter<T>(T filter) where T : Enum
         {
             if (typeof(T) == typeof(PredefinedDefaultFilter))
                 return null;
 
             return ConvertTo4meAttributeName(filter.ToString());
+        }
+
+        /// <summary>
+        /// Gets the enumerator member value for an enumerator.
+        /// </summary>
+        /// <typeparam name="T">A System.Enum compatible type.</typeparam>
+        /// <param name="value">The enumerator value.</param>
+        /// <returns>The enumerator member value.</returns>
+        internal static string ConvertTo4meAttributeName<T>(T value) where T : Enum
+        {
+            Type enumType = typeof(T);
+            string name = Enum.GetName(enumType, value);
+            return ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single().Value;
+        }
+
+        /// <summary>
+        /// Gets the enumerator member value for an array of enumerators.
+        /// </summary>
+        /// <typeparam name="T">A System.Enum compatible type.</typeparam>
+        /// <param name="value">An array of enumerators values.</param>
+        /// <returns>An array of enumerator member values.</returns>
+        internal static string[] ConvertTo4meAttributeName<T>(T[] values) where T : Enum
+        {
+            string[] retval = new string[values.Length];
+            for (int i = 0; i <= values.GetUpperBound(0); i++)
+                retval[i] = ConvertTo4meAttributeName(values[i]);
+            return retval;
         }
 
         /// <summary>
@@ -49,13 +78,13 @@ namespace Sdk4me
             for (int i = 0; i <= hardCodedConversions.GetUpperBound(0); i++)
                 if (attributeName.Equals(hardCodedConversions[i], StringComparison.InvariantCultureIgnoreCase))
                     return hardCodedConversions[i];
-       
+
             //CONVERT TO SNAKE CASE
             string retval = "";
             for (int i = 0; i < attributeName.Length; i++)
             {
-                bool isPrevCharLower = (i == 0) ? false : char.IsLower(attributeName[i - 1]);
-                bool isPrevCharNumber = (i == 0) ? false : char.IsNumber(attributeName[i - 1]);
+                bool isPrevCharLower = i != 0 && char.IsLower(attributeName[i - 1]);
+                bool isPrevCharNumber = i != 0 && char.IsNumber(attributeName[i - 1]);
 
                 if ((isPrevCharLower && char.IsUpper(attributeName[i])) || (isPrevCharNumber && char.IsUpper(attributeName[i])))
                     retval += "_";
@@ -76,7 +105,7 @@ namespace Sdk4me
 
             string[] retval = new string[attributeNames.Length];
 
-            for (int i = retval.GetLowerBound(0); i < attributeNames.Length; i++)
+            for (int i = 0; i <= attributeNames.GetUpperBound(0); i++)
                 retval[i] = ConvertTo4meAttributeName(attributeNames[i]);
 
             return retval;
@@ -101,5 +130,7 @@ namespace Sdk4me
                     return "https://api.4me.com";
             }
         }
+
+
     }
 }

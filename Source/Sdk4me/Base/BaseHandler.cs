@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
 
 namespace Sdk4me
 {
-    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : System.Enum
+    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
     {
         private readonly string url = null;
         private readonly string allAttributeNames = null;
@@ -286,7 +288,7 @@ namespace Sdk4me
             if (responseSorting != SortOrder.None)
                 requestURL += string.Format("&sort={0}", GetSortOrderStringValue(responseSorting));
             for (int i = 0; i < filters.Count; i++)
-                requestURL += string.Format("&{0}", filters[i].FilterCommand);
+                requestURL += string.Format("&{0}", filters[i].GetFilter());
             if (responseAttributeNames != null)
                 requestURL += string.Format("&fields={0}", responseAttributeNames);
 
@@ -345,6 +347,76 @@ namespace Sdk4me
             //CONTINUE NEXT REQUEST CYCLE
             if (page * itemsPerRequest < totalRecords)
                 retval.AddRange(Get(predefinedFilter, filters, page + 1, recursiveRequestCount - 1));
+
+            //RETURN RESULT
+            return retval;
+        }
+
+        internal List<SearchResult> Search(string text, params SearchType[] searchTypes)
+        {
+            //TODO: implement multi value on id's and enumerators for search and other types
+            return Search(text, null, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
+        }
+
+
+        /// <summary>
+        /// Use the search endpoint of the 4me web service.
+        /// </summary>
+        /// <param name="text">The text to search for.</param>
+        /// <param name="onBehalfOf">Search on behalf of.</param>
+        /// <param name="page">The page identifier value.</param>
+        /// <param name="recursiveRequestCount">The amount of recursive requests.</param>
+        /// <param name="searchTypes">Returns a list of search results.</param>
+        /// <returns>A collection of search items.</returns>
+        private List<SearchResult> Search(string text, string onBehalfOf, string page, int recursiveRequestCount, string types)
+        {
+            List<SearchResult> retval = new List<SearchResult>();
+            string nextPage = null;
+
+            //BUILD REQUEST URL
+            string requestURL = url;
+            if (string.IsNullOrWhiteSpace(page))
+                requestURL += string.Format("?per_page={0}", itemsPerRequest);
+            else
+                requestURL += string.Format("?page={0}&per_page={1}", page, itemsPerRequest);
+            requestURL += string.Format("&q={0}", Uri.EscapeDataString(text));
+            if (!string.IsNullOrWhiteSpace(types))
+                requestURL += string.Format("&types={0}", types);
+            if (!string.IsNullOrWhiteSpace(onBehalfOf))
+                requestURL += string.Format("&on_behalf_of={0}", onBehalfOf);
+
+            //WRITE DEBUG
+            DebugWriteLine("GET", requestURL);
+
+            //BUILD WEB REQUEST
+            try
+            {
+                HttpWebRequest request = BuildWebRequest(requestURL, "GET", false);
+                RegisterTime();
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    nextPage = response.Headers["X-Pagination-Next-Page"];
+
+                    using (StreamReader responseStream = new StreamReader(response.GetResponseStream()))
+                    {
+                        using (JsonTextReader jsonTextReader = new JsonTextReader(responseStream))
+                        {
+                            retval.AddRange((List<SearchResult>)serializer.Deserialize(jsonTextReader, typeof(List<SearchResult>)));
+                        }
+                    }
+
+                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
+                    PauseTime("GET");
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ConvertWebException(ex);
+            }
+
+            if (recursiveRequestCount > 1 && !string.IsNullOrWhiteSpace(nextPage))
+                retval.AddRange(Search(text, onBehalfOf, nextPage, recursiveRequestCount - 1, types));
 
             //RETURN RESULT
             return retval;
@@ -759,11 +831,12 @@ namespace Sdk4me
         /// <param name="requestUrl">The 4me API URL to be used.</param>
         /// <param name="method">The protocol method used in the web request.</param>
         /// <returns>A HttpWebRequest.</returns>
-        private HttpWebRequest BuildWebRequest(string requestUrl, string method)
+        private HttpWebRequest BuildWebRequest(string requestUrl, string method, bool useMultipleToken = true)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.PreAuthenticate = true;
-            currentToken = this.authenticationTokens.Get();
+            if (useMultipleToken || currentToken == null)
+                currentToken = this.authenticationTokens.Get();
             request.Headers["Authorization"] = currentToken?.BasicAuthenticationToken;
             request.ContentType = "application/json";
             request.Method = method;
