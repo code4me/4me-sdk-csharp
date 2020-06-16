@@ -40,6 +40,16 @@ namespace Sdk4me
         /// </summary>
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
+        public void Add(string attributeName, FilterCondition filter)
+        {
+            filterItems.Add(new Filter(attributeName, filter));
+        }
+
+        /// <summary>
+        /// Adds an object to the end of the collection.
+        /// </summary>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
         public void Add(string attributeName, FilterCondition filter, string attributeValue)
         {
@@ -63,7 +73,7 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, short attributeValue)
+        public void Add(string attributeName, FilterCondition filter, params short[] attributeValue)
         {
             filterItems.Add(new Filter(attributeName, filter, attributeValue));
         }
@@ -74,7 +84,7 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, int attributeValue)
+        public void Add(string attributeName, FilterCondition filter, params int[] attributeValue)
         {
             filterItems.Add(new Filter(attributeName, filter, attributeValue));
         }
@@ -85,7 +95,7 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, long attributeValue)
+        public void Add(string attributeName, FilterCondition filter, params long[] attributeValue)
         {
             filterItems.Add(new Filter(attributeName, filter, attributeValue));
         }
@@ -107,7 +117,7 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
-        public void Add(string attributeName, FilterCondition filter, Enum attributeValue)
+        public void Add(string attributeName, FilterCondition filter, params Enum[] attributeValue)
         {
             filterItems.Add(new Filter(attributeName, filter, attributeValue));
         }
@@ -174,6 +184,17 @@ namespace Sdk4me
         /// <param name="index">The zero-based index at which item should be inserted.</param>
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
+        public void Insert(int index, string attributeName, FilterCondition filter)
+        {
+            filterItems.Insert(index, new Filter(attributeName, filter));
+        }
+
+        /// <summary>
+        /// Inserts an element into the collection at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which item should be inserted.</param>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
         public void Insert(int index, string attributeName, FilterCondition filter, string attributeValue)
         {
@@ -199,9 +220,9 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, short attributeValue)
+        public void Insert(int index, string attributeName, FilterCondition filter, params short[] attributeValues)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
         }
 
         /// <summary>
@@ -211,9 +232,9 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, int attributeValue)
+        public void Insert(int index, string attributeName, FilterCondition filter, params int[] attributeValues)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
         }
 
         /// <summary>
@@ -223,9 +244,9 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, long attributeValue)
+        public void Insert(int index, string attributeName, FilterCondition filter, params long[] attributeValues)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
         }
 
         /// <summary>
@@ -247,9 +268,9 @@ namespace Sdk4me
         /// <param name="attributeName">The attribute name.</param>
         /// <param name="filter">The filter to be used.</param>
         /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, Enum attributeValue)
+        public void Insert(int index, string attributeName, FilterCondition filter, params Enum[] attributeValues)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
         }
 
         /// <summary>

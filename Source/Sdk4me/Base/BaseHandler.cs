@@ -288,7 +288,7 @@ namespace Sdk4me
             if (responseSorting != SortOrder.None)
                 requestURL += string.Format("&sort={0}", GetSortOrderStringValue(responseSorting));
             for (int i = 0; i < filters.Count; i++)
-                requestURL += string.Format("&{0}", filters[i].FilterCommand);
+                requestURL += string.Format("&{0}", filters[i].GetFilter());
             if (responseAttributeNames != null)
                 requestURL += string.Format("&fields={0}", responseAttributeNames);
 
@@ -355,10 +355,7 @@ namespace Sdk4me
         internal List<SearchResult> Search(string text, params SearchType[] searchTypes)
         {
             //TODO: implement multi value on id's and enumerators for search and other types
-            List<string> filters = new List<string>();
-            foreach (SearchType searchFilter in searchTypes)
-                filters.Add(Common.GetStringEnumValue(searchFilter));
-            return Search(text, null, null, maximumRecursiveRequests, string.Join(",", filters));
+            return Search(text, null, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
         }
 
 

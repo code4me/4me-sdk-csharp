@@ -1354,7 +1354,9 @@ namespace Sdk4me
         [EnumMember(Value = "service-instance")]
         ServiceInstance,
         [EnumMember(Value = "task")]
-        Task
+        Task,
+        [EnumMember(Value = "approval")]
+        Approval
     }
 
     #endregion
