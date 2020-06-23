@@ -45,7 +45,7 @@ A custom, Sdk4meException, is implemented. It will convert an API exception resp
 ```csharp
 using Sdk4me;
 
-AuthenticationToken token = new AuthenticationToken("G1p2I49i9ZliUc05urZuWkl...", AuthenticationType.BearerAuthentication);
+AuthenticationToken token = new AuthenticationToken("G1p2I4iUc05urZuWkl...", AuthenticationType.BearerAuthentication);
 Sdk4meClient client = new Sdk4meClient(token);
 Person me = client.People.GetMe();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
