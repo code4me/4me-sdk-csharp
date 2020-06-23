@@ -352,12 +352,17 @@ namespace Sdk4me
             return retval;
         }
 
-        internal List<SearchResult> Search(string text, params SearchType[] searchTypes)
+        /// <summary>
+        /// Use the search endpoint of the 4me web service. 
+        /// </summary>
+        /// <param name="text">The text to search for.</param>
+        /// <param name="onBehalfOf">Search on behalf of.</param>
+        /// <param name="searchTypes">Returns a list of search results.</param>
+        /// <returns>A collection of search items.</returns>
+        internal List<SearchResult> Search(string text, string onBehalf = null, params SearchType[] searchTypes)
         {
-            //TODO: implement multi value on id's and enumerators for search and other types
-            return Search(text, null, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
+            return Search(text, onBehalf, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
         }
-
 
         /// <summary>
         /// Use the search endpoint of the 4me web service.
@@ -383,7 +388,7 @@ namespace Sdk4me
             if (!string.IsNullOrWhiteSpace(types))
                 requestURL += string.Format("&types={0}", types);
             if (!string.IsNullOrWhiteSpace(onBehalfOf))
-                requestURL += string.Format("&on_behalf_of={0}", onBehalfOf);
+                requestURL += string.Format("&on_behalf={0}", Uri.EscapeDataString(onBehalfOf));
 
             //WRITE DEBUG
             DebugWriteLine("GET", requestURL);
@@ -837,7 +842,7 @@ namespace Sdk4me
             request.PreAuthenticate = true;
             if (useMultipleToken || currentToken == null)
                 currentToken = this.authenticationTokens.Get();
-            request.Headers["Authorization"] = currentToken?.BasicAuthenticationToken;
+            request.Headers["Authorization"] = currentToken?.Token;
             request.ContentType = "application/json";
             request.Method = method;
             if (!string.IsNullOrWhiteSpace(accountID))

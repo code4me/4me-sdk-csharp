@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class Release : BaseItem
     {
+        private List<Attachment> attachments;
         private DateTime? completedAt;
         private ReleaseCompletionReasonType? completionReason;
         private DateTime? completionTargetAt;
@@ -15,6 +17,19 @@ namespace Sdk4me
         private string sourceID;
         private ReleaseStatusType? status;
         private string subject;
+        private UIExtension uIExtension;
+        private CustomFieldCollection customFields;
+
+        #region attachments
+
+        [JsonProperty("attachments")]
+        public List<Attachment> Attachments
+        {
+            get => attachments;
+            internal set => attachments = value;
+        }
+
+        #endregion
 
         #region completed_at
 
@@ -162,9 +177,66 @@ namespace Sdk4me
 
         #endregion
 
+        #region ui_extension
+
+        [JsonProperty("ui_extension")]
+        public UIExtension UIExtension
+        {
+            get => uIExtension;
+            set
+            {
+                if (uIExtension?.ID != value?.ID)
+                    AddIncludedDuringSerialization("ui_extension_id");
+                uIExtension = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "ui_extension_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? UIExtensionID
+        {
+            get => (uIExtension != null ? uIExtension.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region custom_fields
+
+        [JsonProperty("custom_fields")]
+        private List<CustomField> CustomFieldsPrivate
+        {
+            get => customFields?.GetCustomFields();
+            set
+            {
+                customFields = new CustomFieldCollection(value);
+                customFields.Changed += CustomFields_Changed;
+            }
+        }
+
+        [JsonIgnore(), Sdk4meIgnoreInFieldSelection()]
+        public CustomFieldCollection CustomFields
+        {
+            get
+            {
+                if (customFields == null)
+                {
+                    customFields = new CustomFieldCollection();
+                    customFields.Changed += CustomFields_Changed;
+                }
+                return customFields;
+            }
+        }
+
+        private void CustomFields_Changed(object sender, EventArgs e)
+        {
+            AddIncludedDuringSerialization("custom_fields");
+        }
+
+        #endregion
+
         internal override void ResetIncludedDuringSerialization()
         {
             manager?.ResetIncludedDuringSerialization();
+            uIExtension?.ResetIncludedDuringSerialization();
             base.ResetIncludedDuringSerialization();
         }
     }

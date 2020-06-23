@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -51,6 +50,8 @@ namespace Sdk4me
         private string supportDomain;
         private Team team;
         private RequestTemplate template;
+        private int? timeSpent;
+        private EffortClass timeSpentEffortClass;
         private bool urgent;
         private DateTime? waitingUntil;
         private CustomFieldCollection customFields;
@@ -810,6 +811,44 @@ namespace Sdk4me
 
         #endregion
 
+        #region time_spent
+
+        [JsonProperty("time_spent"), Sdk4meIgnoreInFieldSelection()]
+        public int? TimeSpent
+        {
+            get => timeSpent;
+            set
+            {
+                if (timeSpent != value)
+                    AddIncludedDuringSerialization("time_spent");
+                timeSpent = value;
+            }
+        }
+
+        #endregion
+
+        #region time_spent_effort_class
+
+        [JsonProperty("time_spent_effort_class"), Sdk4meIgnoreInFieldSelection()]
+        public EffortClass TimeSpentEffortClass
+        {
+            get => timeSpentEffortClass;
+            set
+            {
+                if (timeSpentEffortClass?.ID != value?.ID)
+                    AddIncludedDuringSerialization("effort_class_id");
+                timeSpentEffortClass = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "time_spent_effort_class_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TimeSpentEffortClassID
+        {
+            get => (timeSpentEffortClass != null ? timeSpentEffortClass.ID : (long?)null);
+        }
+
+        #endregion
+
         #region waiting_until
 
         [JsonProperty("waiting_until")]
@@ -881,6 +920,7 @@ namespace Sdk4me
             supplier?.ResetIncludedDuringSerialization();
             team?.ResetIncludedDuringSerialization();
             template?.ResetIncludedDuringSerialization();
+            timeSpentEffortClass?.ResetIncludedDuringSerialization();
             base.ResetIncludedDuringSerialization();
         }
     }

@@ -14,6 +14,7 @@ namespace Sdk4me
         private bool copySubjectToRequest;
         private int? desiredCompletion;
         private bool disabled;
+        private EffortClass effortClass;
         private bool endUsers;
         private RequestImpactType? impact;
         private string instructions;
@@ -211,6 +212,28 @@ namespace Sdk4me
                     AddIncludedDuringSerialization("disabled");
                 disabled = value;
             }
+        }
+
+        #endregion
+
+        #region effort_class
+
+        [JsonProperty("effort_class")]
+        public EffortClass EffortClass
+        {
+            get => effortClass;
+            set
+            {
+                if (effortClass?.ID != value?.ID)
+                    AddIncludedDuringSerialization("effort_class_id");
+                effortClass = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "effort_class_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? EffortClassID
+        {
+            get => (effortClass != null ? effortClass.ID : (long?)null);
         }
 
         #endregion
@@ -593,6 +616,7 @@ namespace Sdk4me
             changeManager?.ResetIncludedDuringSerialization();
             changeTemplate?.ResetIncludedDuringSerialization();
             cI?.ResetIncludedDuringSerialization();
+            effortClass?.ResetIncludedDuringSerialization();
             member?.ResetIncludedDuringSerialization();
             service?.ResetIncludedDuringSerialization();
             supplier?.ResetIncludedDuringSerialization();

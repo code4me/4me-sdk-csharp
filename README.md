@@ -6,17 +6,20 @@ The C# SDK for 4me uses the [Newtonsoft.Json framework](https://github.com/James
 
 
 # Getting started
-The solution has 2 main objects, BaseItem which is a data type with the minimum object attributes for a 4me data object; and the BaseHandler<T> which contains all methods to handle http requests and responses to and from the 4me REST API.
+The solution has 2 main objects, BaseItem which is a data type with the minimum object attributes for a 4me data object; and the BaseHandler which contains all methods to handle http requests and responses to and from the 4me REST API.
 
-Almost all known datatypes and handlers have been implemented. As an example, the solution contains a data object Person and a handler PeopleHandler. The data type contains all known and documented attributes, the handler exposes methods for all known functions on the /people endpoint.
+Almost all data types and handlers have been implemented. As an example, the solution contains a data object Person and a handler PeopleHandler. The data type contains all known and documented attributes, the handler exposes methods for all known functions on the /people endpoint.
 
 Finally, there is an overall class, the Sdk4meClient, which implemented all available handlers. Using it like this is simple and can be done with very limited amount of code.
 
-### BaseHandler\<T> Built-in features
+### BaseHandler Built-in features
 The default implementation has some built-in functionality to optimize the 4me REST API usage.
 
+#### Authentication
+The BaseHandler supports both authentication types, API Tokens and Personal Access Tokens. More information about authentication can be found on the [4me developer website](https://developer.4me.com/v1/#authentication).
+
 #### Filtering
-The Get method allows filtering and response field selection. More information about filters can be found on the [4me developer website](https://developer.4me.com/v1/general/filtering/).
+The Get method allows predefined filtering, custom filtering and response field selection. More information about filters can be found on the [4me developer website](https://developer.4me.com/v1/general/filtering/).
 
 #### Field selection
 The Get method allows filtering and response attribute selection. If no fields are specified it will return the default field selection as documented on the [4me developer website](https://developer.4me.com/v1/general/field_selection/). To return all field values an asterisk (*) can be used.
@@ -28,7 +31,7 @@ The API requests returning a collection are always paginated. A single API reque
 Filtering and field selection require references to fields. All endpoints and fields are in snake case; the BaseHandler will convert camel case to snake case.
 
 #### Multi-token support
-The BaseHandler supports the usage of multiple authentication tokens. The amount of API request is limited to 3600 request per hour, which in some cases in not enough. When multiple tokens are used the BaseHandler will always use the token with the highest remaining request value. More information about Rate Limiting can be found on the [4me developer website](https://developer.4me.com/v1/#rate-limiting).
+The BaseHandler supports the usage of multiple authentication tokens. The amount of API request is limited to 3600 request per hour, which in some cases in not enough. When multiple tokens are used, the BaseHandler will always use the token with the highest remaining request value. More information about Rate Limiting can be found on the [4me developer website](https://developer.4me.com/v1/#rate-limiting).
 
 #### Response timing
 The 4me REST API limits the amount of requests to 10 per second.  The BaseHandler will keep track of the response time and lock the process to make sure it takes at lease 116 milliseconds per request.
@@ -42,7 +45,7 @@ A custom, Sdk4meException, is implemented. It will convert an API exception resp
 ```csharp
 using Sdk4me;
 
-AuthenticationToken token = new AuthenticationToken("3a4e4590179263839...");
+AuthenticationToken token = new AuthenticationToken("G1p2I49i9ZliUc05urZuWkl...", AuthenticationType.BearerAuthentication);
 Sdk4meClient client = new Sdk4meClient(token);
 Person me = client.People.GetMe();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
@@ -83,20 +86,29 @@ var projectTaskTemplates = client.ProjectTaskTemplates.Get(PredefinedProjectTask
 foreach (ProjectTaskTemplate projectTaskTemplate in projectTaskTemplates)
 	Console.WriteLine(projectTaskTemplate.Subject);
 ```
-
 This will return all enabled [project task templates](https://developer.4me.com/v1/project_task_templates/) using a predefined filter.
+
+```csharp
+var people = client.People.Get(PredefinedPeopleFilter.Directory, new Filter("sourceID", FilterCondition.Present));
+foreach (Person person in people)
+    Console.WriteLine(person.PrimaryEmail);
+```
+This will return all [people](https://developer.4me.com/v1/people/) registered in the directory account of the support domain account from which the data is requested that have a sourceID value.
 
 ### Field selection
 ```csharp
 List<Person> people = client.People.Get("CustomFields", "Manager", "SourceID");
 foreach (Person person in people)
     Console.WriteLine(person);
+```
+This will return all people but only load the CustomFields, Manager and SourceID properties values.
 
+```csharp
 people = client.People.Get("*");
 foreach (Person person in people)
     Console.WriteLine(person);
 ```
-The first Get will return all people but only load the CustomFields, Manager and SourceID properties. The second one returns all people and load all properties.
+This will return all people with load all properties values.
 
 ### Creating a record
 ```csharp
@@ -145,11 +157,10 @@ catch (Sdk4meException ex)
 ```csharp
 AuthenticationTokenCollection tokens = new AuthenticationTokenCollection()
 {
-    "3a4e4590179263839...",
-    "4b4e4590179263839...",
-    "5d4e4590179263839...",
-    "6c4e4590179263839..."
+    new AuthenticationToken("3a4e4590179263839...", AuthenticationType.BasicAuthentication),
+    new AuthenticationToken("G1p2I49i9ZliUc05urZuWkl...", AuthenticationType.BearerAuthentication),
 };
 var client1 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Production);
-var client2 = new Sdk4meClient(tokens, "account-name-2", EnvironmentType.Quality);
+var client2 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Quality);
+var client3 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Demo);
 ```

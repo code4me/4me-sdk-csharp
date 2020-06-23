@@ -6,8 +6,8 @@ namespace Sdk4me
 {
     public sealed class AuthenticationToken
     {
-        private readonly string token = null;
-        private readonly string basicAuthenticationToken = null;
+        private readonly AuthenticationType authenticationTokenType = AuthenticationType.BasicAuthentication;
+        private readonly string authenticationToken = null;
         private int requestLimit = 3600;
         private int requestsRemaining = 3600;
         private DateTime requestReset = DateTime.MinValue;
@@ -18,8 +18,14 @@ namespace Sdk4me
         /// </summary>
         internal string Token
         {
-            get => token;
+            get => authenticationToken;
         }
+
+        internal AuthenticationType TokenType
+        {
+            get => authenticationTokenType;
+        }
+
 
         /// <summary>
         /// The maximum number of requests permitted to make in the current rate limit window.
@@ -59,21 +65,28 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Returns a basic authentication value for this 4me authentication token.
+        /// Create a new instance of an AuthenticationToken.
         /// </summary>
-        internal string BasicAuthenticationToken
+        /// <param name="authenticationToken">The 4me authentication token.</param>
+        [Obsolete]
+        public AuthenticationToken(string authenticationToken)
         {
-            get => basicAuthenticationToken;
+            this.authenticationTokenType = AuthenticationType.BasicAuthentication;
+            this.authenticationToken = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationToken + ":."));
         }
 
         /// <summary>
         /// Create a new instance of an AuthenticationToken.
         /// </summary>
-        /// <param name="token">The 4me authentication token.</param>
-        public AuthenticationToken(string token)
+        /// <param name="authenticationToken">The 4me authentication token.</param>
+        /// <param name="authenticationType">The 4me authentication token type.</param>
+        public AuthenticationToken(string authenticationToken, AuthenticationType authenticationType)
         {
-            this.token = token;
-            this.basicAuthenticationToken = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(token + ":."));
+            if (authenticationType == AuthenticationType.BearerAuthentication)
+                this.authenticationToken = "Bearer " + authenticationToken;
+            else
+                this.authenticationToken = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationToken + ":."));
+            this.authenticationTokenType = authenticationType;
         }
     }
 

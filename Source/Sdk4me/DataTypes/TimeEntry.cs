@@ -12,6 +12,7 @@ namespace Sdk4me
         private bool deleted;
         private string description;
         private EffortClass effortClass;
+        private int? noteID;
         private Organization organization;
         private Person person;
         private Problem problem;
@@ -136,6 +137,22 @@ namespace Sdk4me
         private long? TaskEffortClassID
         {
             get => (effortClass != null ? effortClass.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region note_id
+
+        [JsonProperty("note_id")]
+        public int? NoteID
+        {
+            get => noteID;
+            set
+            {
+                if (noteID != value)
+                    AddIncludedDuringSerialization("note_id");
+                noteID = value;
+            }
         }
 
         #endregion

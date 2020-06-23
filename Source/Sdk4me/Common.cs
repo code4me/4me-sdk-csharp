@@ -19,7 +19,8 @@ namespace Sdk4me
             "systemID",
             "assetID",
             "employeeID",
-            "authenticationID"
+            "authenticationID",
+            "financialID"
         };
 
         /// <summary>

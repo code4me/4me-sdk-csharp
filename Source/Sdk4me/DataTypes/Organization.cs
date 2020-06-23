@@ -12,6 +12,7 @@ namespace Sdk4me
         private Organization businessUnitOrganization;
         private List<Contact> contacts;
         private bool disabled;
+        private string financialID;
         private Person manager;
         private string name;
         private Organization parent;
@@ -95,6 +96,22 @@ namespace Sdk4me
                 if (disabled != value)
                     AddIncludedDuringSerialization("disabled");
                 disabled = value;
+            }
+        }
+
+        #endregion
+
+        #region name
+
+        [JsonProperty("financialID")]
+        public string FinancialID
+        {
+            get => financialID;
+            set
+            {
+                if (financialID != value)
+                    AddIncludedDuringSerialization("financialID");
+                financialID = value;
             }
         }
 

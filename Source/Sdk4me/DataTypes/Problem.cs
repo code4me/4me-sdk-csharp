@@ -27,6 +27,8 @@ namespace Sdk4me
         private Organization supplier;
         private string supplierRequestID;
         private Team team;
+        private int? timeSpent;
+        private EffortClass timeSpentEffortClass;
         private UIExtension uIExtension;
         private bool urgent;
         private DateTime? waitingUntil;
@@ -391,6 +393,44 @@ namespace Sdk4me
 
         #endregion
 
+        #region time_spend
+
+        [JsonProperty("time_spent"), Sdk4meIgnoreInFieldSelection()]
+        public int? TimeSpent
+        {
+            get => timeSpent;
+            set
+            {
+                if (timeSpent != value)
+                    AddIncludedDuringSerialization("time_spent");
+                timeSpent = value;
+            }
+        }
+
+        #endregion
+
+        #region time_spent_effort_class
+
+        [JsonProperty("time_spent_effort_class"), Sdk4meIgnoreInFieldSelection()]
+        public EffortClass TimeSpentEffortClass
+        {
+            get => timeSpentEffortClass;
+            set
+            {
+                if (timeSpentEffortClass?.ID != value?.ID)
+                    AddIncludedDuringSerialization("effort_class_id");
+                timeSpentEffortClass = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "time_spent_effort_class_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TimeSpentEffortClassID
+        {
+            get => (timeSpentEffortClass != null ? timeSpentEffortClass.ID : (long?)null);
+        }
+
+        #endregion
+
         #region ui_extension
 
         [JsonProperty("ui_extension")]
@@ -505,6 +545,7 @@ namespace Sdk4me
             service?.ResetIncludedDuringSerialization();
             supplier?.ResetIncludedDuringSerialization();
             team?.ResetIncludedDuringSerialization();
+            timeSpentEffortClass?.ResetIncludedDuringSerialization();
             uIExtension?.ResetIncludedDuringSerialization();
             base.ResetIncludedDuringSerialization();
         }

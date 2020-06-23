@@ -16,6 +16,22 @@ namespace Sdk4me
     }
 
     /// <summary>
+    /// The 4me authentication type.
+    /// </summary>
+    public enum AuthenticationType
+    {
+        /// <summary>
+        /// API Token using Basic Authentication
+        /// </summary>
+        BasicAuthentication,
+
+        /// <summary>
+        /// Personal Access Token using Bearer Authentication.
+        /// </summary>
+        BearerAuthentication
+    }
+
+    /// <summary>
     /// Sort order for the 4me web request.
     /// </summary>
     public enum SortOrder
@@ -906,6 +922,10 @@ namespace Sdk4me
     {
         [EnumMember(Value = "request_template")]
         RequestTemplate,
+        [EnumMember(Value = "problem")]
+        Problem,
+        [EnumMember(Value = "release")]
+        Release,
         [EnumMember(Value = "change_template")]
         ChangeTemplate,
         [EnumMember(Value = "task_template")]
@@ -924,8 +944,8 @@ namespace Sdk4me
         Person,
         [EnumMember(Value = "site")]
         Site,
-        [EnumMember(Value = "problem")]
-        Problem
+        [EnumMember(Value = "risk")]
+        Risk
     }
 
     #endregion

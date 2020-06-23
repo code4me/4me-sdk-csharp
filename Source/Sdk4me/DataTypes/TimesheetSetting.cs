@@ -13,6 +13,7 @@ namespace Sdk4me
         private EffortClass problemEffortClass;
         private EffortClass projectTaskEffortClass;
         private EffortClass requestEffortClass;
+        private bool requireNote;
         private string source;
         private string sourceID;
         private EffortClass taskEffortClass;
@@ -180,6 +181,22 @@ namespace Sdk4me
         private long? RequestEffortClassID
         {
             get => (requestEffortClass != null ? requestEffortClass.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region require_note
+
+        [JsonProperty("require_note")]
+        public bool RequireNote
+        {
+            get => requireNote;
+            set
+            {
+                if (requireNote != value)
+                    AddIncludedDuringSerialization("require_note");
+                requireNote = value;
+            }
         }
 
         #endregion

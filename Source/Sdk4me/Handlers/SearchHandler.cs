@@ -61,14 +61,35 @@ namespace Sdk4me
             this.maximumRecursiveRequests = maximumRecursiveRequests;
         }
 
-
+        /// <summary>
+        /// Search for through the most relevant 4me records.
+        /// </summary>
+        /// <param name="text">The search query.</param>
+        /// <param name="searchTypes">The types to search for; or all types if none are specified.</param>
+        /// <returns>A list of search results.</returns>
         public List<SearchResult> Get(string text, params SearchType[] searchTypes)
         {
             if (authenticationTokens.Count() != 1)
                 throw new Sdk4meException("Search functionality with multiple tokens is not supported");
 
             DefaultHandler<SearchResult> handler = new DefaultHandler<SearchResult>(url, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
-            return handler.Search(text, searchTypes);
+            return handler.Search(text, null, searchTypes);
+        }
+
+        /// <summary>
+        /// Search for through the most relevant 4me records.
+        /// </summary>
+        /// <param name="text">The search query.</param>
+        /// <param name="onBehalf">Search on behalf of the person by using the person ID or primary email address.</param>
+        /// <param name="searchTypes">The types to search for; or all types if none are specified.</param>
+        /// <returns>A list of search results.</returns>
+        public List<SearchResult> Get(string text, string onBehalf, params SearchType[] searchTypes)
+        {
+            if (authenticationTokens.Count() != 1)
+                throw new Sdk4meException("Search functionality with multiple tokens is not supported");
+
+            DefaultHandler<SearchResult> handler = new DefaultHandler<SearchResult>(url, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
+            return handler.Search(text, onBehalf, searchTypes);
         }
     }
 }

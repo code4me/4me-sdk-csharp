@@ -7,17 +7,21 @@ namespace Sdk4me
 {
     public class Change : BaseItem
     {
+        private int actualEffort;
         private ChangeCategoryType? category;
         private string changeType;
         private DateTime? completedAt;
         private ChangeCompletionReasonType? completionReason;
         private DateTime? completionTargetAt;
+        private int? effortIndication;
         private ChangeImpactType impact;
         private ChangeJustificationType? justification;
         private Person manager;
         private string note;
+        private int plannedEffort;
         private Project project;
         private Release release;
+        private int remainingEffort;
         private Service service;
         private string source;
         private string sourceID;
@@ -26,6 +30,17 @@ namespace Sdk4me
         private string subject;
         private ChangeTemplate template;
         private CustomFieldCollection customFields;
+
+        #region actual_effort
+
+        [JsonProperty("actual_effort")]
+        public int ActualEffort
+        {
+            get => actualEffort;
+            internal set => actualEffort = value;
+        }
+
+        #endregion
 
         #region category
 
@@ -97,6 +112,17 @@ namespace Sdk4me
 
         #endregion
 
+        #region effort_indication
+
+        [JsonProperty("effort_indication")]
+        public int? EffortIndication
+        {
+            get => effortIndication;
+            internal set => effortIndication = value;
+        }
+
+        #endregion
+
         #region impact
 
         [JsonProperty("impact")]
@@ -162,6 +188,17 @@ namespace Sdk4me
 
         #endregion
 
+        #region planned_effort
+
+        [JsonProperty("planned_effort")]
+        public int PlannedEffort
+        {
+            get => plannedEffort;
+            internal set => plannedEffort = value;
+        }
+
+        #endregion
+
         #region project
 
         [JsonProperty("project")]
@@ -202,6 +239,17 @@ namespace Sdk4me
         private long? ReleaseID
         {
             get => (release != null ? release.ID : (long?)null);
+        }
+
+        #endregion
+
+        #region remaining_effort
+
+        [JsonProperty("remaining_effort")]
+        public int RemainingEffort
+        {
+            get => remainingEffort;
+            internal set => remainingEffort = value;
         }
 
         #endregion

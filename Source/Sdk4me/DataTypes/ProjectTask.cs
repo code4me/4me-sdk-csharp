@@ -30,6 +30,8 @@ namespace Sdk4me
         private string supplierRequestID;
         private Team team;
         private ProjectTaskTemplate template;
+        private int? timeSpent;
+        private EffortClass timeSpentEffortClass;
         private bool urgent;
         private bool workHoursAre24x7;
         private CustomFieldCollection customFields;
@@ -412,6 +414,44 @@ namespace Sdk4me
 
         #endregion
 
+        #region time_spend
+
+        [JsonProperty("time_spent"), Sdk4meIgnoreInFieldSelection()]
+        public int? TimeSpent
+        {
+            get => timeSpent;
+            set
+            {
+                if (timeSpent != value)
+                    AddIncludedDuringSerialization("time_spent");
+                timeSpent = value;
+            }
+        }
+
+        #endregion
+
+        #region time_spent_effort_class
+
+        [JsonProperty("time_spent_effort_class"), Sdk4meIgnoreInFieldSelection()]
+        public EffortClass TimeSpentEffortClass
+        {
+            get => timeSpentEffortClass;
+            set
+            {
+                if (timeSpentEffortClass?.ID != value?.ID)
+                    AddIncludedDuringSerialization("effort_class_id");
+                timeSpentEffortClass = value;
+            }
+        }
+
+        [JsonProperty(PropertyName = "time_spent_effort_class_id"), Sdk4meIgnoreInFieldSelection()]
+        private long? TimeSpentEffortClassID
+        {
+            get => (timeSpentEffortClass != null ? timeSpentEffortClass.ID : (long?)null);
+        }
+
+        #endregion
+
         #region urgent
 
         [JsonProperty("urgent")]
@@ -489,6 +529,7 @@ namespace Sdk4me
             project?.ResetIncludedDuringSerialization();
             supplier?.ResetIncludedDuringSerialization();
             template?.ResetIncludedDuringSerialization();
+            timeSpentEffortClass?.ResetIncludedDuringSerialization();
             base.ResetIncludedDuringSerialization();
         }
     }
