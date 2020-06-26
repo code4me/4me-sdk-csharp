@@ -14,7 +14,6 @@ namespace Sdk4me
 
         private Person archivedBy;
         private string archived;
-        //private string nodeID;
 
         #region updated_at (override)
 
@@ -56,17 +55,6 @@ namespace Sdk4me
             get => archivedBy;
             internal set => archivedBy = value;
         }
-
-        #endregion
-
-        #region nodeID
-
-        //[JsonProperty(PropertyName = "nodeID")]
-        //public string NodeID
-        //{
-        //    get => nodeID;
-        //    internal set => nodeID = value;
-        //}
 
         #endregion
 

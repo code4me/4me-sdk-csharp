@@ -80,16 +80,19 @@ namespace Sdk4me
         /// Search for through the most relevant 4me records.
         /// </summary>
         /// <param name="text">The search query.</param>
-        /// <param name="onBehalf">Search on behalf of the person by using the person ID or primary email address.</param>
+        /// <param name="onBehalfOf">Search on behalf of the person by using the person ID or primary email address.</param>
         /// <param name="searchTypes">The types to search for; or all types if none are specified.</param>
         /// <returns>A list of search results.</returns>
-        public List<SearchResult> Get(string text, string onBehalf, params SearchType[] searchTypes)
+        public List<SearchResult> Get(string text, Person onBehalfOf, params SearchType[] searchTypes)
         {
             if (authenticationTokens.Count() != 1)
                 throw new Sdk4meException("Search functionality with multiple tokens is not supported");
 
+            if (onBehalfOf == null)
+                throw new ArgumentNullException(nameof(onBehalfOf));
+
             DefaultHandler<SearchResult> handler = new DefaultHandler<SearchResult>(url, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests);
-            return handler.Search(text, onBehalf, searchTypes);
+            return handler.Search(text, onBehalfOf, searchTypes);
         }
     }
 }

@@ -56,5 +56,29 @@ namespace Sdk4me
         }
 
         #endregion
+
+        #region archive, trash and restore
+
+        public Problem Archive(Problem problem)
+        {
+            return CustomWebRequest($"{problem.ID}/archive", "POST");
+        }
+
+        public Problem Trash(Problem problem)
+        {
+            return CustomWebRequest($"{problem.ID}/trash", "POST");
+        }
+
+        public Problem Restore(Archive archive)
+        {
+            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+        }
+
+        public Problem Restore(Trash trash)
+        {
+            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+        }
+
+        #endregion
     }
 }

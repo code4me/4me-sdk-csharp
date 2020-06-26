@@ -277,6 +277,9 @@ namespace Sdk4me
             if (recursiveRequestCount == 0)
                 return retval;
 
+            if (page < 0)
+                page = 0;
+
             //VALIDATE FILTERS
             if (filters == null)
                 filters = new FilterCollection();
@@ -359,9 +362,9 @@ namespace Sdk4me
         /// <param name="onBehalfOf">Search on behalf of.</param>
         /// <param name="searchTypes">Returns a list of search results.</param>
         /// <returns>A collection of search items.</returns>
-        internal List<SearchResult> Search(string text, string onBehalf = null, params SearchType[] searchTypes)
+        internal List<SearchResult> Search(string text, Person onBehalfOf = null, params SearchType[] searchTypes)
         {
-            return Search(text, onBehalf, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
+            return Search(text, onBehalfOf, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
         }
 
         /// <summary>
@@ -373,10 +376,14 @@ namespace Sdk4me
         /// <param name="recursiveRequestCount">The amount of recursive requests.</param>
         /// <param name="searchTypes">Returns a list of search results.</param>
         /// <returns>A collection of search items.</returns>
-        private List<SearchResult> Search(string text, string onBehalfOf, string page, int recursiveRequestCount, string types)
+        private List<SearchResult> Search(string text, Person onBehalfOf, string page, int recursiveRequestCount, string types)
         {
             List<SearchResult> retval = new List<SearchResult>();
             string nextPage = null;
+
+            //VALIDATE
+            if (string.IsNullOrWhiteSpace(text))
+                throw new NullReferenceException(nameof(text));
 
             //BUILD REQUEST URL
             string requestURL = url;
@@ -387,8 +394,8 @@ namespace Sdk4me
             requestURL += string.Format("&q={0}", Uri.EscapeDataString(text));
             if (!string.IsNullOrWhiteSpace(types))
                 requestURL += string.Format("&types={0}", types);
-            if (!string.IsNullOrWhiteSpace(onBehalfOf))
-                requestURL += string.Format("&on_behalf={0}", Uri.EscapeDataString(onBehalfOf));
+            if (onBehalfOf != null)
+                requestURL += string.Format("&on_behalf={0}", onBehalfOf.ID);
 
             //WRITE DEBUG
             DebugWriteLine("GET", requestURL);
@@ -435,6 +442,10 @@ namespace Sdk4me
         public bool Delete(T item)
         {
             bool retval = false;
+
+            //IS NULL
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}/{1}", url, item.ID);
@@ -515,6 +526,10 @@ namespace Sdk4me
             //DEFINE DEFAULT VALUE
             T retval = default;
 
+            //IS NULL
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}", url);
 
@@ -581,6 +596,10 @@ namespace Sdk4me
         {
             //DEFINE DEFAULT VALUE
             T retval = default;
+
+            //IS NULL
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
 
             //BUILD REQUEST URL
             string requestURL = string.Format("{0}/{1}", url, item.ID);
@@ -650,9 +669,7 @@ namespace Sdk4me
             T retval = default;
 
             //BUILD REQUEST URL
-            if (appendToURL.StartsWith("/"))
-                appendToURL = appendToURL.Remove(0, 1);
-            string requestURL = string.Format("{0}/{1}", url, appendToURL);
+            string requestURL = string.Format("{0}/{1}", url.TrimEnd('/'), appendToURL.TrimEnd('/'));
 
             //WRITE DEBUG
             DebugWriteLine(method, requestURL);
@@ -747,6 +764,14 @@ namespace Sdk4me
         {
             bool retval = false;
 
+            //IS NULL
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            //IS NULL
+            if (relationItem == null)
+                throw new ArgumentNullException(nameof(relationItem));
+
             if (string.IsNullOrWhiteSpace(relationObjectType))
             {
                 DebugWriteLine("DELETE", "relationObjectType is null or blank.");
@@ -792,6 +817,10 @@ namespace Sdk4me
         protected bool DeleteAllRelations(T item, string relationObjectType)
         {
             bool retval = false;
+
+            //IS NULL
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
 
             if (string.IsNullOrWhiteSpace(relationObjectType))
             {

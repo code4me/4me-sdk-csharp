@@ -90,5 +90,28 @@ namespace Sdk4me
 
         #endregion
 
+        #region archive, trash and restore
+
+        public Change Archive(Change change)
+        {
+            return CustomWebRequest($"{change.ID}/archive", "POST");
+        }
+
+        public Change Trash(Change change)
+        {
+            return CustomWebRequest($"{change.ID}/trash", "POST");
+        }
+
+        public Change Restore(Archive archive)
+        {
+            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+        }
+
+        public Change Restore(Trash trash)
+        {
+            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+        }
+
+        #endregion
     }
 }
