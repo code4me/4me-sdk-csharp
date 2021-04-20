@@ -546,6 +546,7 @@ namespace Sdk4me
             try
             {
                 HttpWebRequest request = BuildWebRequest(requestURL, "POST");
+                request.ContentType = "application/json";
                 item.RemoveIdentifierDuringSerialization();
                 serializer.ContractResolver = new Sdk4meContractResolver(item.IncludeDuringSerialization);
                 RegisterTime();
@@ -617,6 +618,7 @@ namespace Sdk4me
             try
             {
                 HttpWebRequest request = BuildWebRequest(requestURL, "PATCH");
+                request.ContentType = "application/json";
                 item.IncludeIdentifierDuringSerialization();
                 serializer.ContractResolver = new Sdk4meContractResolver(item.IncludeDuringSerialization);
                 RegisterTime();
@@ -872,7 +874,6 @@ namespace Sdk4me
             if (useMultipleToken || currentToken == null)
                 currentToken = this.authenticationTokens.Get();
             request.Headers["Authorization"] = currentToken?.Token;
-            request.ContentType = "application/json";
             request.Method = method;
             if (!string.IsNullOrWhiteSpace(accountID))
                 request.Headers["X-4me-Account"] = this.accountID;
