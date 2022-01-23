@@ -5,12 +5,12 @@ namespace Sdk4me
 {
     public class ReleaseHandler : BaseHandler<Release, PredefinedReleaseFilter>
     {
-        public ReleaseHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ReleaseHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ReleaseHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ReleaseHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -19,7 +19,7 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Release release, params string[] attributeNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{release.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{release.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
             {
                 SortOrder = SortOrder.CreatedAt
             };
@@ -32,7 +32,7 @@ namespace Sdk4me
 
         public List<Change> GetChanges(Release release, params string[] attributeNames)
         {
-            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{URL}/{release.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{this.URL}/{release.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -40,7 +40,7 @@ namespace Sdk4me
         {
             return CreateRelation(release, "changes", change);
         }
-    
+
         public bool RemoveChange(Release release, Change change)
         {
             return DeleteRelation(release, "changes", change);

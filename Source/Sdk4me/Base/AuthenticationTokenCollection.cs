@@ -46,7 +46,7 @@ namespace Sdk4me
         /// <param name="authenticationType">The 4me authentication token type.</param>
         public void Add(string authenticationToken, AuthenticationType authenticationType)
         {
-            this.Add(new AuthenticationToken(authenticationToken, authenticationType));
+            Add(new AuthenticationToken(authenticationToken, authenticationType));
         }
 
         /// <summary>

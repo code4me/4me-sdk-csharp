@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -77,8 +76,10 @@ namespace Sdk4me
 
             //CHECK IF THIS ATTRIBUTE HAS A HARD CODED CONVERSION VALUE
             for (int i = 0; i <= hardCodedConversions.GetUpperBound(0); i++)
-                if (attributeName.Equals(hardCodedConversions[i], StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (attributeName.Equals(hardCodedConversions[i], StringComparison.OrdinalIgnoreCase))
                     return hardCodedConversions[i];
+            }
 
             //CONVERT TO SNAKE CASE
             string retval = "";

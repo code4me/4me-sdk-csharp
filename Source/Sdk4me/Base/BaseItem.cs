@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -48,7 +47,7 @@ namespace Sdk4me
             if (string.IsNullOrWhiteSpace(allAttributeNames))
             {
                 List<string> allAttributes = new List<string>();
-                Type type = this.GetType();
+                Type type = GetType();
                 PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 for (int i = 0; i <= properties.GetUpperBound(0); i++)
                 {
@@ -56,7 +55,7 @@ namespace Sdk4me
                     {
                         allAttributes.Add(jsonPropertyAttribute.PropertyName ?? properties[i].Name);
                     }
-                        
+
                 }
                 this.allAttributeNames = string.Join(",", allAttributes);
             }
@@ -69,7 +68,7 @@ namespace Sdk4me
         /// <returns>True if there is at least one attribute to be serialized; otherwise false.</returns>
         internal bool ShouldSendApiRequest()
         {
-            if (includedDuringSerialization == null)
+            if (includedDuringSerialization is null)
                 return false;
             else if (includedDuringSerialization.Count == 0)
                 return false;

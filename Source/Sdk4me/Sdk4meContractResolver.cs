@@ -15,7 +15,7 @@ namespace Sdk4me
         public HashSet<string> IncludedProperties
         {
             get => includedProperties;
-            set => includedProperties = (value ?? new HashSet<string>());
+            set => includedProperties = value ?? new HashSet<string>();
         }
 
         /// <summary>

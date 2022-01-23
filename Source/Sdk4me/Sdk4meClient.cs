@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
@@ -31,12 +32,18 @@ namespace Sdk4me
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication object.</param>
-        /// <param name="accountID">The 4me account identifier, in case no accountID specified (null) it used account in which the token's identity exists.</param>
+        /// <param name="accountID">The 4me account name.</param>
         /// <param name="environmentType">The 4me environment.</param>
         /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
         /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
-        public Sdk4meClient(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        public Sdk4meClient(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
         {
+            if (authenticationToken is null)
+                throw new ArgumentNullException(nameof(authenticationToken));
+
+            if (string.IsNullOrWhiteSpace(accountID))
+                throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
+
             this.authenticationTokens = new AuthenticationTokenCollection(authenticationToken);
             this.accountID = accountID;
             this.environmentType = environmentType;
@@ -49,13 +56,16 @@ namespace Sdk4me
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
         /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
-        /// <param name="accountID">The 4me account identifier, in case no accountID specified (null) it used account in which the token's identity exists.</param>
+        /// <param name="accountID">The 4me account name.</param>
         /// <param name="environmentType">The 4me environment.</param>
         /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
         /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
-        public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
         {
-            this.authenticationTokens = authenticationTokens;
+            if (string.IsNullOrWhiteSpace(accountID))
+                throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
+
+            this.authenticationTokens = authenticationTokens ?? throw new ArgumentNullException(nameof(authenticationTokens));
             this.accountID = accountID;
             this.environmentType = environmentType;
             this.itemsPerRequest = itemsPerRequest;

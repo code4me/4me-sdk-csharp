@@ -4,12 +4,12 @@ namespace Sdk4me
 {
     public class KnowledgeArticleHandler : BaseHandler<KnowledgeArticle, PredefinedKnowledgeArticleFilter>
     {
-        public KnowledgeArticleHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public KnowledgeArticleHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/knowledge_articles", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public KnowledgeArticleHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public KnowledgeArticleHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/knowledge_articles", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetServiceInstances(KnowledgeArticle knowledgeArticle, params string[] attributeNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{knowledgeArticle.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{knowledgeArticle.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -44,7 +44,7 @@ namespace Sdk4me
 
         public List<Request> GetRequests(KnowledgeArticle knowledgeArticle, params string[] attributeNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{URL}/{knowledgeArticle.ID}/requests", this.AuthenticationTokens, this.AccountID, ItemsPerRequest, MaximumRecursiveRequests);
+            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{knowledgeArticle.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -54,31 +54,31 @@ namespace Sdk4me
 
         public List<KnowledgeArticleTranslation> GetTranslations(KnowledgeArticle knowledgeArticle, params string[] attributeNames)
         {
-            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{this.URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
         public KnowledgeArticleTranslation AddTranslation(KnowledgeArticle knowledgeArticle, KnowledgeArticleTranslation knowledgeArticleTranslation)
         {
-            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{this.URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Insert(knowledgeArticleTranslation);
         }
 
         public KnowledgeArticleTranslation UpdateTranslation(KnowledgeArticle knowledgeArticle, KnowledgeArticleTranslation knowledgeArticleTranslation)
         {
-            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{this.URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Update(knowledgeArticleTranslation);
         }
 
         public bool DeleteTranslation(KnowledgeArticle knowledgeArticle, KnowledgeArticleTranslation knowledgeArticleTranslation)
         {
-            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{this.URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Delete(knowledgeArticleTranslation);
         }
 
         public bool DeleteAllTranslations(KnowledgeArticle knowledgeArticle)
         {
-            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<KnowledgeArticleTranslation> handler = new DefaultHandler<KnowledgeArticleTranslation>($"{this.URL}/{knowledgeArticle.ID}/translations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.DeleteAll();
         }
 

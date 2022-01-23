@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 
 namespace Sdk4me
@@ -65,10 +64,10 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Create a new instance of an AuthenticationToken.
+        /// Create a new instance of an <see cref="AuthenticationToken"/>.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
-        [Obsolete]
+        [Obsolete("This constructor is deprecated, use AuthenticationToken(string authenticationToken, AuthenticationType authenticationType).")]
         public AuthenticationToken(string authenticationToken)
         {
             this.authenticationTokenType = AuthenticationType.BasicAuthentication;
@@ -76,7 +75,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Create a new instance of an AuthenticationToken.
+        /// Create a new instance of an <see cref="AuthenticationToken"/>.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
         /// <param name="authenticationType">The 4me authentication token type.</param>

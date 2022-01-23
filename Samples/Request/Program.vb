@@ -4,7 +4,7 @@ Module Program
 
     Public Sub Main()
         'AUTHENTICATION TOKENS
-        Dim token As New AuthenticationToken("31fd31927a8b...")
+        Dim token As New AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication)
 
         'INIT CLIENT
         Dim client As New Sdk4meClient(token, "wna", EnvironmentType.Quality)
@@ -24,7 +24,7 @@ Module Program
         Try
             'SEARCH FILTER
             Dim filters As New FilterCollection
-            filters.Add(New Filter("UpdatedAt", FilterCondition.GreaterThanOrEqualsTo, DateTime.Now.AddDays(-30)))
+            filters.Add(New Filter("UpdatedAt", FilterCondition.GreaterThanOrEqualsTo, Date.Now.AddDays(-30)))
 
             'SEARCH AND ONLY LOAD SPECIFIED ATTRIBUTES
             Dim requests = client.Requests.Get(filters)

@@ -4,17 +4,17 @@
     {
         private readonly string baseURL;
 
-        public TrashHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/trash",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TrashHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/trash", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
-            baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
+            this.baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
             this.SortOrder = SortOrder.CreatedAt;
         }
 
-        public TrashHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/trash",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TrashHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/trash", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
-            baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
+            this.baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
             this.SortOrder = SortOrder.CreatedAt;
         }
 

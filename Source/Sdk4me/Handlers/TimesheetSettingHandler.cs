@@ -4,13 +4,13 @@ namespace Sdk4me
 {
     public class TimesheetSettingHandler : BaseHandler<TimesheetSetting, PredefinedTimesheetSettingFilter>
     {
-        public TimesheetSettingHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimesheetSettingHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TimesheetSettingHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimesheetSettingHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<EffortClass> GetEffortClasses(TimesheetSetting timesheetSetting, params string[] attributeNames)
         {
-            DefaultHandler<EffortClass> handler = new DefaultHandler<EffortClass>($"{URL}/{timesheetSetting.ID}/effort_classes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<EffortClass> handler = new DefaultHandler<EffortClass>($"{this.URL}/{timesheetSetting.ID}/effort_classes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -31,7 +31,7 @@ namespace Sdk4me
         {
             return DeleteRelation(timesheetSetting, "effort_classes", effortClass);
         }
-    
+
         public bool RemoveAllEffortClasses(TimesheetSetting timesheetSetting)
         {
             return DeleteAllRelations(timesheetSetting, "effort_classes");
@@ -43,7 +43,7 @@ namespace Sdk4me
 
         public List<Organization> GetOrganizations(TimesheetSetting timesheetSetting, params string[] attributeNames)
         {
-            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{URL}/{timesheetSetting.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{this.URL}/{timesheetSetting.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -56,7 +56,7 @@ namespace Sdk4me
         {
             return DeleteRelation(timesheetSetting, "organizations", organization);
         }
-    
+
         public bool RemoveAllOrganizations(TimesheetSetting timesheetSetting)
         {
             return DeleteAllRelations(timesheetSetting, "organizations");

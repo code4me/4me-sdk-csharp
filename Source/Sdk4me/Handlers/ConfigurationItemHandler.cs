@@ -4,12 +4,12 @@ namespace Sdk4me
 {
     public class ConfigurationItemHandler : BaseHandler<ConfigurationItem, PredefinedConfigurationItemFilter>
     {
-        public ConfigurationItemHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ConfigurationItemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ConfigurationItemHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ConfigurationItemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -18,31 +18,31 @@ namespace Sdk4me
 
         public List<ConfigurationItemRelation> GetConfigurationItemRelations(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
         public ConfigurationItemRelation AddConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Insert(configurationItemRelation);
         }
 
         public ConfigurationItemRelation UpdateConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Update(configurationItemRelation);
         }
 
         public bool DeleteConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Delete(configurationItemRelation);
         }
 
         public bool DeleteAllConfigurationItemRelations(ConfigurationItem configurationItem)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.DeleteAll();
         }
 
@@ -52,7 +52,7 @@ namespace Sdk4me
 
         public List<Contract> GetContracts(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<Contract> handler = new DefaultHandler<Contract>($"{URL}/{configurationItem.ID}/contracts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Contract> handler = new DefaultHandler<Contract>($"{this.URL}/{configurationItem.ID}/contracts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -77,7 +77,7 @@ namespace Sdk4me
 
         public List<Problem> GetProblems(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{URL}/{configurationItem.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{this.URL}/{configurationItem.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -87,7 +87,7 @@ namespace Sdk4me
 
         public List<Request> GetRequests(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{URL}/{configurationItem.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{configurationItem.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -98,7 +98,7 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetServiceInstances(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{configurationItem.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{configurationItem.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -123,7 +123,7 @@ namespace Sdk4me
 
         public List<Task> GetTasks(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{URL}/{configurationItem.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{configurationItem.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -134,7 +134,7 @@ namespace Sdk4me
 
         public List<Person> GetUsers(ConfigurationItem configurationItem, params string[] attributeNames)
         {
-            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{URL}/{configurationItem.ID}/users", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{this.URL}/{configurationItem.ID}/users", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

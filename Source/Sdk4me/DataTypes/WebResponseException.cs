@@ -10,14 +10,5 @@ namespace Sdk4me
 
         [JsonProperty("errors")]
         public List<List<string>> Errors { get; set; }
-
-
-        public string GetCompleteMessage()
-        {
-            string retval = Message ?? "";
-
-
-            return retval;
-        }
     }
 }

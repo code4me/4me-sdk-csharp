@@ -9,7 +9,7 @@ namespace People_Sample
         static void Main(string[] args)
         {
             //AUTHENTICATION TOKENS
-            AuthenticationToken token = new AuthenticationToken("31fd31927a8b...");
+            AuthenticationToken token = new AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication);
 
             //INIT CLIENT
             Sdk4meClient client = new Sdk4meClient(token, null, EnvironmentType.Quality);

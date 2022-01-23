@@ -10,7 +10,7 @@ namespace Sdk4me
         private string value;
 
         #region id
-    
+
         [JsonProperty(PropertyName = "id")]
         public string ID
         {

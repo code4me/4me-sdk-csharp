@@ -583,15 +583,6 @@ namespace Sdk4me
         Emergency
     }
 
-    //[JsonConverter(typeof(StringEnumConverter))]
-    //public enum ChangeType
-    //{
-    //    [EnumMember(Value = "application_change")]
-    //    ApplicationChange,
-    //    [EnumMember(Value = "infrastructure_change")]
-    //    InfrastructureChange
-    //}
-
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ChangeJustificationType
     {
@@ -955,6 +946,8 @@ namespace Sdk4me
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AccountPlanType
     {
+        [EnumMember(Value = "freemium")]
+        Freemium,
         [EnumMember(Value = "basic")]
         Basic,
         [EnumMember(Value = "premium")]
@@ -962,6 +955,8 @@ namespace Sdk4me
         [EnumMember(Value = "premium_plus")]
         PremiumPlus
     }
+
+
 
     #endregion
 

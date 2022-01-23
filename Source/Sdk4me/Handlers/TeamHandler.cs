@@ -4,13 +4,13 @@ namespace Sdk4me
 {
     public class TeamHandler : BaseHandler<Team, PredefinedTeamFilter>
     {
-        public TeamHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/teams",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TeamHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/teams", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TeamHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/teams",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TeamHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/teams", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<ServiceInstance> GetServiceInstances(Team team, params string[] attributeNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{URL}/{team.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{team.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -28,7 +28,7 @@ namespace Sdk4me
 
         public List<Person> GetMembers(Team team, params string[] attributeNames)
         {
-            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{URL}/{team.ID}/members", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{this.URL}/{team.ID}/members", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

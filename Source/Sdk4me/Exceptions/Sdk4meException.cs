@@ -35,7 +35,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-        public Sdk4meException(string message, Exception inner) : 
+        public Sdk4meException(string message, Exception inner) :
             base(message, inner)
         {
         }
@@ -45,10 +45,10 @@ namespace Sdk4me
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="errors">A list with additional details.</param>
-        public Sdk4meException(string message, List<List<string>> errors) : 
+        public Sdk4meException(string message, List<List<string>> errors) :
             base(message)
         {
-            DetailedMessage = ParseDetails(errors);
+            this.DetailedMessage = ParseDetails(errors);
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace Sdk4me
         /// <param name="message">The message that describes the error.</param>
         /// <param name="errors">A list with additional details.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-        public Sdk4meException(string message, List<List<string>> errors, Exception innerException) : 
+        public Sdk4meException(string message, List<List<string>> errors, Exception innerException) :
             base(message, innerException)
         {
-            DetailedMessage = ParseDetails(errors);
+            this.DetailedMessage = ParseDetails(errors);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="errors">A list with additional details.</param>
         /// <returns>A parsed value of the list with additional details.</returns>
-        private string ParseDetails(List<List<string>> errors)
+        private static string ParseDetails(List<List<string>> errors)
         {
             string retval = "";
             if (errors != null)

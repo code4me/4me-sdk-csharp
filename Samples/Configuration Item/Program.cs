@@ -13,8 +13,8 @@ namespace Configuration_Item_Sample
         {
             //AUTHENTICATION TOKENS
             AuthenticationTokenCollection tokens = new AuthenticationTokenCollection {
-                "31fd31927a8b...",
-                "28fd31927a8c..."
+                new AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication),
+                new AuthenticationToken("28fd31927a8c...", AuthenticationType.BearerAuthentication)
             };
 
             //INIT CLIENT

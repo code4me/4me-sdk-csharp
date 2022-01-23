@@ -4,12 +4,12 @@ namespace Sdk4me
 {
     public class ChangeHandler : BaseHandler<Change, PredefinedChangeFilter>
     {
-        public ChangeHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ChangeHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/changes", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ChangeHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ChangeHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/changes", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Change change, params string[] attributeNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{change.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{change.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
             {
                 SortOrder = SortOrder.CreatedAt
             };
@@ -31,7 +31,7 @@ namespace Sdk4me
 
         public List<Request> GetRequests(Change change, params string[] attributeNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{URL}/{change.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{change.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
 
         }
@@ -58,7 +58,7 @@ namespace Sdk4me
 
         public List<Problem> GetProblems(Change change, params string[] attributeNames)
         {
-            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{URL}/{change.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{this.URL}/{change.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
 
         }
@@ -84,7 +84,7 @@ namespace Sdk4me
 
         public List<Task> GetTasks(Change change, params string[] attributeNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{URL}/{change.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{change.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 

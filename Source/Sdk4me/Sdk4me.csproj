@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>netstandard2.1;net5.0;net452</TargetFrameworks>
     <Authors>Klaas Vandeweerdt</Authors>
     <Description>A .NET client for accessing the 4me v1 REST API</Description>
-    <Copyright>Copyright © Klaas Vandeweerdt 2020</Copyright>
+    <Copyright>MIT License</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <AssemblyVersion>1.0.0.8</AssemblyVersion>
-    <FileVersion>1.0.0.8</FileVersion>
-    <Version>1.0.0.8</Version>
+    <AssemblyVersion>1.0.0.9</AssemblyVersion>
+    <FileVersion>1.0.0.9</FileVersion>
+    <Version>1.0.0.9</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <UserSecretsId>2bfc9998-eda0-4a73-8958-453ab0b7f558</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants />
@@ -19,6 +21,6 @@
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 </Project>

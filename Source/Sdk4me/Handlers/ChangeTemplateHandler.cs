@@ -4,12 +4,12 @@ namespace Sdk4me
 {
     public class ChangeTemplateHandler : BaseHandler<ChangeTemplate, PredefinedChangeTemplateFilter>
     {
-        public ChangeTemplateHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ChangeTemplateHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/change_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ChangeTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+        public ChangeTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
             base($"{Common.GetBaseUrl(environmentType)}/v1/change_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<Change> GetChanges(ChangeTemplate changeTemplate, params string[] attributeNames)
         {
-            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{URL}/{changeTemplate.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{this.URL}/{changeTemplate.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -28,7 +28,7 @@ namespace Sdk4me
 
         public List<TaskTemplate> GetTaskTemplates(ChangeTemplate changeTemplate, params string[] attributeNames)
         {
-            DefaultHandler<TaskTemplate> handler = new DefaultHandler<TaskTemplate>($"{URL}/{changeTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            DefaultHandler<TaskTemplate> handler = new DefaultHandler<TaskTemplate>($"{this.URL}/{changeTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
             {
                 SortOrder = SortOrder.None
             };

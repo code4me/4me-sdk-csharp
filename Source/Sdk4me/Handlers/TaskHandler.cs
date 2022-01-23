@@ -4,13 +4,13 @@ namespace Sdk4me
 {
     public class TaskHandler : BaseHandler<Task, PredefinedTaskFilter>
     {
-        public TaskHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<Note> GetNotes(Task task, params string[] attributeNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{URL}/{task.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{task.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
             {
                 SortOrder = SortOrder.CreatedAt
             };
@@ -31,7 +31,7 @@ namespace Sdk4me
 
         public List<ConfigurationItem> GetPeople(Task task, params string[] attributeNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{URL}/{task.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{task.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -56,7 +56,7 @@ namespace Sdk4me
 
         public List<Task> GetPredecessors(Task task, params string[] attributeNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{URL}/{task.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{task.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -81,7 +81,7 @@ namespace Sdk4me
 
         public List<Task> GetSuccessors(Task task, params string[] attributeNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{URL}/{task.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{task.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -106,7 +106,7 @@ namespace Sdk4me
 
         public List<TaskApproval> GetApprovals(Task task, params string[] attributeNames)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
+            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
             {
                 SortOrder = SortOrder.None
             };
@@ -115,25 +115,25 @@ namespace Sdk4me
 
         public TaskApproval AddApproval(Task task, TaskApproval approval)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Insert(approval);
         }
 
         public TaskApproval UpdateApproval(Task task, TaskApproval approval)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Update(approval);
         }
 
         public bool RemoveApproval(Task task, TaskApproval approval)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Delete(approval);
         }
 
         public bool RemoveAllApprovals(Task task)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.DeleteAll();
         }
 

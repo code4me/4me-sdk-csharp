@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sdk4me
+﻿namespace Sdk4me
 {
     /// <summary>
     /// The default predefined filter values.

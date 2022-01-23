@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -50,11 +49,11 @@ namespace Sdk4me
             get => account;
             set => account = value;
         }
-    
+
         #endregion
 
         #region roles
-    
+
         [JsonProperty(PropertyName = "roles")]
         private List<string> RolesPrivate
         {
@@ -71,7 +70,7 @@ namespace Sdk4me
                     RolesPrivate = new List<string>();
                 else
                     RolesPrivate.Clear();
-            
+
                 if (value.HasFlag(AccessRoleType.KeyContact))
                     RolesPrivate.Add("key_contact");
                 if (value.HasFlag(AccessRoleType.Auditor))

@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sdk4me", "Sdk4me", "{8A9AA755-11EF-4DF8-98AA-A9599C090585}"
 	ProjectSection(SolutionItems) = preProject
 		Sdk4me\Newtonsoft.Json.dll = Sdk4me\Newtonsoft.Json.dll
 		Sdk4me\Sdk4me.dll = Sdk4me\Sdk4me.dll
+		Sdk4me\Sdk4me.pdb = Sdk4me\Sdk4me.pdb
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration Item", "Configuration Item\Configuration Item.csproj", "{7C50640D-794B-43BF-80F8-15E4F7772B05}"

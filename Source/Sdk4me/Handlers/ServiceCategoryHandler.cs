@@ -4,13 +4,13 @@ namespace Sdk4me
 {
     public class ServiceCategoryHandler : DefaultHandler<ServiceCategory>
     {
-        public ServiceCategoryHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/service_categories",  authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ServiceCategoryHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/service_categories", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ServiceCategoryHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/service_categories",  authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ServiceCategoryHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
+            base($"{Common.GetBaseUrl(environmentType)}/v1/service_categories", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -18,7 +18,7 @@ namespace Sdk4me
 
         public List<Service> GetServices(ServiceCategory serviceCategory, params string[] attributeNames)
         {
-            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{URL}/{serviceCategory.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
+            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{this.URL}/{serviceCategory.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
             return handler.Get(attributeNames);
         }
 
@@ -26,7 +26,7 @@ namespace Sdk4me
         {
             return CreateRelation(serviceCategory, "services", service);
         }
-    
+
         public bool RemoveService(ServiceCategory serviceCategory, Service service)
         {
             return DeleteRelation(serviceCategory, "services", service);

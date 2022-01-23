@@ -164,7 +164,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="value">The string to escape.</param>
         /// <returns>A System.String that contains the escaped URI representation of stringToEscape.</returns>
-        private string EscapeUriString(string value)
+        private static string EscapeUriString(string value)
         {
             return Uri.EscapeDataString(value).Replace("%2C", "\\,");
         }

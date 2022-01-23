@@ -37,13 +37,9 @@ namespace Sdk4me
         /// <param name="authenticationToken">The 4me authentication object.</param>
         /// <param name="accountID">The 4me account identifier.</param>
         /// <param name="environmentType">The 4me environment.</param>
-        public SearchHandler(AuthenticationToken authenticationToken, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        public SearchHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environmentType, itemsPerRequest, maximumRecursiveRequests)
         {
-            this.authenticationTokens = new AuthenticationTokenCollection(authenticationToken);
-            this.accountID = accountID;
-            this.url = $"{Common.GetBaseUrl(environmentType)}/v1/search";
-            this.itemsPerRequest = itemsPerRequest;
-            this.maximumRecursiveRequests = maximumRecursiveRequests;
         }
 
         /// <summary>
@@ -52,13 +48,16 @@ namespace Sdk4me
         /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
         /// <param name="accountID">The 4me account identifier.</param>
         /// <param name="environmentType">The 4me environment.</param>
-        public SearchHandler(AuthenticationTokenCollection authenticationTokens, string accountID = null, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        public SearchHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
         {
-            this.authenticationTokens = authenticationTokens;
+            if (string.IsNullOrWhiteSpace(accountID)) 
+                throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
+
+            this.authenticationTokens = authenticationTokens ?? throw new ArgumentNullException(nameof(authenticationTokens));
             this.accountID = accountID;
             this.url = $"{Common.GetBaseUrl(environmentType)}/v1/search";
-            this.itemsPerRequest = itemsPerRequest;
-            this.maximumRecursiveRequests = maximumRecursiveRequests;
+            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 100 : itemsPerRequest;
+            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 50 : maximumRecursiveRequests;
         }
 
         /// <summary>

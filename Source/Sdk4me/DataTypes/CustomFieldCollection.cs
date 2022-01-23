@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sdk4me
 {
     [Serializable(), DebuggerDisplay("Count = {Count}")]
     public sealed class CustomFieldCollection : IDictionary<string, string>
     {
-        private Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
         private bool changed = false;
 
         public event EventHandler Changed;
