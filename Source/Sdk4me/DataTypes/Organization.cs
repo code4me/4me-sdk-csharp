@@ -101,7 +101,7 @@ namespace Sdk4me
 
         #endregion
 
-        #region name
+        #region financialID
 
         [JsonProperty("financialID")]
         public string FinancialID

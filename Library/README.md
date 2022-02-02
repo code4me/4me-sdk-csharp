@@ -1,7 +1,7 @@
-**Download the latest stable release of the C# SDK for 4me for .NET Framework 4.5.2**
+**Download the latest stable release of the C# SDK for 4me**
 
-A quick start? Download the files, reference them in your project and you're ready to go.
+A quick start? Download the NuGet package, reference them in your project and you're ready to go.
 To get started have a look at the [coding samples](https://github.com/code4me/4me-sdk-csharp/tree/master/Samples).
 
-**Other Frameworks**
-The solution targets multiple frameworks .Net 5, .NET Standard 2.1 and .NET Framework 4.5.2.
+**Frameworks**
+The solution and NuGet package targets multiple frameworks .NET Framework 4.5.2, .NET Standard 2.1, .Net Core 3.1 and .Net 5.

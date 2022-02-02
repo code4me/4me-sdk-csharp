@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5.0;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5.0;net452;netcoreapp3.1</TargetFrameworks>
     <Authors>Klaas Vandeweerdt</Authors>
     <Description>A .NET client for accessing the 4me v1 REST API</Description>
     <Copyright>MIT License</Copyright>
@@ -12,6 +12,8 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <UserSecretsId>2bfc9998-eda0-4a73-8958-453ab0b7f558</UserSecretsId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants />
@@ -20,6 +22,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
