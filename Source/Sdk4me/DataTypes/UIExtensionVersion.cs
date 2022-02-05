@@ -54,7 +54,7 @@ namespace Sdk4me
 
         #region compiled_css
 
-        [JsonProperty("compiled_css")]
+        [JsonProperty("compiled_css"), Sdk4meIgnoreInFieldSelection()]
         public string CompiledCSS
         {
             get => compiledCSS;
@@ -142,7 +142,7 @@ namespace Sdk4me
 
         #region view_audit_path
 
-        [JsonProperty("view_audit_path")]
+        [JsonProperty("view_audit_path"), Sdk4meIgnoreInFieldSelection()]
         public string ViewAuditPath
         {
             get => viewAuditPath;
