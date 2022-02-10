@@ -6,9 +6,9 @@
     <Copyright>MIT License</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <AssemblyVersion>1.0.0.9</AssemblyVersion>
-    <FileVersion>1.0.0.9</FileVersion>
-    <Version>1.0.0.9</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1.0</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <UserSecretsId>2bfc9998-eda0-4a73-8958-453ab0b7f558</UserSecretsId>
