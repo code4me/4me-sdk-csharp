@@ -46,7 +46,7 @@ namespace Sdk4me
         {
             this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
             this.attributeValues = new string[1];
-            this.attributeValues[0] = attributeValue.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            this.attributeValues[0] = EscapeUriString(attributeValue.ToString("yyyy-MM-ddTHH:mm:sszzz"));
             this.filter = filter;
         }
 
