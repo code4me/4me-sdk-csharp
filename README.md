@@ -15,9 +15,6 @@ Finally, there is an overall class, the Sdk4meClient, which implemented all avai
 ### BaseHandler Built-in features
 The default implementation has some built-in functionality to optimize the 4me REST API usage.
 
-#### Authentication
-The BaseHandler supports both authentication types, API Tokens and Personal Access Tokens. More information about authentication can be found on the [4me developer website](https://developer.4me.com/v1/#authentication).
-
 #### Filtering
 The Get method allows predefined filtering, custom filtering and response field selection. More information about filters can be found on the [4me developer website](https://developer.4me.com/v1/general/filtering/).
 
@@ -161,6 +158,4 @@ AuthenticationTokenCollection tokens = new AuthenticationTokenCollection()
     new AuthenticationToken("TheSecondBearerToken")
 };
 var client1 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Production);
-var client2 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Quality);
-var client3 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Demo);
 ```
