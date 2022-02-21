@@ -399,7 +399,6 @@ namespace Sdk4me
                     nextPageUrl += string.Format("&on_behalf={0}", onBehalfOf.ID);
             }
 
-
             //BUILD WEB REQUEST
             try
             {
@@ -882,7 +881,6 @@ namespace Sdk4me
                     DebugWriteLine("", $"Force thread sleep: {sleepTicks} ms");
                     System.Threading.Thread.Sleep(sleepTicks);
                 }
-
             }
         }
 

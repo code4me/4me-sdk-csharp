@@ -4,7 +4,7 @@ Module Program
 
     Public Sub Main()
         'AUTHENTICATION TOKENS
-        Dim token As New AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication)
+        Dim token As New AuthenticationToken("31fd31927a8b...")
 
         'INIT CLIENT
         Dim client As New Sdk4meClient(token, "wna", EnvironmentType.Quality)

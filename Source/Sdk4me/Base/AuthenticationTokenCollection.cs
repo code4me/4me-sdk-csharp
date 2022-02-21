@@ -24,11 +24,10 @@ namespace Sdk4me
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
         /// <param name="authenticationType">The 4me authentication token type.</param>
-        public AuthenticationTokenCollection(string authenticationToken, AuthenticationType authenticationType)
+        public AuthenticationTokenCollection(string authenticationToken)
         {
-            Add(authenticationToken, authenticationType);
+            Add(new AuthenticationToken(authenticationToken));
         }
-
 
         /// <summary>
         /// Create a new instance of an AuthenticationTokenCollection.
@@ -42,22 +41,12 @@ namespace Sdk4me
         /// <summary>
         /// Adds a 4me authentication token to the collection.
         /// </summary>
-        /// <param name="authenticationToken">The 4me authentication token.</param>
-        /// <param name="authenticationType">The 4me authentication token type.</param>
-        public void Add(string authenticationToken, AuthenticationType authenticationType)
-        {
-            Add(new AuthenticationToken(authenticationToken, authenticationType));
-        }
-
-        /// <summary>
-        /// Adds a 4me authentication token to the collection.
-        /// </summary>
         /// <param name="token">The 4me authentication token.</param>
         public void Add(AuthenticationToken token)
         {
             for (int i = 0; i < authenticationTokens.Count; i++)
             {
-                if (authenticationTokens[i].Token.Equals(token.Token) && authenticationTokens[i].TokenType.Equals(token.TokenType))
+                if (authenticationTokens[i].Token.Equals(token.Token))
                     return;
             }
             authenticationTokens.Add(token);
@@ -68,9 +57,9 @@ namespace Sdk4me
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
         /// <param name="authenticationType">The 4me authentication token type.</param>
-        public void Remove(string authenticationToken, AuthenticationType authenticationType)
+        public void Remove(string authenticationToken)
         {
-            Remove(new AuthenticationToken(authenticationToken, authenticationType));
+            Remove(new AuthenticationToken(authenticationToken));
         }
 
         /// <summary>
@@ -82,7 +71,7 @@ namespace Sdk4me
         {
             for (int i = authenticationTokens.Count - 1; i >= 0; i--)
             {
-                if (authenticationTokens[i].Token.Equals(authenticationToken.Token) && authenticationTokens[i].TokenType.Equals(authenticationToken.TokenType))
+                if (authenticationTokens[i].Token.Equals(authenticationToken.Token))
                 {
                     authenticationTokens.RemoveAt(i);
                     return;
@@ -144,5 +133,4 @@ namespace Sdk4me
             }
         }
     }
-
 }

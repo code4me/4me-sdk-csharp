@@ -13,8 +13,8 @@ namespace Configuration_Item_Sample
         {
             //AUTHENTICATION TOKENS
             AuthenticationTokenCollection tokens = new AuthenticationTokenCollection {
-                new AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication),
-                new AuthenticationToken("28fd31927a8c...", AuthenticationType.BearerAuthentication)
+                new AuthenticationToken("31fd31927a8b..."),
+                new AuthenticationToken("28fd31927a8c...")
             };
 
             //INIT CLIENT
@@ -95,7 +95,6 @@ namespace Configuration_Item_Sample
                     Console.WriteLine($"  {person.Name}");
                 Console.WriteLine();
 
-
                 //REMOVE CI FROM PERSON (DELETE RELATION)
                 Console.WriteLine($"Remove {configurationItems[0].Name} from {me.Name}");
                 client.ConfigurationItems.RemoveUser(configurationItems[0], me);
@@ -114,6 +113,5 @@ namespace Configuration_Item_Sample
                 Console.WriteLine($"Details: {ex.DetailedMessage}");
             }
         }
-
     }
 }

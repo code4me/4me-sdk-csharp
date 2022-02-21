@@ -9,7 +9,7 @@ namespace People_Sample
         static void Main(string[] args)
         {
             //AUTHENTICATION TOKENS
-            AuthenticationToken token = new AuthenticationToken("31fd31927a8b...", AuthenticationType.BearerAuthentication);
+            AuthenticationToken token = new AuthenticationToken("31fd31927a8b...");
 
             //INIT CLIENT
             Sdk4meClient client = new Sdk4meClient(token, null, EnvironmentType.Quality);
@@ -74,7 +74,6 @@ namespace People_Sample
                 Console.WriteLine($"Error: {ex.Message}");
                 Console.WriteLine($"Details: {ex.DetailedMessage}");
             }
-
         }
 
         private static void Example2(Sdk4meClient client)
@@ -86,7 +85,6 @@ namespace People_Sample
                 {
                     { "CreatedAt", FilterCondition.GreaterThanOrEqualsTo, new DateTime(2018, 06, 01) },
                     { "CreatedAt", FilterCondition.LessThanOrEqualsTo, new DateTime(2018, 07, 01) }
-
                 };
 
                 //SEARCH AND ONLY LOAD SPECIFIED ATTRIBUTES
@@ -106,8 +104,6 @@ namespace People_Sample
                 Console.WriteLine($"Error: {ex.Message}");
                 Console.WriteLine($"Details: {ex.DetailedMessage}");
             }
-
-
         }
 
         private static void Example3(Sdk4meClient client)

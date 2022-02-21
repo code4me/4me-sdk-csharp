@@ -16,22 +16,6 @@ namespace Sdk4me
     }
 
     /// <summary>
-    /// The 4me authentication type.
-    /// </summary>
-    public enum AuthenticationType
-    {
-        /// <summary>
-        /// API Token using Basic Authentication
-        /// </summary>
-        BasicAuthentication,
-
-        /// <summary>
-        /// Personal Access Token using Bearer Authentication.
-        /// </summary>
-        BearerAuthentication
-    }
-
-    /// <summary>
     /// Sort order for the 4me web request.
     /// </summary>
     public enum SortOrder
@@ -955,8 +939,6 @@ namespace Sdk4me
         [EnumMember(Value = "premium_plus")]
         PremiumPlus
     }
-
-
 
     #endregion
 

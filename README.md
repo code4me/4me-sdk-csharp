@@ -45,7 +45,7 @@ A custom, Sdk4meException, is implemented. It will convert an API exception resp
 ```csharp
 using Sdk4me;
 
-AuthenticationToken token = new AuthenticationToken("G1p2I4iUc05urZuWkl...", AuthenticationType.BearerAuthentication);
+AuthenticationToken token = new AuthenticationToken("TheBearerToken");
 Sdk4meClient client = new Sdk4meClient(token);
 Person me = client.People.GetMe();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
@@ -140,7 +140,7 @@ The BaseHandler has a Delete and DeleteAll method. Those can only be used to rem
 ```csharp
 try
 {
-    AuthenticationToken token = new AuthenticationToken("3a4e4590179263839...");
+    AuthenticationToken token = new AuthenticationToken("3TheBearerToken");
     Sdk4meClient client = new Sdk4meClient(token);
     Person me = client.People.GetMe();
     List<Team> myTeams = client.People.GetTeams(me, "*");
@@ -157,8 +157,8 @@ catch (Sdk4meException ex)
 ```csharp
 AuthenticationTokenCollection tokens = new AuthenticationTokenCollection()
 {
-    new AuthenticationToken("3a4e4590179263839...", AuthenticationType.BasicAuthentication),
-    new AuthenticationToken("G1p2I49i9ZliUc05urZuWkl...", AuthenticationType.BearerAuthentication),
+    new AuthenticationToken("TheFirstBearerToken"),
+    new AuthenticationToken("TheSecondBearerToken")
 };
 var client1 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Production);
 var client2 = new Sdk4meClient(tokens, "account-name-1", EnvironmentType.Quality);
