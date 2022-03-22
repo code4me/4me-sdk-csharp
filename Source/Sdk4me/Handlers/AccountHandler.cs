@@ -1,76 +1,91 @@
-﻿using System;
+﻿using Sdk4me.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sdk4me
 {
-    public class AccountHandler : IBaseHandler
+    public sealed class AccountHandler : IBaseHandler
     {
         private readonly AuthenticationTokenCollection authenticationTokens = null;
         private readonly string accountID = null;
         private readonly string url = null;
-        private int itemsPerRequest = 100;
-        private int maximumRecursiveRequests = 50;
+        private readonly string peopleUrl = null;
+        private int itemsPerRequest = 25;
+        private int maximumRecursiveRequests = 10;
 
         /// <summary>
-        /// <para>Gets or sets the amount of items returned in one request.</para>
+        /// <para>Gets or sets the number of items returned in one request.</para>
         /// <para>The value must be at least 1 and maximum 100.</para>
         /// </summary>
         public int ItemsPerRequest
         {
             get => itemsPerRequest;
-            set => itemsPerRequest = (value < 1 || value > 100) ? 100 : value;
+            set => itemsPerRequest = (value < 1 || value > 100) ? 25 : value;
         }
 
         /// <summary>
-        /// <para>Gets or sets the amount of recursive requests.</para>
+        /// <para>Gets or sets the number of recursive requests.</para>
+        /// <para>The value must be at least 1 and maximum 1000.</para>
         /// </summary>
         public int MaximumRecursiveRequests
         {
             get => maximumRecursiveRequests;
-            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 50 : value;
+            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 10 : value;
         }
 
-        /// <summary>
-        /// Creates a new instance of the AccountHandler.
-        /// </summary>
-        /// <param name="authenticationToken">The 4me authentication object.</param>
-        /// <param name="accountID">The 4me account identifier.</param>
-        /// <param name="environmentType">The 4me environment.</param>
-        public AccountHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
-            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environmentType, itemsPerRequest, maximumRecursiveRequests)
+        public AccountHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environmentType, environmentRegion, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        /// <summary>
-        /// Creates a new instance of the AccountHandler.
-        /// </summary>
-        /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
-        /// <param name="accountID">The 4me account identifier.</param>
-        /// <param name="environmentType">The 4me environment.</param>
-        public AccountHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        public AccountHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
         {
+            //validate string argument values
             if (string.IsNullOrWhiteSpace(accountID))
                 throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
 
-            this.authenticationTokens = authenticationTokens ?? throw new ArgumentNullException(nameof(authenticationTokens));
+            //validate authentication tokens
+            if (authenticationTokens is null)
+                throw new ArgumentNullException(nameof(authenticationTokens));
+
+            if (!authenticationTokens.Any())
+                throw new ArgumentException($"'{nameof(authenticationTokens)}' cannot be empty.", nameof(authenticationTokens));
+
+            //set global variables
+            url = $"{EnvironmentURL.Get(environmentType, environmentRegion)}/account";
+            peopleUrl = $"{EnvironmentURL.Get(environmentType, environmentRegion)}/people";
+            this.authenticationTokens = authenticationTokens;
             this.accountID = accountID;
-            this.url = $"{Common.GetBaseUrl(environmentType)}/v1/account";
-            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 100 : itemsPerRequest;
-            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 50 : maximumRecursiveRequests;
+            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 25 : itemsPerRequest;
+            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 10 : maximumRecursiveRequests;
         }
 
         /// <summary>
         /// Get the current account information.
         /// </summary>
-        /// <returns>The current Account object.</returns>
+        /// <returns>The account information for the currently used <see cref="AuthenticationToken"/>.</returns>
         public Account Get()
         {
-            DefaultHandler<Account> handler = new DefaultHandler<Account>($"{url}", authenticationTokens, accountID, 100, 1000)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get()[0];
+            return new DefaultBaseHandler<Account>(url, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.None }.Get().FirstOrDefault();
         }
+
+        #region Permissions
+
+        /// <summary>
+        /// Returns all people that are registered in this account and its directory account, provided that these people have at least one of the specified roles.
+        /// </summary>
+        /// <param name="accessRoles">The access roles.</param>
+        /// <returns>A person collection.</returns>
+        public List<Person> GetPeopleWithRoles(AccessRoles accessRoles, AccountSelection accountSelection, params string[] fieldNames)
+        {
+            if (accountSelection == AccountSelection.CurrentAccountAndDirectoryAccount)
+                return new DefaultBaseHandler<Person>($"{peopleUrl}?roles={string.Join(",", accessRoles.Get4meStringCollection())}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests).Get(fieldNames);
+            else
+                return new DefaultBaseHandler<Person>($"{peopleUrl}/all_with_roles?roles={string.Join(",", accessRoles.Get4meStringCollection())}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests).Get(fieldNames);
+        }
+
+        #endregion
 
         #region billable users
 
@@ -80,11 +95,7 @@ namespace Sdk4me
         /// <returns>A list of billable users.</returns>
         public List<BillableUser> GetBillableUsers()
         {
-            DefaultHandler<BillableUser> handler = new DefaultHandler<BillableUser>($"{url}/billable_users", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get("*");
+            return new DefaultBaseHandler<BillableUser>($"{url}/billable_users", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.None }.Get();
         }
 
         /// <summary>
@@ -95,11 +106,7 @@ namespace Sdk4me
         /// <returns>A list of billable users for a specific month.</returns>
         public List<BillableUser> GetBillableUsers(int year, int month)
         {
-            DefaultHandler<BillableUser> handler = new DefaultHandler<BillableUser>($"{url}/billable_users?year={year}&month={month}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get("*");
+            return new DefaultBaseHandler<BillableUser>($"{url}/billable_users?year={year}&month={month}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.None }.Get();
         }
 
         /// <summary>
@@ -122,11 +129,7 @@ namespace Sdk4me
         /// <returns>A list of usage statements.</returns>
         public List<UsageStatement> GetUsageStatements()
         {
-            DefaultHandler<UsageStatement> handler = new DefaultHandler<UsageStatement>($"{url}/usage_statements", authenticationTokens, accountID, 100, 1000)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get("*");
+            return new DefaultBaseHandler<UsageStatement>($"{url}/usage_statements", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.None }.Get();
         }
 
         /// <summary>
@@ -137,11 +140,7 @@ namespace Sdk4me
         /// <returns>A list of billable users for a specific month.</returns>
         public List<UsageStatement> GetUsageStatements(int year, int month)
         {
-            DefaultHandler<UsageStatement> handler = new DefaultHandler<UsageStatement>($"{url}/usage_statements?year={year}&month={month}", authenticationTokens, accountID, 100, 1000)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get("*");
+            return new DefaultBaseHandler<UsageStatement>($"{url}/usage_statements?year={year}&month={month}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.None }.Get();
         }
 
         /// <summary>

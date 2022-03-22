@@ -2,24 +2,52 @@
 
 namespace Sdk4me
 {
-    public class CalendarHandler : BaseHandler<Calendar, PredefinedCalendarFilter>
+    public class CalendarHandler : BaseHandler<Calendar, PredefinedEnabledDisabledFilter>
     {
-        public CalendarHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/calendars", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public CalendarHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/calendars", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public CalendarHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/calendars", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public CalendarHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/calendars", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region holidays
+        #region Calendar hours
 
-        public List<Holiday> GetHolidays(Calendar calendar, params string[] attributeNames)
+        public List<CalendarHours> GetCalendarHours(Calendar calendar, params string[] fieldNames)
         {
-            DefaultHandler<Holiday> handler = new DefaultHandler<Holiday>($"{this.URL}/{calendar.ID}/holidays", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<CalendarHours>(calendar, "calendar_hours", SortOrder.None).Get(fieldNames);
+        }
+
+        public CalendarHours AddCalendarHours(Calendar calendar, CalendarHours calendarHours)
+        {
+            return GetChildHandler<CalendarHours>(calendar, "calendar_hours").Insert(calendarHours);
+        }
+
+        public CalendarHours UpdateCalendarHours(Calendar calendar, CalendarHours calendarHours)
+        {
+            return GetChildHandler<CalendarHours>(calendar, "calendar_hours").Update(calendarHours);
+        }
+
+        public bool DeleteCalendarHours(Calendar calendar, CalendarHours calendarHours)
+        {
+            return GetChildHandler<CalendarHours>(calendar, "calendar_hours").Delete(calendarHours);
+        }
+
+        public bool DeleteAllCalendarHours(Calendar calendar)
+        {
+            return GetChildHandler<CalendarHours>(calendar, "calendar_hours").DeleteAll();
+        }
+
+        #endregion
+
+        #region Holidays
+
+        public List<Holiday> GetHolidays(Calendar calendar, params string[] fieldNames)
+        {
+            return GetChildHandler<Holiday>(calendar, "holidays").Get(fieldNames);
         }
 
         public bool AddHoliday(Calendar calendar, Holiday holiday)
@@ -27,7 +55,7 @@ namespace Sdk4me
             return CreateRelation(calendar, "holidays", holiday);
         }
 
-        public bool RemoveHoliday(Holiday holiday, Calendar calendar)
+        public bool RemoveHoliday(Calendar calendar, Holiday holiday)
         {
             return DeleteRelation(calendar, "holidays", holiday);
         }
@@ -35,26 +63,6 @@ namespace Sdk4me
         public bool RemoveAllHolidays(Calendar calendar)
         {
             return DeleteAllRelations(calendar, "holidays");
-        }
-
-        #endregion
-
-        #region service offering
-
-        public List<ServiceOffering> GetServiceOfferings(Calendar calendar, params string[] attributeNames)
-        {
-            DefaultHandler<ServiceOffering> handler = new DefaultHandler<ServiceOffering>($"{this.URL}/{calendar.ID}/service_offerings", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
-        }
-
-        #endregion
-
-        #region teams
-
-        public List<Team> GetTeams(Calendar calendar, params string[] attributeNames)
-        {
-            DefaultHandler<Team> handler = new DefaultHandler<Team>($"{this.URL}/{calendar.ID}/teams", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
         }
 
         #endregion

@@ -1,126 +1,153 @@
-﻿using System;
+﻿using Sdk4me.Extensions;
+using System;
 
 namespace Sdk4me
 {
     public class Filter
     {
-        private readonly string attributeName = "";
+        private readonly string fieldName = null;
         private readonly string[] attributeValues = null;
         private readonly FilterCondition filter = FilterCondition.Equality;
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        public Filter(string attributeName, FilterCondition filter)
+        public Filter(string fieldName, FilterCondition filter)
+            : this(fieldName, filter, (string)null)
         {
-            if (filter != FilterCondition.Present && filter != FilterCondition.Empty)
-                throw new ArgumentNullException("attributeValue");
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[0];
+        }
+
+        /// <summary>
+        /// Creates a new filter instance.
+        /// </summary>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="value">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, string value)
+        {
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[1];
+            attributeValues[0] = Uri.EscapeDataString(value ?? "");
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, string attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, DateTime value)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[1];
-            this.attributeValues[0] = EscapeUriString(attributeValue ?? "");
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[1];
+            attributeValues[0] = Uri.EscapeDataString(value.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+            this.filter = filter;
+        }
+
+        /// <summary>
+        /// Create a new filter instance.
+        /// </summary>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="value1">The first attribute value.</param>
+        /// <param name="value2">The second attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, DateTime value1, DateTime value2)
+        {
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[2];
+            attributeValues[0] = Uri.EscapeDataString(value1.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+            attributeValues[1] = Uri.EscapeDataString(value2.ToString("yyyy-MM-ddTHH:mm:sszzz"));
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, DateTime attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, BaseItem value)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[1];
-            this.attributeValues[0] = EscapeUriString(attributeValue.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[1];
+            attributeValues[0] = value.ID.ToString();
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, short[] attributeValues)
+        /// <param name="values">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, params short[] values)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[attributeValues.GetUpperBound(0) + 1];
-            for (int i = 0; i <= attributeValues.GetUpperBound(0); i++)
-                this.attributeValues[i] = attributeValues[i].ToString();
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[values.GetUpperBound(0) + 1];
+            for (int i = 0; i <= values.GetUpperBound(0); i++)
+                attributeValues[i] = values[i].ToString();
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, params int[] attributeValues)
+        /// <param name="values">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, params int[] values)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[attributeValues.GetUpperBound(0) + 1];
-            for (int i = 0; i <= attributeValues.GetUpperBound(0); i++)
-                this.attributeValues[i] = attributeValues[i].ToString();
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[values.GetUpperBound(0) + 1];
+            for (int i = 0; i <= values.GetUpperBound(0); i++)
+                attributeValues[i] = values[i].ToString();
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, params long[] attributeValues)
+        /// <param name="values">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, params long[] values)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[attributeValues.GetUpperBound(0) + 1];
-            for (int i = 0; i <= attributeValues.GetUpperBound(0); i++)
-                this.attributeValues[i] = attributeValues[i].ToString();
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[values.GetUpperBound(0) + 1];
+            for (int i = 0; i <= values.GetUpperBound(0); i++)
+                attributeValues[i] = values[i].ToString();
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public Filter(string attributeName, FilterCondition filter, bool attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public Filter(string fieldName, FilterCondition filter, bool value)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[1];
-            this.attributeValues[0] = attributeValue ? "true" : "false";
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[1];
+            attributeValues[0] = value ? "true" : "false";
             this.filter = filter;
         }
 
         /// <summary>
         /// Creates a new filter instance.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
-        public Filter(string attributeName, FilterCondition filter, params Enum[] attributeValues)
+        /// <param name="values">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
+        public Filter(string fieldName, FilterCondition filter, params Enum[] values)
         {
-            this.attributeName = EscapeUriString(Common.ConvertTo4meAttributeName(attributeName));
-            this.attributeValues = new string[attributeValues.GetUpperBound(0) + 1];
-            for (int i = 0; i <= attributeValues.GetUpperBound(0); i++)
-                this.attributeValues[i] = EscapeUriString(Common.ConvertTo4meAttributeName(attributeValues[i].ToString()));
+            this.fieldName = EscapeUriString(fieldName.To4meString());
+            attributeValues = new string[values.GetUpperBound(0) + 1];
+            for (int i = 0; i <= values.GetUpperBound(0); i++)
+                attributeValues[i] = Uri.EscapeDataString(values[i].To4meString());
             this.filter = filter;
         }
 
@@ -130,32 +157,47 @@ namespace Sdk4me
         /// <returns>Returns a 4ME URI compliant filter syntax.</returns>
         internal string GetFilter()
         {
-            switch (this.filter)
+            switch (filter)
             {
                 case FilterCondition.GreaterThan:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=>", string.Join(",", this.attributeValues));
-
                 case FilterCondition.GreaterThanOrEqualsTo:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=>=", string.Join(",", this.attributeValues));
-
                 case FilterCondition.LessThan:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=<", string.Join(",", this.attributeValues));
-
                 case FilterCondition.LessThanOrEqualsTo:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=<=", string.Join(",", this.attributeValues));
+                    if (attributeValues is null || attributeValues.Length != 1)
+                        throw new ApplicationException($"The {filter} filter requires a single value.");
+                    return $"{fieldName}{"=<="}{attributeValues[0]}";
+
+                case FilterCondition.GreaterThanAndLessThan:
+                    if (attributeValues is null || attributeValues.Length != 1)
+                        throw new ApplicationException($"The {filter} filter requires a single value.");
+                    return $"{fieldName}{"=>"}{attributeValues[0]}<{attributeValues[1]}";
+
+                case FilterCondition.GreaterThanOrEqualToAndLessThanOrEqualTo:
+                    if (attributeValues is null || attributeValues.Length != 2)
+                        throw new ApplicationException($"The {filter} filter requires a two values.");
+                    return $"{fieldName}{"=>="}{attributeValues[0]}<={attributeValues[1]}";
 
                 case FilterCondition.Negation:
+                    if (attributeValues is null || attributeValues.Length != 2)
+                        throw new ApplicationException($"The {filter} filter requires a two values.");
+                    return $"{fieldName}{"=!"}{attributeValues[0]}";
+
+                case FilterCondition.In:
+                    return $"{fieldName}{"="}{string.Join(",", attributeValues)}";
+
                 case FilterCondition.NotIn:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=!", string.Join(",", this.attributeValues));
+                    return $"{fieldName}{"=!"}{string.Join(",", attributeValues)}";
 
                 case FilterCondition.Present:
-                    return string.Format("{0}{1}", this.attributeName, "=!");
+                    return $"{fieldName}=!";
 
                 case FilterCondition.Empty:
-                    return string.Format("{0}{1}", this.attributeName, "=");
+                    return $"{fieldName}=";
 
                 default:
-                    return string.Format("{0}{1}{2}", this.attributeName, "=", string.Join(",", this.attributeValues));
+                    if (attributeValues is null || attributeValues.Length != 1)
+                        throw new ApplicationException($"The {filter} filter requires a single value.");
+                    return $"{fieldName}{"="}{attributeValues[0]}";
             }
         }
 
@@ -166,7 +208,7 @@ namespace Sdk4me
         /// <returns>A System.String that contains the escaped URI representation of stringToEscape.</returns>
         private static string EscapeUriString(string value)
         {
-            return Uri.EscapeDataString(value).Replace("%2C", "\\,");
+            return Uri.EscapeDataString(value).Replace("%2C", "\\,", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

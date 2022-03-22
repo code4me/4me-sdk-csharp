@@ -1,25 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class ContractHandler : BaseHandler<Contract, PredefinedContractFilter>
+    public class ContractHandler : BaseHandler<Contract, PredefinedActiveInactiveFilter>
     {
-        public ContractHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/contracts", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ContractHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/contracts", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ContractHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/contracts", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ContractHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/contracts", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetConfigurationItems(Contract contract, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Contract contract, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{contract.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(contract, "cis").Get(fieldNames);
+        }
+
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, Contract contract, params string[] fieldNames)
+        {
+            return GetChildHandler<ConfigurationItem>(contract, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddConfigurationItem(Contract contract, ConfigurationItem configurationItem)
@@ -32,12 +37,11 @@ namespace Sdk4me
             return DeleteRelation(contract, "cis", configurationItem);
         }
 
-        public bool RemoveAllConfigurationItems(Contract contract)
+        public bool RemoveAllConfigurationItem(Contract contract)
         {
             return DeleteAllRelations(contract, "cis");
         }
 
         #endregion
-
     }
 }

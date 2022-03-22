@@ -1,67 +1,76 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class ServiceInstanceHandler : BaseHandler<ServiceInstance, PredefinedServiceInstanceFilter>
+    public class ServiceInstanceHandler : BaseHandler<ServiceInstance, PredefinedActiveInactiveFilter>
     {
-        public ServiceInstanceHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/service_instances", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ServiceInstanceHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/service_instances", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ServiceInstanceHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/service_instances", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ServiceInstanceHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/service_instances", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
+        #region Child service instances
 
-        #region child and parent service instances
-
-        public List<ServiceInstance> GetChildServiceInstances(ServiceInstance serviceInstance, params string[] attributeNames)
+        public List<ServiceInstance> GetChildServiceInstances(ServiceInstance serviceInstance, params string[] fieldNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{serviceInstance.ID}/child_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
-        }
-
-        public List<ServiceInstance> GetParentServiceInstances(ServiceInstance serviceInstance, params string[] attributeNames)
-        {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{serviceInstance.ID}/parent_service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceInstance>(serviceInstance, "child_service_instances").Get(fieldNames);
         }
 
         #endregion
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetConfigurationItems(ServiceInstance serviceInstance, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(ServiceInstance serviceInstance, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{serviceInstance.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(serviceInstance, "cis").Get(fieldNames);
         }
 
-        public bool AddConfigurationItem(ServiceInstance serviceInstance, ConfigurationItem configuration)
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, ServiceInstance serviceInstance, params string[] fieldNames)
         {
-            return CreateRelation(serviceInstance, "cis", configuration);
+            return GetChildHandler<ConfigurationItem>(serviceInstance, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
-        public bool RemoveConfigurationItem(ServiceInstance serviceInstance, ConfigurationItem configuration)
+        public bool AddConfigurationItem(ServiceInstance serviceInstance, ConfigurationItem configurationItem)
         {
-            return DeleteRelation(serviceInstance, "cis", configuration);
+            return CreateRelation(serviceInstance, "cis", configurationItem);
+        }
+
+        public bool RemoveConfigurationItem(ServiceInstance serviceInstance, ConfigurationItem configurationItem)
+        {
+            return DeleteRelation(serviceInstance, "cis", configurationItem);
         }
 
         public bool RemoveAllConfigurationItems(ServiceInstance serviceInstance)
         {
             return DeleteAllRelations(serviceInstance, "cis");
         }
+        #endregion
+
+        #region Parent services instances
+
+        public List<ServiceInstance> GetParentServiceInstances(ServiceInstance serviceInstance, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceInstance>(serviceInstance, "parent_service_instances").Get(fieldNames);
+        }
 
         #endregion
 
-        #region service level agreements
+        #region Service level agreements
 
-        public List<ServiceLevelAgreement> GetSLAs(ServiceInstance serviceInstance, params string[] attributeNames)
+        public List<ServiceLevelAgreement> GetServiceLevelAgreements(ServiceInstance serviceInstance, params string[] fieldNames)
         {
-            DefaultHandler<ServiceLevelAgreement> handler = new DefaultHandler<ServiceLevelAgreement>($"{this.URL}/{serviceInstance.ID}/slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceLevelAgreement>(serviceInstance, "slas").Get(fieldNames);
+        }
+
+        public List<ServiceLevelAgreement> GetServiceLevelAgreements(PredefinedActiveInactiveFilter filter, ServiceInstance serviceInstance, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceLevelAgreement>(serviceInstance, $"slas/{filter.To4meString()}").Get(fieldNames);
         }
 
         #endregion

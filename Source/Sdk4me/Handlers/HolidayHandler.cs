@@ -2,24 +2,23 @@
 
 namespace Sdk4me
 {
-    public class HolidayHandler : DefaultHandler<Holiday>
+    public class HolidayHandler : DefaultBaseHandler<Holiday>
     {
-        public HolidayHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/holidays", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public HolidayHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/holidays", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public HolidayHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/holidays", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public HolidayHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/holidays", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region calendars
+        #region Calendar
 
-        public List<Calendar> GetCalendars(Holiday holiday, params string[] attributeNames)
+        public List<Calendar> GetCalendars(Holiday holiday, params string[] fieldNames)
         {
-            DefaultHandler<Calendar> handler = new DefaultHandler<Calendar>($"{this.URL}/{holiday.ID}/calendars", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Calendar>(holiday, "calendars").Get(fieldNames);
         }
 
         public bool AddCalendar(Holiday holiday, Calendar calendar)
@@ -38,6 +37,5 @@ namespace Sdk4me
         }
 
         #endregion
-
     }
 }

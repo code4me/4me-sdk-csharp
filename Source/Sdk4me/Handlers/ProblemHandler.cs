@@ -1,82 +1,131 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class ProblemHandler : BaseHandler<Problem, PredefinedProblemFilter>
     {
-        public ProblemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/problems", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProblemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/problems", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ProblemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/problems", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProblemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/problems", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetConfigurationItems(Problem problem, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Problem problem, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{problem.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(problem, "cis").Get(fieldNames);
         }
 
-        #endregion
-
-        #region notes
-
-        public List<Note> GetNotes(Problem problem, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, Problem problem, params string[] fieldNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{problem.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(problem, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
-        #endregion
-
-        #region requests
-
-        public List<Request> GetRequests(Problem problem, params string[] attributeNames)
+        public bool AddConfigurationItem(Problem problem, ConfigurationItem configurationItem)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{problem.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return CreateRelation(problem, "cis", configurationItem);
+        }
+
+        public bool RemoveConfigurationItem(Problem problem, ConfigurationItem configurationItem)
+        {
+            return DeleteRelation(problem, "cis", configurationItem);
+        }
+
+        public bool RemoveAllConfigurationItem(Problem problem)
+        {
+            return DeleteAllRelations(problem, "cis");
         }
 
         #endregion
 
-        #region service instances
+        #region Notes
 
-        public List<ServiceInstance> GetServiceInstances(Problem problem, params string[] attributeNames)
+        public List<Note> GetNotes(Problem problem, params string[] fieldNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{problem.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Note>(problem, "notes", SortOrder.None).Get(fieldNames);
         }
 
         #endregion
 
-        #region archive, trash and restore
+        #region Requests
+
+        public List<Request> GetRequests(Problem problem, params string[] fieldNames)
+        {
+            return GetChildHandler<Request>(problem, "requests").Get(fieldNames);
+        }
+
+        public List<Request> GetRequests(PredefinedOpenCompletedFilter filter, Problem problem, params string[] fieldNames)
+        {
+            return GetChildHandler<Request>(problem, $"requests/{filter.To4meString()}").Get(fieldNames);
+        }
+
+        public bool AddRequest(Problem problem, Request request)
+        {
+            return CreateRelation(problem, "requests", request);
+        }
+
+        public bool RemoveRequest(Problem problem, Request request)
+        {
+            return DeleteRelation(problem, "requests", request);
+        }
+
+        public bool RemoveAllRequests(Problem problem)
+        {
+            return DeleteAllRelations(problem, "requests");
+        }
+
+        #endregion
+
+        #region Services instances
+
+        public List<ServiceInstance> GetServiceInstances(Problem problem, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceInstance>(problem, "service_instances").Get(fieldNames);
+        }
+
+        public List<ServiceInstance> GetServiceInstances(PredefinedActiveInactiveFilter filter, Problem problem, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceInstance>(problem, $"service_instances/{filter.To4meString()}").Get(fieldNames);
+        }
+
+        public bool AddServiceInstance(Problem problem, ServiceInstance serviceInstance)
+        {
+            return CreateRelation(problem, "service_instances", serviceInstance);
+        }
+
+        public bool RemoveServiceInstance(Problem problem, ServiceInstance serviceInstance)
+        {
+            return DeleteRelation(problem, "service_instances", serviceInstance);
+        }
+
+        #endregion
+
+        #region Archive, trash and restore
 
         public Problem Archive(Problem problem)
         {
-            return CustomWebRequest($"{problem.ID}/archive", "POST");
+            return GetChildHandler<Problem>(problem, "archive").Invoke("Post");
         }
 
         public Problem Trash(Problem problem)
         {
-            return CustomWebRequest($"{problem.ID}/trash", "POST");
+            return GetChildHandler<Problem>(problem, "trash").Invoke("Post");
         }
 
         public Problem Restore(Archive archive)
         {
-            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+            return GetChildHandler<Problem>(new Problem() { ID = archive.Details.ID }, "restore").Invoke("Post");
         }
 
         public Problem Restore(Trash trash)
         {
-            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+            return GetChildHandler<Problem>(new Problem() { ID = trash.Details.ID }, "restore").Invoke("Post");
         }
 
         #endregion

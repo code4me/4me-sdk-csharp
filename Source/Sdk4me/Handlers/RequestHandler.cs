@@ -1,48 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class RequestHandler : BaseHandler<Request, PredefinedRequestFilter>
     {
-        public RequestHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/requests", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public RequestHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/requests", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public RequestHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/requests", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public RequestHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/requests", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region  affected SLAs
+        #region Affected service level agreements
 
-        public List<AffectedServiceLevelAgreement> GetAffectedServiceLevelAgreements(Request request, params string[] attributeNames)
+        public List<AffectedServiceLevelAgreement> GetAffectedServiceLevelAgreements(Request request, params string[] fieldNames)
         {
-            DefaultHandler<AffectedServiceLevelAgreement> handler = new DefaultHandler<AffectedServiceLevelAgreement>($"{this.URL}/{request.ID}/affected_slas", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
-        }
-
-        #endregion
-
-        #region notes
-
-        public List<Note> GetNotes(Request request, params string[] attributeNames)
-        {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{request.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<AffectedServiceLevelAgreement>(request, "affected_slas").Get(fieldNames);
         }
 
         #endregion
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetConfigurationItems(Request request, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Request request, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{request.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(request, "cis").Get(fieldNames);
+        }
+
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<ConfigurationItem>(request, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddConfigurationItem(Request request, ConfigurationItem configurationItem)
@@ -55,43 +46,70 @@ namespace Sdk4me
             return DeleteRelation(request, "cis", configurationItem);
         }
 
-        public bool RemoveAllConfigurationItems(Request request)
+        public bool RemoveConfigurationItems(Request request)
         {
             return DeleteAllRelations(request, "cis");
         }
 
         #endregion
 
-        #region grouped requests
+        #region Grouped requests
 
-        public List<Request> GetGroupedRequests(Request request, params string[] attributeNames)
+        public List<Request> GetGroupedRequests(Request requestGroup, params string[] fieldNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{request.ID}/grouped_requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Request>(requestGroup, "grouped_requests").Get(fieldNames);
         }
 
         #endregion
 
-        #region archive, trash and restore
+        #region Notes
+
+        public List<Note> GetNotes(Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<Note>(request, "notes", SortOrder.None).Get(fieldNames);
+        }
+
+        public List<Note> GetNotes(PredefinedRequestNoteFilter filter, Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<Note>(request, $"notes/{filter.To4meString()}", SortOrder.None).Get(fieldNames);
+        }
+
+        #endregion
+
+        #region Satisfaction
+
+        public bool Satisfied(Request request)
+        {
+            return GetChildHandler<RequestDissatisfied>(request, "satisfied").InvokeNoContent("Post");
+        }
+
+        public bool Dissatisfied(Request request, RequestDissatisfied dissatisfied)
+        {
+            return GetChildHandler<RequestDissatisfied>(request, "dissatisfied").Insert(dissatisfied) is null;
+        }
+
+        #endregion
+
+        #region Archive, trash and restore
 
         public Request Archive(Request request)
         {
-            return CustomWebRequest($"{request.ID}/archive", "POST");
+            return GetChildHandler<Request>(request, "archive").Invoke("Post");
         }
 
         public Request Trash(Request request)
         {
-            return CustomWebRequest($"{request.ID}/trash", "POST");
+            return GetChildHandler<Request>(request, "trash").Invoke("Post");
         }
 
         public Request Restore(Archive archive)
         {
-            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+            return GetChildHandler<Request>(new Request() { ID = archive.Details.ID }, "restore").Invoke("Post");
         }
 
         public Request Restore(Trash trash)
         {
-            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+            return GetChildHandler<Request>(new Request() { ID = trash.Details.ID }, "restore").Invoke("Post");
         }
 
         #endregion

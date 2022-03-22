@@ -4,88 +4,69 @@ namespace Sdk4me
 {
     public class ProjectTaskHandler : BaseHandler<ProjectTask, PredefinedProjectTaskFilter>
     {
-        public ProjectTaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ProjectTaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region assignment
+        #region Assignments
 
-        public List<ProjectTaskAssignment> GetAssignments(ProjectTask projectTask, params string[] attributeNames)
+        public List<ProjectTaskAssignment> GetAssignments(ProjectTask projectTask)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTaskAssignment>(projectTask, "assignments", SortOrder.None).Get("*");
         }
 
-        public ProjectTaskAssignment AddAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
+        public ProjectTaskAssignment AddAssignment(ProjectTask projectTask, ProjectTaskAssignment projectTaskAssignment)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Insert(assignment);
+            return GetChildHandler<ProjectTaskAssignment>(projectTask, "assignments").Insert(projectTaskAssignment);
         }
 
-        public ProjectTaskAssignment UpdateAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
+        public ProjectTaskAssignment UpdateAssignment(ProjectTask projectTask, ProjectTaskAssignment projectTaskAssignment)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Update(assignment);
+            return GetChildHandler<ProjectTaskAssignment>(projectTask, "assignments").Update(projectTaskAssignment);
         }
 
-        public bool RemoveAssignment(ProjectTask projectTask, ProjectTaskAssignment assignment)
+        public bool DeleteAssignment(ProjectTask projectTask, ProjectTaskAssignment projectTaskAssignment)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(assignment);
+            return GetChildHandler<ProjectTaskAssignment>(projectTask, "assignments").Delete(projectTaskAssignment);
         }
 
-        public bool RemoveAllAssignments(ProjectTask projectTask)
+        public bool DeleteAllAssignments(ProjectTask projectTask)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTask.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<ProjectTaskAssignment>(projectTask, "assignments").DeleteAll();
         }
 
         #endregion
 
-        #region notes
+        #region Notes
 
-        public List<Note> GetNotes(ProjectTask projectTask, params string[] attributeNames)
+        public List<Note> GetNotes(ProjectTask projectTask, params string[] fieldNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{projectTask.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<Note>(projectTask, "notes", SortOrder.None).Get(fieldNames);
         }
 
         #endregion
 
-        #region predecessors
+        #region Predecessors
 
-        public List<ProjectTask> GetPredecessors(ProjectTask projectTask, params string[] attributeNames)
+        public List<ProjectTask> GetPredecessors(ProjectTask projectTask, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{this.URL}/{projectTask.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTask>(projectTask, "predecessors").Get(fieldNames);
         }
 
-        public bool AddPredecessor(ProjectTask projectTask, ProjectTask predecessorProjectTask)
+        public bool AddPredecessor(ProjectTask projectTask, ProjectTask predecessor)
         {
-            return CreateRelation(projectTask, "predecessors", predecessorProjectTask);
+            return CreateRelation(projectTask, "predecessors", predecessor);
         }
 
-        public bool RemovePredecessor(ProjectTask projectTask, ProjectTask predecessorProjectTask)
+        public bool RemovePredecessor(ProjectTask projectTask, ProjectTask predecessor)
         {
-            return DeleteRelation(projectTask, "predecessors", predecessorProjectTask);
+            return DeleteRelation(projectTask, "predecessors", predecessor);
         }
 
         public bool RemoveAllPredecessors(ProjectTask projectTask)
@@ -95,27 +76,26 @@ namespace Sdk4me
 
         #endregion
 
-        #region successors
+        #region Successors
 
-        public List<ProjectTask> GetSuccessors(ProjectTask projectTask, params string[] attributeNames)
+        public List<ProjectTask> GetSuccessors(ProjectTask projectTask, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{this.URL}/{projectTask.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTask>(projectTask, "successors").Get(fieldNames);
         }
 
-        public bool AddSuccessor(ProjectTask projectTask, ProjectTask successorProjectTask)
+        public bool AddSuccessor(ProjectTask projectTask, ProjectTask successor)
         {
-            return CreateRelation(projectTask, "predecessors", successorProjectTask);
+            return CreateRelation(projectTask, "successors", successor);
         }
 
-        public bool RemoveSuccessor(ProjectTask projectTask, ProjectTask successorProjectTask)
+        public bool RemoveSuccessor(ProjectTask projectTask, ProjectTask successor)
         {
-            return DeleteRelation(projectTask, "predecessors", successorProjectTask);
+            return DeleteRelation(projectTask, "successors", successor);
         }
 
         public bool RemoveAllSuccessors(ProjectTask projectTask)
         {
-            return DeleteAllRelations(projectTask, "predecessors");
+            return DeleteAllRelations(projectTask, "successors");
         }
 
         #endregion

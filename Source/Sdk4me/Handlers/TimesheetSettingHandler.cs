@@ -1,25 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class TimesheetSettingHandler : BaseHandler<TimesheetSetting, PredefinedTimesheetSettingFilter>
+    public class TimesheetSettingHandler : BaseHandler<TimesheetSetting, PredefinedEnabledDisabledFilter>
     {
-        public TimesheetSettingHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimesheetSettingHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/timesheet_settings", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TimesheetSettingHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/timesheet_settings", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimesheetSettingHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/timesheet_settings", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region effort class
+        #region EffortClass
 
-        public List<EffortClass> GetEffortClasses(TimesheetSetting timesheetSetting, params string[] attributeNames)
+        public List<EffortClass> GetEfforClasses(TimesheetSetting timesheetSetting, params string[] fieldNames)
         {
-            DefaultHandler<EffortClass> handler = new DefaultHandler<EffortClass>($"{this.URL}/{timesheetSetting.ID}/effort_classes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<EffortClass>(timesheetSetting, "effort_classes").Get(fieldNames);
+        }
+
+        public List<EffortClass> GetEfforClasses(PredefinedEnabledDisabledFilter filter, TimesheetSetting timesheetSetting, params string[] fieldNames)
+        {
+            return GetChildHandler<EffortClass>(timesheetSetting, $"effort_classes/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddEffortClass(TimesheetSetting timesheetSetting, EffortClass effortClass)
@@ -32,19 +37,23 @@ namespace Sdk4me
             return DeleteRelation(timesheetSetting, "effort_classes", effortClass);
         }
 
-        public bool RemoveAllEffortClasses(TimesheetSetting timesheetSetting)
+        public bool RemoveEffortClasses(TimesheetSetting timesheetSetting)
         {
             return DeleteAllRelations(timesheetSetting, "effort_classes");
         }
 
         #endregion
 
-        #region organization
+        #region Organizations
 
-        public List<Organization> GetOrganizations(TimesheetSetting timesheetSetting, params string[] attributeNames)
+        public List<Organization> GetOrganizations(TimesheetSetting timesheetSetting, params string[] fieldNames)
         {
-            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{this.URL}/{timesheetSetting.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Organization>(timesheetSetting, "organizations").Get(fieldNames);
+        }
+
+        public List<Organization> GetOrganizations(PredefinedEnabledDisabledFilter filter, TimesheetSetting timesheetSetting, params string[] fieldNames)
+        {
+            return GetChildHandler<Organization>(timesheetSetting, $"organizations/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddOrganization(TimesheetSetting timesheetSetting, Organization organization)
@@ -63,6 +72,5 @@ namespace Sdk4me
         }
 
         #endregion
-
     }
 }

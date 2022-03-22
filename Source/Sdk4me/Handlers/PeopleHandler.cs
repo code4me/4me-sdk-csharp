@@ -1,72 +1,70 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Sdk4me
 {
     public class PeopleHandler : BaseHandler<Person, PredefinedPeopleFilter>
     {
-        public PeopleHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/people", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public PeopleHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/people", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public PeopleHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/people", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public PeopleHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/people", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region addresses
+        #region Addresses
 
-        public List<Address> GetAddresses(Person person)
+        public List<Address> GetAddresses(Person person, params string[] fieldNames)
         {
-            DefaultHandler<Address> handler = new DefaultHandler<Address>($"{this.URL}/{person.ID}/addresses", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get();
+            return GetChildHandler<Address>(person, "addresses", SortOrder.None).Get(fieldNames);
         }
 
         public Address AddAddress(Person person, Address address)
         {
-            DefaultHandler<Address> handler = new DefaultHandler<Address>($"{this.URL}/{person.ID}/addresses", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Insert(address);
+            return GetChildHandler<Address>(person, "addresses").Insert(address);
         }
 
         public Address UpdateAddress(Person person, Address address)
         {
-            DefaultHandler<Address> handler = new DefaultHandler<Address>($"{this.URL}/{person.ID}/addresses", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Update(address);
+            return GetChildHandler<Address>(person, "addresses").Update(address);
         }
 
         public bool DeleteAddress(Person person, Address address)
         {
-            DefaultHandler<Address> handler = new DefaultHandler<Address>($"{this.URL}/{person.ID}/addresses", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(address);
+            return GetChildHandler<Address>(person, "addresses").Delete(address);
         }
 
         public bool DeleteAllAddresses(Person person)
         {
-            DefaultHandler<Address> handler = new DefaultHandler<Address>($"{this.URL}/{person.ID}/addresses", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<Address>(person, "addresses").DeleteAll();
         }
 
         #endregion
 
-        #region configuration item coverages
+        #region Configuration item coverage
 
-        public List<ConfigurationItem> GetConfigurationItemCoverages(Person person, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItemCoverage(Person person, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{person.ID}/ci_coverages", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(person, "ci_coverages").Get(fieldNames);
         }
 
         #endregion
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetConfigurationItems(Person person, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Person person, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{person.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(person, "cis").Get(fieldNames);
+        }
+
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, Person person, params string[] fieldNames)
+        {
+            return GetChildHandler<ConfigurationItem>(person, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddConfigurationItem(Person person, ConfigurationItem configurationItem)
@@ -79,177 +77,154 @@ namespace Sdk4me
             return DeleteRelation(person, "cis", configurationItem);
         }
 
-        public bool RemoveAllConfigurationItems(Person person)
+        public bool RemoveAllConfigurationItem(Person person)
         {
             return DeleteAllRelations(person, "cis");
         }
 
         #endregion
 
-        #region contacts
+        #region contacts 
 
-        public List<Contact> GetContacts(Person person)
+        public List<Contact> GetContacts(Person person, params string[] fieldNames)
         {
-            DefaultHandler<Contact> handler = new DefaultHandler<Contact>($"{this.URL}/{person.ID}/contacts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get();
-
+            return GetChildHandler<Contact>(person, "contacts", SortOrder.None).Get(fieldNames);
         }
 
-        public Contact InsertContact(Person person, Contact contact)
+        public Contact AddContact(Person person, Contact contact)
         {
-            DefaultHandler<Contact> handler = new DefaultHandler<Contact>($"{this.URL}/{person.ID}/contacts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Insert(contact);
+            return GetChildHandler<Contact>(person, "contacts").Insert(contact);
         }
 
         public Contact UpdateContact(Person person, Contact contact)
         {
-            DefaultHandler<Contact> handler = new DefaultHandler<Contact>($"{this.URL}/{person.ID}/contacts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Update(contact);
+            return GetChildHandler<Contact>(person, "contacts").Update(contact);
         }
 
         public bool DeleteContact(Person person, Contact contact)
         {
-            DefaultHandler<Contact> handler = new DefaultHandler<Contact>($"{this.URL}/{person.ID}/contacts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(contact);
+            return GetChildHandler<Contact>(person, "contacts").Delete(contact);
         }
 
         public bool DeleteAllContacts(Person person)
         {
-            DefaultHandler<Contact> handler = new DefaultHandler<Contact>($"{this.URL}/{person.ID}/contact", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<Contact>(person, "contacts").DeleteAll();
         }
 
         #endregion
 
-        #region me
+        #region Permissions
 
-        public Person GetMe()
+        public List<AccountPermission> GetAccountPermissions(Person person)
         {
-            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{this.URL}/me", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            List<Person> result = handler.Get("*");
-            return result.Count.Equals(1) ? result[0] : null;
-        }
-
-        #endregion
-
-        #region permissions
-
-        public List<Permission> GetAccountPermissions(Person person)
-        {
-            DefaultHandler<Permission> handler = new DefaultHandler<Permission>($"{this.URL}/{person.ID}/permissions", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None,
-                AlwaysAsList = true
-            };
+            DefaultBaseHandler<AccountPermission> handler = GetChildHandler<AccountPermission>(person, "permissions");
+            handler.SortOrder = SortOrder.None;
+            handler.AlwaysAsList = true;
             return handler.Get();
         }
 
-        public Permission GetAccountPermission(Person person, Account account)
+        public AccountPermission GetAccountPermissions(Person person, string accountIdentifier)
         {
-            DefaultHandler<Permission> handler = new DefaultHandler<Permission>($"{this.URL}/{person.ID}/permissions/{account.ID}", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            List<Permission> result = handler.Get();
-            return result.Count.Equals(1) ? result[0] : null;
+            return GetAccountPermissions(person, new AccountReference() { ID = accountIdentifier });
         }
 
-        public Permission AddAccountPermission(Person person, Account account, AccessRoleType accessRoles)
+        public AccountPermission GetAccountPermissions(Person person, AccountReference account)
         {
-            return AddAccountPermission(person, new Permission()
-            {
-                Account = account,
-                Roles = accessRoles
-            });
+            if (account is null)
+                throw new ArgumentNullException(nameof(account));
+
+            return GetChildHandler<AccountPermission>(person, $"permissions/{account.ID}", SortOrder.None).Get().FirstOrDefault();
         }
 
-        public Permission AddAccountPermission(Person person, Permission permission)
+        public List<Person> GetPeopleWithRoles(AccessRoles accessRoles, AccountSelection accountSelection, params string[] fieldNames)
         {
-            DefaultHandler<Permission> handler = new DefaultHandler<Permission>($"{this.URL}/{person.ID}/permissions", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest($"/{permission.Account.ID}?roles={permission.GetRolesInSingleString()}", "POST");
+            if (accountSelection == AccountSelection.CurrentAccountAndDirectoryAccount)
+                return new DefaultBaseHandler<Person>($"{URL}?roles={string.Join(",", accessRoles.Get4meStringCollection())}", AuthenticationTokens, AccountID, ItemsPerRequest, MaximumRecursiveRequests).Get(fieldNames);
+            else
+                return new DefaultBaseHandler<Person>($"{URL}/all_with_roles?roles={string.Join(",", accessRoles.Get4meStringCollection())}", AuthenticationTokens, AccountID, ItemsPerRequest, MaximumRecursiveRequests).Get(fieldNames);
         }
 
-        public Permission UpdateAccountPermission(Person person, Account account, AccessRoleType accessRoles)
+        public AccountPermission AddAccountPermission(Person person, AccountReference account, AccessRoles accessRoles)
         {
-            return UpdateAccountPermission(person, new Permission()
-            {
-                Account = account,
-                Roles = accessRoles
-            });
+            if (account is null)
+                throw new ArgumentNullException(nameof(account));
+
+            return AddAccountPermission(person, new AccountPermission() { Account = account, Roles = accessRoles });
         }
 
-        public Permission UpdateAccountPermission(Person person, Permission permission)
+        public AccountPermission AddAccountPermission(Person person, AccountPermission permissions)
         {
-            DefaultHandler<Permission> handler = new DefaultHandler<Permission>($"{this.URL}/{person.ID}/permissions", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest($"/{permission.Account.ID}?roles={permission.GetRolesInSingleString()}", "PATCH");
+            if (permissions is null)
+                throw new ArgumentNullException(nameof(permissions));
+
+            return GetChildHandler<AccountPermission>(person, $"permissions/{permissions.Account.ID}?roles={string.Join(",", permissions.Roles.Get4meStringCollection())}").Invoke("Post");
         }
 
-        public bool RemoveAccountPermission(Person person, Account account, AccessRoleType accessRoles)
+        public AccountPermission UpdateAccountPermission(Person person, AccountReference account, AccessRoles accessRoles)
         {
-            return RemoveAccountPermission(person, new Permission()
-            {
-                Account = account,
-                Roles = accessRoles
-            });
+            if (account is null)
+                throw new ArgumentNullException(nameof(account));
+
+            return UpdateAccountPermission(person, new AccountPermission() { Account = account, Roles = accessRoles });
         }
 
-        public bool RemoveAccountPermission(Person person, Permission permission)
+        public AccountPermission UpdateAccountPermission(Person person, AccountPermission permissions)
         {
-            DefaultHandler<Permission> handler = new DefaultHandler<Permission>($"{this.URL}/{person.ID}/permissions", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest($"/{permission.Account.ID}?roles={permission.GetRolesInSingleString()}", "DELETE") == null;
+            if (permissions is null)
+                throw new ArgumentNullException(nameof(permissions));
+
+            return GetChildHandler<AccountPermission>(person, $"permissions/{permissions.Account.ID}?roles={string.Join(",", permissions.Roles.Get4meStringCollection())}").Invoke("Patch");
         }
 
-        public bool RemoveAccountPermissions(Person person, Account account)
+        public bool RemoveAccountPermission(Person person, AccountReference account)
         {
-            return DeleteAllRelations(person, $"permissions/{account.ID}");
+            return GetChildHandler<AccountPermission>(person, $"permissions/{account.ID}").Invoke("Delete") == null;
         }
 
         public bool RemoveAllAccountPermissions(Person person)
         {
-            return DeleteAllRelations(person, "permissions");
+            return GetChildHandler<AccountPermission>(person, "permissions").Invoke("Delete") == null;
         }
 
         #endregion
 
-        #region service coverages
+        #region Service coverage
 
-        public List<Service> GetServiceCoverages(Person person, params string[] attributeNames)
+        public List<Service> GetServiceCoverage(Person person, params string[] fieldNames)
         {
-            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{this.URL}/{person.ID}/service_coverages", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Service>(person, "service_coverages").Get(fieldNames);
         }
 
         #endregion
 
-        #region service instance coverages
+        #region Service instance coverage
 
-        public List<ServiceInstance> GetServiceInstanceCoverages(Person person, params string[] attributeNames)
+        public List<ServiceInstance> GetServiceInstanceCoverage(Person person, params string[] fieldNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{person.ID}/service_instance_coverages", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceInstance>(person, "service_instance_coverages").Get(fieldNames);
         }
 
         #endregion
 
-        #region SLA coverages
+        #region Service level agreement coverage
 
-        public List<ServiceLevelAgreement> GetServiceLevelAgreementCoverages(Person person, params string[] attributeNames)
+        public List<ServiceLevelAgreement> GetServiceLevelAgreementCoverage(Person person, params string[] fieldNames)
         {
-            DefaultHandler<ServiceLevelAgreement> handler = new DefaultHandler<ServiceLevelAgreement>($"{this.URL}/{person.ID}/sla_coverages", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceLevelAgreement>(person, "sla_coverages").Get(fieldNames);
         }
 
         #endregion
 
-        #region teams
+        #region Teams 
 
-        public List<Team> GetTeams(Person person, params string[] attributeNames)
+        public List<Team> GetTeams(Person person, params string[] fieldNames)
         {
-            DefaultHandler<Team> handler = new DefaultHandler<Team>($"{this.URL}/{person.ID}/teams", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Team>(person, "teams").Get(fieldNames);
+        }
+
+        public List<Team> GetTeams(PredefinedEnabledDisabledFilter filter, Person person, params string[] fieldNames)
+        {
+            return GetChildHandler<Team>(person, $"teams/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddTeam(Person person, Team team)
@@ -269,29 +244,57 @@ namespace Sdk4me
 
         #endregion
 
-        #region archive, trash and restore
+        #region Skill pools
 
-        public Person Archive(Person person)
+        public List<SkillPool> GetSkillPools(Person person, params string[] fieldNames)
         {
-            return CustomWebRequest($"{person.ID}/archive", "POST");
+            return GetChildHandler<SkillPool>(person, "skill_pools").Get(fieldNames);
         }
 
-        public Person Trash(Person person)
+        public List<SkillPool> GetSkillPools(PredefinedEnabledDisabledFilter filter, Person person, params string[] fieldNames)
         {
-            return CustomWebRequest($"{person.ID}/trash", "POST");
+            return GetChildHandler<SkillPool>(person, $"skill_pools/{filter.To4meString()}").Get(fieldNames);
         }
 
-        public Person Restore(Archive archive)
+        public bool AddSkillPool(Person person, SkillPool skillPool)
         {
-            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+            return CreateRelation(person, "skill_pools", skillPool);
         }
 
-        public Person Restore(Trash trash)
+        public bool RemoveSkillPool(Person person, SkillPool skillPool)
         {
-            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+            return DeleteRelation(person, "skill_pools", skillPool);
+        }
+
+        public bool RemoveAllSkillPools(Person person)
+        {
+            return DeleteAllRelations(person, "skill_pools");
         }
 
         #endregion
 
+        #region Archive, trash and restore
+
+        public Person Archive(Person person)
+        {
+            return GetChildHandler<Person>(person, "archive").Invoke("Post");
+        }
+
+        public Person Trash(Person person)
+        {
+            return GetChildHandler<Person>(person, "trash").Invoke("Post");
+        }
+
+        public Person Restore(Archive archive)
+        {
+            return GetChildHandler<Person>(new Person() { ID = archive.Details.ID }, "restore").Invoke("Post");
+        }
+
+        public Person Restore(Trash trash)
+        {
+            return GetChildHandler<Person>(new Person() { ID = trash.Details.ID }, "restore").Invoke("Post");
+        }
+
+        #endregion
     }
 }

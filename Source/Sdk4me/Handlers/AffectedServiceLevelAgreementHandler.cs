@@ -1,14 +1,14 @@
 ﻿namespace Sdk4me
 {
-    public class AffectedServiceLevelAgreementHandler : DefaultHandler<AffectedServiceLevelAgreement>
+    public class AffectedServiceLevelAgreementHandler : DefaultBaseHandler<AffectedServiceLevelAgreement>
     {
-        public AffectedServiceLevelAgreementHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/affected_slas", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public AffectedServiceLevelAgreementHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/affected_slas", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public AffectedServiceLevelAgreementHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/affected_slas", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public AffectedServiceLevelAgreementHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/affected_slas", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
     }

@@ -1,78 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class ProjectTaskTemplateHandler : BaseHandler<ProjectTaskTemplate, PredefinedProjectTaskTemplateFilter>
+    public class ProjectTaskTemplateHandler : BaseHandler<ProjectTaskTemplate, PredefinedEnabledDisabledFilter>
     {
-        public ProjectTaskTemplateHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_task_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTaskTemplateHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_task_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ProjectTaskTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_task_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTaskTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_task_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region assignment
+        #region Assignments
 
-        public List<ProjectTaskTemplateAssignment> GetAssignments(ProjectTaskTemplate projectTaskTemplate, params string[] attributeNames)
+        public List<ProjectTaskTemplateAssignment> GetAssignments(ProjectTaskTemplate projectTaskTemplate)
         {
-            DefaultHandler<ProjectTaskTemplateAssignment> handler = new DefaultHandler<ProjectTaskTemplateAssignment>($"{this.URL}/{projectTaskTemplate.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTaskTemplateAssignment>(projectTaskTemplate, "assignments", SortOrder.None).Get("*");
         }
 
-        public ProjectTaskTemplateAssignment AddAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment assignment)
+        public ProjectTaskTemplateAssignment AddAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment projectTaskTemplateAssignment)
         {
-            DefaultHandler<ProjectTaskTemplateAssignment> handler = new DefaultHandler<ProjectTaskTemplateAssignment>($"{this.URL}/{projectTaskTemplate.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Insert(assignment);
+            return GetChildHandler<ProjectTaskTemplateAssignment>(projectTaskTemplate, "assignments").Insert(projectTaskTemplateAssignment);
         }
 
-        public ProjectTaskTemplateAssignment UpdateAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment assignment)
+        public ProjectTaskTemplateAssignment UpdateAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment projectTaskTemplateAssignment)
         {
-            DefaultHandler<ProjectTaskTemplateAssignment> handler = new DefaultHandler<ProjectTaskTemplateAssignment>($"{this.URL}/{projectTaskTemplate.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Update(assignment);
+            return GetChildHandler<ProjectTaskTemplateAssignment>(projectTaskTemplate, "assignments").Update(projectTaskTemplateAssignment);
         }
 
-        public bool RemoveAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment assignment)
+        public bool DeleteAssignment(ProjectTaskTemplate projectTaskTemplate, ProjectTaskTemplateAssignment projectTaskTemplateAssignment)
         {
-            DefaultHandler<ProjectTaskTemplateAssignment> handler = new DefaultHandler<ProjectTaskTemplateAssignment>($"{this.URL}/{projectTaskTemplate.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(assignment);
+            return GetChildHandler<ProjectTaskTemplateAssignment>(projectTaskTemplate, "assignments").Delete(projectTaskTemplateAssignment);
         }
 
-        public bool RemoveAllAssignments(ProjectTaskTemplate projectTaskTemplate)
+        public bool DeleteAllAssignments(ProjectTaskTemplate projectTaskTemplate)
         {
-            DefaultHandler<ProjectTaskAssignment> handler = new DefaultHandler<ProjectTaskAssignment>($"{this.URL}/{projectTaskTemplate.ID}/assignments", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<ProjectTaskTemplateAssignment>(projectTaskTemplate, "assignments").DeleteAll();
         }
 
         #endregion
 
-        #region project tasks
+        #region Project tasks
 
-        public List<ProjectTask> GetProjectTasks(ProjectTaskTemplate projectTaskTemplate, params string[] attributeNames)
+        public List<ProjectTask> GetProjectTasks(ProjectTaskTemplate projectTaskTemplate, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{this.URL}/{projectTaskTemplate.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTask>(projectTaskTemplate, "tasks").Get(fieldNames);
+        }
+
+        public List<ProjectTask> GetProjectTasks(PredefinedTaskStatusFilter filter, ProjectTaskTemplate projectTaskTemplate, params string[] fieldNames)
+        {
+            return GetChildHandler<ProjectTask>(projectTaskTemplate, $"tasks/{filter.To4meString()}").Get(fieldNames);
         }
 
         #endregion
 
-        #region project templates
+        #region Project template
 
-        public List<ProjectTemplate> GetProjectTemplates(ProjectTaskTemplate projectTaskTemplate, params string[] attributeNames)
+        public List<ProjectTemplate> GetProjectTemplates(ProjectTaskTemplate projectTaskTemplate, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTemplate> handler = new DefaultHandler<ProjectTemplate>($"{this.URL}/{projectTaskTemplate.ID}/project_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTemplate>(projectTaskTemplate, "project_templates").Get(fieldNames);
+        }
+
+        public List<ProjectTemplate> GetProjectTemplates(PredefinedEnabledDisabledFilter filter, ProjectTaskTemplate projectTaskTemplate, params string[] fieldNames)
+        {
+            return GetChildHandler<ProjectTemplate>(projectTaskTemplate, $"project_templates/{filter.To4meString()}").Get(fieldNames);
         }
 
         #endregion

@@ -38,88 +38,99 @@ namespace Sdk4me
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        public void Add(string attributeName, FilterCondition filter)
+        public void Add(string fieldName, FilterCondition filter)
         {
-            filterItems.Add(new Filter(attributeName, filter));
+            filterItems.Add(new Filter(fieldName, filter));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, string attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, string value)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, DateTime attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, DateTime value)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, value));
+        }
+
+        /// <summary>
+        /// Creates a new filter instance.
+        /// </summary>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="value">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, BaseItem value)
+        {
+            filterItems.Add(new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, params short[] attributeValue)
+        /// <param name="values">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, params short[] values)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, params int[] attributeValue)
+        /// <param name="values">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, params int[] values)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, params long[] attributeValue)
+        /// <param name="values">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, params long[] values)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Add(string attributeName, FilterCondition filter, bool attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, bool value)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Adds an object to the end of the collection.
         /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
-        public void Add(string attributeName, FilterCondition filter, params Enum[] attributeValue)
+        /// <param name="values">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
+        public void Add(string fieldName, FilterCondition filter, params Enum[] values)
         {
-            filterItems.Add(new Filter(attributeName, filter, attributeValue));
+            filterItems.Add(new Filter(fieldName, filter, values));
         }
 
         /// <summary>
@@ -182,95 +193,107 @@ namespace Sdk4me
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter)
+        public void Insert(int index, string fieldName, FilterCondition filter)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter));
+            filterItems.Insert(index, new Filter(fieldName, filter));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, string attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, string value)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, DateTime attributeValue)
+        /// <param name="value">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, DateTime value)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, params short[] attributeValues)
+        /// <param name="value">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, BaseItem value)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
+            filterItems.Insert(index, new Filter(fieldName, filter, value));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, params int[] attributeValues)
+        /// <param name="values">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, params short[] values)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
+            filterItems.Insert(index, new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, params long[] attributeValues)
+        /// <param name="values">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, params int[] values)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
+            filterItems.Insert(index, new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, bool attributeValue)
+        /// <param name="values">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, params long[] values)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValue));
+            filterItems.Insert(index, new Filter(fieldName, filter, values));
         }
 
         /// <summary>
         /// Inserts an element into the collection at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which item should be inserted.</param>
-        /// <param name="attributeName">The attribute name.</param>
+        /// <param name="fieldName">The field name.</param>
         /// <param name="filter">The filter to be used.</param>
-        /// <param name="attributeValue">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
-        public void Insert(int index, string attributeName, FilterCondition filter, params Enum[] attributeValues)
+        /// <param name="value">The attribute value.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, bool value)
         {
-            filterItems.Insert(index, new Filter(attributeName, filter, attributeValues));
+            filterItems.Insert(index, new Filter(fieldName, filter, value));
+        }
+
+        /// <summary>
+        /// Inserts an element into the collection at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which item should be inserted.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="values">The attribute value. The enumeration name will be used, camel case names will be converted to snake case.</param>
+        public void Insert(int index, string fieldName, FilterCondition filter, params Enum[] values)
+        {
+            filterItems.Insert(index, new Filter(fieldName, filter, values));
         }
 
         /// <summary>

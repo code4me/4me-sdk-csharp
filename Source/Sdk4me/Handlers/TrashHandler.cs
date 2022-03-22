@@ -1,21 +1,66 @@
-﻿namespace Sdk4me
-{
-    public class TrashHandler : DefaultHandler<Trash>
-    {
-        private readonly string baseURL;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-        public TrashHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/trash", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+namespace Sdk4me
+{
+    public sealed class TrashHandler : IBaseHandler
+    {
+        private readonly AuthenticationTokenCollection authenticationTokens = null;
+        private readonly string accountID = null;
+        private readonly string url = null;
+        private int itemsPerRequest = 25;
+        private int maximumRecursiveRequests = 10;
+
+        /// <summary>
+        /// <para>Gets or sets the number of items returned in one request.</para>
+        /// <para>The value must be at least 1 and maximum 100.</para>
+        /// </summary>
+        public int ItemsPerRequest
         {
-            this.baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
-            this.SortOrder = SortOrder.CreatedAt;
+            get => itemsPerRequest;
+            set => itemsPerRequest = (value < 1 || value > 100) ? 25 : value;
         }
 
-        public TrashHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/trash", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        /// <summary>
+        /// <para>Gets or sets the number of recursive requests.</para>
+        /// <para>The value must be at least 1 and maximum 1000.</para>
+        /// </summary>
+        public int MaximumRecursiveRequests
         {
-            this.baseURL = $"{Common.GetBaseUrl(environmentType)}/v1";
-            this.SortOrder = SortOrder.CreatedAt;
+            get => maximumRecursiveRequests;
+            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 10 : value;
+        }
+
+        public TrashHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environmentType, environmentRegion, itemsPerRequest, maximumRecursiveRequests)
+        {
+        }
+
+        public TrashHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        {
+            //validate string argument values
+            if (string.IsNullOrWhiteSpace(accountID))
+                throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
+
+            //validate authentication tokens
+            if (authenticationTokens is null)
+                throw new ArgumentNullException(nameof(authenticationTokens));
+
+            if (!authenticationTokens.Any())
+                throw new ArgumentException($"'{nameof(authenticationTokens)}' cannot be empty.", nameof(authenticationTokens));
+
+            //set global variables
+            url = $"{EnvironmentURL.Get(environmentType, environmentRegion)}";
+            this.authenticationTokens = authenticationTokens;
+            this.accountID = accountID;
+            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 25 : itemsPerRequest;
+            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 10 : maximumRecursiveRequests;
+        }
+
+        public List<Trash> Get()
+        {
+            return new DefaultBaseHandler<Trash>($"{url}/trash", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests) { SortOrder = SortOrder.CreatedAt }.Get();
         }
 
         public BaseItem Restore(Trash trash)
@@ -25,8 +70,7 @@
 
         public T Restore<T>(Trash trash) where T : BaseItem, new()
         {
-            DefaultHandler<T> handler = new DefaultHandler<T>($"{baseURL}{trash.Details.HypertextReference}", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest("restore", "POST");
+            return new DefaultBaseHandler<T>($"{url}/{trash.Details.HypertextReference.Trim('/')}/restore", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests).Invoke("Post");
         }
     }
 }

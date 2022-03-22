@@ -1,80 +1,69 @@
-﻿using Newtonsoft.Json;
+﻿#if NET5_0_OR_GREATER
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Sdk4me.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Sdk4me
 {
-    public class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
+    public abstract class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
     {
-        private readonly string url = null;
-        private readonly string allAttributeNames = null;
+        private readonly bool traceEnabled = Trace.Listeners != null && Trace.Listeners.Count > 0;
+        private readonly string applicationJsonMediaType = "application/json";
+        private readonly DateTime epochDateTimeMinValue = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private readonly string allFieldNames = null;
+        private readonly HttpClient client = new HttpClient();
         private readonly JsonSerializer serializer = new JsonSerializer();
-        private readonly int minimumDurationPerRequestInMiliseconds = 116;
-        private readonly AuthenticationTokenCollection authenticationTokens = null;
-        private readonly string accountID = null;
-        private readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private readonly string url;
+        private readonly string storageFacilityUrl;
+        private readonly AuthenticationTokenCollection authenticationTokens;
+        private readonly string accountID;
+        private readonly Type currentType = typeof(T);
+        private readonly Type currentCollectionType = typeof(List<T>);
         private AuthenticationToken currentToken = null;
-        private string responseAttributeNames = null;
-        private int itemsPerRequest = 100;
-        private int maximumRecursiveRequests = 50;
         private SortOrder responseSorting = SortOrder.UpdatedAt;
+        private string responseFieldNames = null;
+        private int itemsPerRequest = 25;
+        private int maximumRecursiveRequests = 10;
         private bool alwaysAsList = false;
-        private int startTickCount = 0;
 
         /// <summary>
-        /// <para>Gets or sets the amount of items returned in one request.</para>
+        /// <para>Gets or sets the number of items returned in one request.</para>
         /// <para>The value must be at least 1 and maximum 100.</para>
         /// </summary>
         public int ItemsPerRequest
         {
             get => itemsPerRequest;
-            set => itemsPerRequest = (value < 1 || value > 100) ? 100 : value;
+            set => itemsPerRequest = (value < 1 || value > 100) ? 25 : value;
         }
 
         /// <summary>
-        /// <para>Gets or sets the amount of recursive requests.</para>
+        /// <para>Gets or sets the number of recursive requests.</para>
         /// <para>The value must be at least 1 and maximum 1000.</para>
         /// </summary>
         public int MaximumRecursiveRequests
         {
             get => maximumRecursiveRequests;
-            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 50 : value;
+            set => maximumRecursiveRequests = (value < 1 || value > 1000) ? 10 : value;
         }
 
         /// <summary>
-        /// Force to parse the web response as a list.
+        /// Force to parse the API response as a list.
         /// </summary>
         public bool AlwaysAsList
         {
             get => alwaysAsList;
             set => alwaysAsList = value;
-        }
-
-        /// <summary>
-        /// Returns a collection of known the 4me authentication tokens.
-        /// </summary>
-        protected AuthenticationTokenCollection AuthenticationTokens
-        {
-            get => authenticationTokens;
-        }
-
-        /// <summary>
-        /// Returns the 4me environment.
-        /// </summary>
-        protected string AccountID
-        {
-            get => accountID;
-        }
-
-        /// <summary>
-        /// Returns the 4me API URL used.
-        /// </summary>
-        protected string URL
-        {
-            get => url;
         }
 
         /// <summary>
@@ -88,96 +77,170 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Creates a new instance of the 4me BaseHandler.
+        /// Returns the <see cref="AuthenticationToken"/> collection.
         /// </summary>
-        /// <param name="apiURL">The 4me API URL to be used.</param>
-        /// <param name="authenticationToken">The 4me authentication object.</param>
-        /// <param name="accountID">The 4me account name.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
-        public BaseHandler(string apiURL, AuthenticationToken authenticationToken, string accountID, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
-            : this(apiURL, new AuthenticationTokenCollection(authenticationToken), accountID, itemsPerRequest, maximumRecursiveRequests)
+        protected AuthenticationTokenCollection AuthenticationTokens
         {
+            get => authenticationTokens;
         }
 
         /// <summary>
-        /// Creates a new instance of the 4me BaseHandler.
+        /// Returns the 4me account identifier.
         /// </summary>
-        /// <param name="apiURL">The 4me API URL to be used.</param>
-        /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
-        /// <param name="accountID">The 4me account name.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
-        public BaseHandler(string apiURL, AuthenticationTokenCollection authenticationTokens, string accountID, int itemsPerRequest = 100, int maximumRecursiveRequests = 50)
+        protected string AccountID
         {
-            //VALIDATE STRING ARGUMENTS
-            if (string.IsNullOrWhiteSpace(apiURL))
-                throw new ArgumentException($"'{nameof(apiURL)}' cannot be null or whitespace.", nameof(apiURL));
-            
+            get => accountID;
+        }
+
+        /// <summary>
+        /// Returns the 4me API URL.
+        /// </summary>
+        protected string URL
+        {
+            get => url;
+        }
+
+        #region constructors
+
+        public BaseHandler(string endPointUrl, AuthenticationToken authenticationToken, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : this(endPointUrl, new AuthenticationTokenCollection(authenticationToken), accountID, itemsPerRequest, maximumRecursiveRequests)
+        {
+        }
+
+        public BaseHandler(string endPointUrl, AuthenticationTokenCollection authenticationTokens, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        {
+            //validate string argument values
             if (string.IsNullOrWhiteSpace(accountID))
                 throw new ArgumentException($"'{nameof(accountID)}' cannot be null or whitespace.", nameof(accountID));
-            
-            if (!Uri.TryCreate(apiURL, UriKind.Absolute, out Uri uriResult) || uriResult.Scheme != Uri.UriSchemeHttps)
-                throw new ArgumentException($"'{nameof(apiURL)}' is invalid.", nameof(apiURL));
 
-            //SET GLOBAL VARIABLES
-            this.url = apiURL;
-            this.authenticationTokens = authenticationTokens ?? throw new ArgumentNullException(nameof(authenticationTokens));
+            //validate the url
+            if (string.IsNullOrWhiteSpace(endPointUrl))
+                throw new ArgumentException($"'{nameof(endPointUrl)}' cannot be null or whitespace.", nameof(endPointUrl));
+
+            if (!Uri.TryCreate(endPointUrl, UriKind.Absolute, out Uri uriResult) || uriResult.Scheme != Uri.UriSchemeHttps)
+                throw new ArgumentException($"'{nameof(endPointUrl)}' is invalid.", nameof(endPointUrl));
+
+            //set storage facility url
+            storageFacilityUrl = EnvironmentURL.GetStorageFacilityUrl(endPointUrl);
+
+            //validate authentication tokens
+            if (authenticationTokens is null)
+                throw new ArgumentNullException(nameof(authenticationTokens));
+
+            if (!authenticationTokens.Any())
+                throw new ArgumentException($"'{nameof(authenticationTokens)}' cannot be empty.", nameof(authenticationTokens));
+
+            //json converter settings
+            serializer.Converters.Add(new StringEnumConverter());
+
+            //set global variables
+            url = endPointUrl.TrimEnd('/');
+            this.authenticationTokens = authenticationTokens;
             this.accountID = accountID;
-            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 100 : itemsPerRequest;
-            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 50 : maximumRecursiveRequests;
+            this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 25 : itemsPerRequest;
+            this.maximumRecursiveRequests = (maximumRecursiveRequests < 1 || maximumRecursiveRequests > 1000) ? 10 : maximumRecursiveRequests;
 
-            //SET FIELD ATTRIBUTE (BASE ON ALL PROPERTIES OF T)
-            this.allAttributeNames = (new T()).GetAllAttributeNames();
+            //get all field names for the current type
+            allFieldNames = new T().GetAllFieldNames();
+        }
 
-            //FORCE TLS 1.2
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        #endregion
+
+        #region get a child handler
+
+        /// <summary>
+        /// Get a <see cref="DefaultBaseHandler{T}"/> with a relation to the item.
+        /// </summary>
+        /// <typeparam name="H"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="endPointName">The endpoint for the child relational item.</param>
+        /// <returns>Returns a <see cref="DefaultBaseHandler{T}"/> with a relation to the item object handler.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        protected DefaultBaseHandler<H> GetChildHandler<H>(T item, string endPointName) where H : BaseItem, new()
+        {
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
+
+            if (string.IsNullOrEmpty(endPointName))
+                throw new ArgumentException($"'{nameof(endPointName)}' cannot be null or empty.", nameof(endPointName));
+
+            return new DefaultBaseHandler<H>($"{url}/{item.ID}/{endPointName.Trim('/')}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests, responseSorting);
         }
 
         /// <summary>
-        /// Query the 4me web service.
+        /// Get a <see cref="DefaultBaseHandler{T}"/> with a relation to the item.
+        /// </summary>
+        /// <typeparam name="H"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="endPointName">The endpoint for the child relational item.</param>
+        /// <param name="sortOrder">The sort order of the handler.</param>
+        /// <returns>Returns a <see cref="DefaultBaseHandler{T}"/> with a relation to the item object handler.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        protected DefaultBaseHandler<H> GetChildHandler<H>(T item, string endPointName, SortOrder sortOrder) where H : BaseItem, new()
+        {
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
+
+            if (string.IsNullOrEmpty(endPointName))
+                throw new ArgumentException($"'{nameof(endPointName)}' cannot be null or empty.", nameof(endPointName));
+
+            return new DefaultBaseHandler<H>($"{url}/{item.ID}/{endPointName.Trim('/')}", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests, sortOrder);
+        }
+
+        #endregion
+
+        #region get methods
+
+        /// <summary>
+        /// Query the 4me web services.
         /// </summary>
         /// <param name="ID">The identifier of the object.</param>
-        /// <returns>The object that matches the specified identifier.</returns>
+        /// <returns>The object that matches the identifier.</returns>
+        /// <exception cref="Sdk4meException"></exception>
         public T Get(long ID)
         {
-            SetResponseAttributes(null);
-            return GetByIdentifier(ID);
+            SetResponseFieldNames(null);
+            return Get(null, null, $"{url}/{ID}", 1).FirstOrDefault();
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(null, null, null, this.maximumRecursiveRequests);
+            SetResponseFieldNames(fieldNames);
+            return Get(null, null, null, maximumRecursiveRequests);
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
         /// <param name="predefinedFilter">A predefined filter value.</param>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(X predefinedFilter, params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(X predefinedFilter, params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), null, null, this.maximumRecursiveRequests);
+            SetResponseFieldNames(fieldNames);
+            return Get(predefinedFilter.To4meString(), null, null, maximumRecursiveRequests);
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
         /// <param name="filter">The filter for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(Filter filter, params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(Filter filter, params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(null, new FilterCollection() { filter }, null, this.maximumRecursiveRequests);
+            SetResponseFieldNames(fieldNames);
+            return Get(null, new FilterCollection() { filter }, null, maximumRecursiveRequests);
         }
 
         /// <summary>
@@ -185,24 +248,26 @@ namespace Sdk4me
         /// </summary>
         /// <param name="predefinedFilter">A predefined filter value.</param>
         /// <param name="filter">The filter for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(X predefinedFilter, Filter filter, params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(X predefinedFilter, Filter filter, params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), new FilterCollection() { filter }, null, this.maximumRecursiveRequests);
+            SetResponseFieldNames(fieldNames);
+            return Get(predefinedFilter.To4meString(), new FilterCollection() { filter }, null, maximumRecursiveRequests);
         }
 
         /// <summary>
         /// Query the 4me web service.
         /// </summary>
         /// <param name="filters">The filters for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(FilterCollection filters, params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(FilterCollection filters, params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(null, filters, null, this.maximumRecursiveRequests);
+            SetResponseFieldNames(fieldNames);
+            return Get(null, filters, null, maximumRecursiveRequests);
         }
 
         /// <summary>
@@ -210,60 +275,13 @@ namespace Sdk4me
         /// </summary>
         /// <param name="predefinedFilter">A predefined filter value.</param>
         /// <param name="filters">The filters for the request.</param>
-        /// <param name="attributeNames">An array of attributes names to be requested. If no attribute names are specified the default attributes will be returned. Use * to get all attribute values.</param>
+        /// <param name="fieldNames">An array of field names to be requested. If no field names are specified the default fields will be returned. Use * to get all fields.</param>
         /// <returns>A collection of objects.</returns>
-        public List<T> Get(X predefinedFilter, FilterCollection filters, params string[] attributeNames)
+        /// <exception cref="Sdk4meException"></exception>
+        public List<T> Get(X predefinedFilter, FilterCollection filters, params string[] fieldNames)
         {
-            SetResponseAttributes(attributeNames);
-            return Get(Common.ConvertTo4mePredefinedFilter(predefinedFilter), filters, null, this.maximumRecursiveRequests);
-        }
-
-        /// <summary>
-        /// Query the 4me web service.
-        /// </summary>
-        /// <param name="ID">The identifier of the object.</param>
-        /// <returns>The object that matches the specified identifier.</returns>
-        private T GetByIdentifier(long ID)
-        {
-            //SET DEFAULT VALUE
-            T retval = default;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}", url, ID);
-
-            //BUILD WEB REQUEST
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "GET");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //SINGLE RECORD
-                    using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                        {
-                            retval = (T)serializer.Deserialize(jsonTextReader, typeof(T));
-                        }
-                    }
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-
-                    //RESET INCLUDED DURING SERIALIZATION
-                    retval.ResetIncludedDuringSerialization();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            //RETURN RESULT
-            return retval;
+            SetResponseFieldNames(fieldNames);
+            return Get(predefinedFilter.To4meString(), filters, null, maximumRecursiveRequests);
         }
 
         /// <summary>
@@ -273,307 +291,72 @@ namespace Sdk4me
         /// <param name="filters">The filters used during the request.</param>
         /// <param name="nextPageUrl">The 'next page' URL. This should always be null; unless it is a recursive call.</param>
         /// <param name="recursiveRequestCount">The amount of recursive requests.</param>
-        /// <returns>The 4me web service query result set.</returns>
+        /// <returns>A collection of objects.</returns>
+        /// <exception cref="Sdk4meException"></exception>
         private List<T> Get(string predefinedFilter, FilterCollection filters, string nextPageUrl, int recursiveRequestCount)
         {
             List<T> retval = new List<T>();
 
-            if (recursiveRequestCount == 0)
+            if (recursiveRequestCount < 1)
                 return retval;
 
-            //BUILD REQUEST URL
             if (nextPageUrl == null)
             {
-                //VALIDATE FILTERS
                 if (filters is null)
                     filters = new FilterCollection();
 
-                nextPageUrl = string.Format("{0}?per_page={1}", this.url, itemsPerRequest);
-                if (predefinedFilter != null)
-                    nextPageUrl = string.Format("{0}/{1}?per_page={2}", this.url, predefinedFilter, itemsPerRequest);
+                nextPageUrl = (predefinedFilter == null) ? $"{url}{(url.Contains('?') ? "&" : "?")}per_page={itemsPerRequest}" : $"{url}/{predefinedFilter}?per_page={itemsPerRequest}";
                 if (responseSorting != SortOrder.None)
-                    nextPageUrl += string.Format("&sort={0}", GetSortOrderStringValue(responseSorting));
+                    nextPageUrl += $"&sort={responseSorting.To4meString()}";
                 for (int i = 0; i < filters.Count; i++)
-                    nextPageUrl += string.Format("&{0}", filters[i].GetFilter());
-                if (responseAttributeNames != null)
-                    nextPageUrl += string.Format("&fields={0}", responseAttributeNames);
+                    nextPageUrl += $"&{filters[i].GetFilter()}";
+                if (responseFieldNames != null)
+                    nextPageUrl += $"&fields={responseFieldNames}";
             }
 
-            //BUILD WEB REQUEST
-            try
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(HttpMethod.Get, nextPageUrl))
             {
-                HttpWebRequest request = BuildWebRequest(nextPageUrl, "GET");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.Headers["x-pagination-total-entries"] != null || this.alwaysAsList)
-                    {
-                        //GET NEXT URL FROM LINK HEADER
-                        nextPageUrl = LinkHeader.LinksFromHeader(response.Headers["Link"]).NextLink;
+                nextPageUrl = null;
 
-                        //MULTIPLE RECORDS
-                        using (StreamReader responseStream = new StreamReader(response.GetResponseStream()))
-                        {
-                            using (JsonTextReader jsonTextReader = new JsonTextReader(responseStream))
-                            {
-                                retval.AddRange((List<T>)serializer.Deserialize(jsonTextReader, typeof(List<T>)));
-                            }
-                        }
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage))
+                {
+                    if (responseMessage.Headers.TryGetValues("X-Pagination-Total-Entries", out _) || alwaysAsList)
+                    {
+                        if (responseMessage.Headers.TryGetValues("Link", out IEnumerable<string> linkHeaderValue))
+                            nextPageUrl = HttpHeaderLink.GetLinksFromHeader(linkHeaderValue.FirstOrDefault()).NextLink;
+
+                        retval.AddRange(GetHttpContentAsCollection(responseMessage));
                     }
                     else
                     {
-                        //SET NEXT URL
-                        nextPageUrl = null;
-
-                        //SINGLE RECORD
-                        using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                        {
-                            using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                            {
-                                retval.Add((T)serializer.Deserialize(jsonTextReader, typeof(T)));
-                            }
-                        }
+                        retval.Add(GetHttpContentAsItem(responseMessage));
                     }
 
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-
-                    //RESET INCLUDED DURING SERIALIZATION
                     for (int i = 0; i < retval.Count; i++)
-                        retval[i].ResetIncludedDuringSerialization();
+                        retval[i].ResetPropertySerializationCollection();
                 }
             }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
 
-            //CONTINUE NEXT REQUEST CYCLE
             if (nextPageUrl != null)
                 retval.AddRange(Get(predefinedFilter, filters, nextPageUrl, recursiveRequestCount - 1));
 
-            //RETURN RESULT
             return retval;
         }
 
-        /// <summary>
-        /// Use the search endpoint of the 4me web service. 
-        /// </summary>
-        /// <param name="text">The text to search for.</param>
-        /// <param name="onBehalfOf">Search on behalf of.</param>
-        /// <param name="searchTypes">Returns a list of search results.</param>
-        /// <returns>A collection of search items.</returns>
-        internal List<SearchResult> Search(string text, Person onBehalfOf = null, params SearchType[] searchTypes)
-        {
-            return Search(text, onBehalfOf, null, maximumRecursiveRequests, string.Join(",", Common.ConvertTo4meAttributeName(searchTypes)));
-        }
+        #endregion
+
+        #region insert and update methods
 
         /// <summary>
-        /// Use the search endpoint of the 4me web service.
-        /// </summary>
-        /// <param name="text">The text to search for.</param>
-        /// <param name="onBehalfOf">Search on behalf of.</param>
-        /// <param name="nextPageUrl">The 'next page' URL. This should always be null; unless it is a recursive call.</param>
-        /// <param name="recursiveRequestCount">The amount of recursive requests.</param>
-        /// <param name="searchTypes">Returns a list of search results.</param>
-        /// <returns>A collection of search items.</returns>
-        private List<SearchResult> Search(string text, Person onBehalfOf, string nextPageUrl, int recursiveRequestCount, string types)
-        {
-            List<SearchResult> retval = new List<SearchResult>();
-
-            //VALIDATE
-            if (string.IsNullOrWhiteSpace(text))
-                throw new NullReferenceException(nameof(text));
-
-            //BUILD REQUEST URL
-            if (nextPageUrl == null)
-            {
-                nextPageUrl = string.Format("{0}?per_page={1}", url, itemsPerRequest);
-                nextPageUrl += string.Format("&q={0}", Uri.EscapeDataString(text));
-                if (!string.IsNullOrWhiteSpace(types))
-                    nextPageUrl += string.Format("&types={0}", types);
-                if (onBehalfOf != null)
-                    nextPageUrl += string.Format("&on_behalf={0}", onBehalfOf.ID);
-            }
-
-            //BUILD WEB REQUEST
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(nextPageUrl, "GET", false);
-                RegisterTime();
-
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    nextPageUrl = LinkHeader.LinksFromHeader(response.Headers["Link"]).NextLink;
-
-                    using (StreamReader responseStream = new StreamReader(response.GetResponseStream()))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(responseStream))
-                        {
-                            retval.AddRange((List<SearchResult>)serializer.Deserialize(jsonTextReader, typeof(List<SearchResult>)));
-                        }
-                    }
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            if (nextPageUrl != null && recursiveRequestCount > 1)
-                retval.AddRange(Search(text, onBehalfOf, nextPageUrl, recursiveRequestCount - 1, types));
-
-            //RETURN RESULT
-            return retval;
-        }
-
-        /// <summary>
-        /// Delete an object in 4me.
-        /// </summary>
-        /// <param name="item">The object to delete.</param>
-        /// <returns>True in case of success otherwise false/</returns>
-        public bool Delete(T item)
-        {
-            bool retval = false;
-
-            //IS NULL
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}", url, item.ID);
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "DELETE");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //GET RESPONSE
-                    retval = response.StatusCode == HttpStatusCode.NoContent;
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            return retval;
-        }
-
-        /// <summary>
-        /// Delete all objects in 4me.
-        /// </summary>
-        /// <returns>True in case of success otherwise false.</returns>
-        public bool DeleteAll()
-        {
-            bool retval = false;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}", url);
-
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "DELETE");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //GET RESPONSE
-                    retval = response.StatusCode == HttpStatusCode.NoContent;
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            return retval;
-        }
-
-        /// <summary>
-        /// Insert a new object in 4me.
+        /// Creates a new object in 4me.
         /// </summary>
         /// <param name="item">The object to create.</param>
         /// <returns>A new instance of the created object.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
         public T Insert(T item)
         {
-            //IS NULL
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
-
-            //SHOULD SERIALIZE?
-            if (!item.ShouldSendApiRequest())
-            {
-                DebugWriteLine("POST", "None of the attribute values changed, request canceled");
-                return item;
-            }
-
-            //SET DEFAULT VALUE
-            T retval = default;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}", url);
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "POST");
-                request.ContentType = "application/json";
-                item.RemoveIdentifierDuringSerialization();
-                serializer.ContractResolver = new Sdk4meContractResolver(item.IncludeDuringSerialization);
-                RegisterTime();
-
-                //WRITE CONTENT
-                using (StreamWriter requestStream = new StreamWriter(request.GetRequestStream()))
-                {
-                    using (JsonTextWriter jsonTextWriter = new JsonTextWriter(requestStream))
-                    {
-                        serializer.Serialize(jsonTextWriter, item, typeof(T));
-                    }
-                }
-
-                //READ CONTENT
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //SINGLE RECORD
-                    using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                        {
-                            retval = (T)serializer.Deserialize(jsonTextReader, typeof(T));
-                        }
-                    }
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            retval?.ResetIncludedDuringSerialization();
-            return retval;
+            return InsertOrUpdate(HttpMethod.Post, item);
         }
 
         /// <summary>
@@ -581,397 +364,590 @@ namespace Sdk4me
         /// </summary>
         /// <param name="item">The object to be updated.</param>
         /// <returns>A new instance of the updated object.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
         public T Update(T item)
         {
-            //IS NULL
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
-
-            //SHOULD SERIALIZE?
-            if (!item.ShouldSendApiRequest())
-            {
-                DebugWriteLine("PATCH", "None of the attribute values changed, request canceled");
-                return item;
-            }
-
-            //SET DEFAULT VALUE
-            T retval = default;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}", url, item.ID);
-
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "PATCH");
-                request.ContentType = "application/json";
-                item.IncludeIdentifierDuringSerialization();
-                serializer.ContractResolver = new Sdk4meContractResolver(item.IncludeDuringSerialization);
-                RegisterTime();
-
-                //WRITE CONTENT
-                using (StreamWriter requestStream = new StreamWriter(request.GetRequestStream()))
-                {
-                    using (JsonTextWriter jsonTextWriter = new JsonTextWriter(requestStream))
-                    {
-                        serializer.Serialize(jsonTextWriter, item, typeof(T));
-                    }
-                }
-
-                //GET CONTENT
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //SINGLE RECORD
-                    using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                        {
-                            retval = (T)serializer.Deserialize(jsonTextReader, typeof(T));
-                        }
-                    }
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            retval?.ResetIncludedDuringSerialization();
-            return retval;
+            return InsertOrUpdate(HttpMethod.Patch, item);
         }
 
         /// <summary>
-        /// A custom web request without request data.
+        /// Create or updates an object in 4me.
         /// </summary>
-        /// <param name="appendToURL">An addition to the 4me API URL value specified during object handler creation.</param>
-        /// <param name="method">The protocol method used in the web request.</param>
-        /// <returns>A new object instance based upon the response.</returns>
-        internal T CustomWebRequest(string appendToURL, string method)
+        /// <param name="method">The http method.</param>
+        /// <param name="item">The object to be created or updated.</param>
+        /// <returns>A new instance of the created object.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        private T InsertOrUpdate(HttpMethod method, T item)
         {
-            //SET DEFAULT VALUE
-            T retval = default;
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
 
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}", url.TrimEnd('/'), appendToURL.TrimEnd('/'));
-            try
+            if (!item.HasChanged)
+                return item;
+
+            string requestUrl = method == HttpMethod.Post ? url : $"{url}/{item.ID}";
+            serializer.ContractResolver = new ContractResolver(item.PropertySerializationCollection, method != HttpMethod.Post);
+
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(method, requestUrl))
             {
-                HttpWebRequest request = BuildWebRequest(requestURL, method);
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage, item))
                 {
-                    //SINGLE RECORD
-                    using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                        {
-                            retval = (T)serializer.Deserialize(jsonTextReader, typeof(T));
-                        }
-                    }
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
+                    T retval = GetHttpContentAsItem(responseMessage);
+                    retval?.ResetPropertySerializationCollection();
+                    return retval;
                 }
             }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            retval?.ResetIncludedDuringSerialization();
-            return retval;
         }
+
+        /// <summary>
+        /// Send a request without any content to the 4me API.
+        /// </summary>
+        /// <param name="httpMethod">The HTTP method.</param>
+        /// <returns><see cref="T"/> in case of success; otherwise false.</returns>
+        public T Invoke(string httpMethod)
+        {
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(new HttpMethod(httpMethod.ToUpperInvariant()), url))
+            {
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage))
+                {
+                    T retval = GetHttpContentAsItem(responseMessage);
+                    retval?.ResetPropertySerializationCollection();
+                    return retval;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Send a request without any content to the 4me API.
+        /// </summary>
+        /// <param name="httpMethod">The HTTP method.</param>
+        /// <returns>True on any HTTP success status code; otherwise false.</returns>
+        public bool InvokeNoContent(string httpMethod)
+        {
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(new HttpMethod(httpMethod.ToUpperInvariant()), url))
+            {
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage))
+                {
+                    return responseMessage.IsSuccessStatusCode;
+                }
+            }
+        }
+
+        #endregion
+
+        #region delete methods
+
+        /// <summary>
+        /// Delete a linked 4me object.
+        /// </summary>
+        /// <param name="item">The object to delete.</param>
+        /// <returns>True is case of success; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        public bool Delete(T item)
+        {
+            return Delete(item, false);
+        }
+
+        /// <summary>
+        /// Delete all linked 4me objects.
+        /// </summary>
+        /// <param name="item">The object to delete.</param>
+        /// <returns>True is case of success; otherwise false.</returns>
+        /// <exception cref="Sdk4meException"></exception>
+        public bool DeleteAll()
+        {
+            return Delete(null, true);
+        }
+
+        /// <summary>
+        /// Delete one or all linked 4me objects.
+        /// </summary>
+        /// <param name="item">The object to delete.</param>
+        /// <param name="allItems">True to delete all items, when true the item value will be ignored."/></param>
+        /// <returns>True is case of success; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        private bool Delete(T item, bool allItems)
+        {
+            if (!allItems && item is null)
+                throw new ArgumentNullException(nameof(item));
+
+            using (HttpRequestMessage request = CreateHttpRequest(HttpMethod.Delete, allItems ? url : $"{url}/{item.ID}"))
+            {
+                using (HttpResponseMessage response = SendHttpRequest(request))
+                {
+                    return response.StatusCode == HttpStatusCode.NoContent;
+                }
+            }
+        }
+
+        #endregion
+
+        #region relational methods
 
         /// <summary>
         /// Create a relation between 2 objects.
         /// </summary>
         /// <param name="item">The item to create the relation for.</param>
-        /// <param name="relationObjectType">The object type (4me name) of the relation.</param>
-        /// <param name="relationItem">The identifier of the object type of the relation.</param>
+        /// <param name="relationObjectName">The object type (4me name) of the relation.</param>
+        /// <param name="relationItem">The related item.</param>
         /// <returns>True in case of success, otherwise false.</returns>
-        protected bool CreateRelation(T item, string relationObjectType, BaseItem relationItem)
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        protected bool CreateRelation(T item, string relationObjectName, BaseItem relationItem)
         {
-            if (string.IsNullOrWhiteSpace(relationObjectType))
-                throw new ArgumentException($"'{nameof(relationObjectType)}' cannot be null or whitespace.", nameof(relationObjectType));
+            if (string.IsNullOrWhiteSpace(relationObjectName))
+                throw new ArgumentException($"'{nameof(relationObjectName)}' cannot be null or whitespace.", nameof(relationObjectName));
+            if (relationItem is null)
+                throw new ArgumentNullException(nameof(relationItem));
 
-            bool retval = false;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}/{2}/{3}", url, item.ID, relationObjectType, relationItem.ID);
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "POST");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //GET RESPONSE
-                    retval = response.StatusCode == HttpStatusCode.OK;
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            return retval;
+            return UpdateRelation(HttpMethod.Post, item, relationObjectName, relationItem);
         }
 
         /// <summary>
         /// Delete a relation between two objects.
         /// </summary>
         /// <param name="item">The item to delete the relation from.</param>
-        /// <param name="relationObjectType">The object type (4me name) of the relation.</param>
-        /// <param name="relationObjectIdentifier">The identifier of the object type of the relations, or null to delete all relations for the specified object type.</param>
+        /// <param name="relationObjectName">The object type (4me name) of the relation.</param>
+        /// <param name="relationItem">The related item.</param>
         /// <returns>True in case of success, otherwise false.</returns>
-        protected bool DeleteRelation(T item, string relationObjectType, BaseItem relationItem)
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        protected bool DeleteRelation(T item, string relationObjectName, BaseItem relationItem)
         {
-            //IS NULL OR WHITESPACE
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
+            if (string.IsNullOrWhiteSpace(relationObjectName))
+                throw new ArgumentException($"'{nameof(relationObjectName)}' cannot be null or whitespace.", nameof(relationObjectName));
             if (relationItem is null)
                 throw new ArgumentNullException(nameof(relationItem));
-            if (string.IsNullOrWhiteSpace(relationObjectType))
-                throw new ArgumentException($"'{nameof(relationObjectType)}' cannot be null or whitespace.", nameof(relationObjectType));
 
-            bool retval = false;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}/{2}/{3}", url, item.ID, relationObjectType, relationItem.ID);
-            try
-            {
-                HttpWebRequest request = BuildWebRequest(requestURL, "DELETE");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    //GET RESPONSE
-                    retval = response.StatusCode == HttpStatusCode.NoContent;
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
-                }
-            }
-            catch (WebException ex)
-            {
-                throw ConvertWebException(ex);
-            }
-
-            return retval;
+            return UpdateRelation(HttpMethod.Delete, item, relationObjectName, relationItem);
         }
 
         /// <summary>
         /// Delete all relations from the object.
         /// </summary>
         /// <param name="item">The item to delete the relation from.</param>
-        /// <param name="relationObjectType">The object type (4me name) of the relation.</param>
+        /// <param name="relationObjectName">The object type (4me name) of the relation.</param>
         /// <returns>True in case of success, otherwise false.</returns>
-        protected bool DeleteAllRelations(T item, string relationObjectType)
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        protected bool DeleteAllRelations(T item, string relationObjectName)
         {
-            //IS NULL OR WHITESPACE
+            if (string.IsNullOrWhiteSpace(relationObjectName))
+                throw new ArgumentException($"'{nameof(relationObjectName)}' cannot be null or whitespace.", nameof(relationObjectName));
+
+            return UpdateRelation(HttpMethod.Delete, item, relationObjectName, null);
+        }
+
+        /// <summary>
+        /// Add or Delete a relation between objects.
+        /// </summary>
+        /// <param name="method">The http method.</param>
+        /// <param name="item">The item to delete the relation from.</param>
+        /// <param name="relationObjectName">The object type (4me name) of the relation.</param>
+        /// <param name="relationItem">The related item.</param>
+        /// <returns>True in case of success, otherwise false.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        private bool UpdateRelation(HttpMethod method, T item, string relationObjectName, BaseItem relationItem)
+        {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
 
-            if (string.IsNullOrWhiteSpace(relationObjectType))
-                throw new ArgumentException($"'{nameof(relationObjectType)}' cannot be null or whitespace.", nameof(relationObjectType));
+            string requestUrl = $"{url}/{item.ID}/{relationObjectName}";
+            if (relationItem != null)
+                requestUrl += $"/{relationItem.ID}";
 
-            bool retval = false;
-
-            //BUILD REQUEST URL
-            string requestURL = string.Format("{0}/{1}/{2}", url, item.ID, relationObjectType);
-            try
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(method, requestUrl))
             {
-                HttpWebRequest request = BuildWebRequest(requestURL, "DELETE");
-                RegisterTime();
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage))
                 {
-                    //GET RESPONSE
-                    retval = response.StatusCode == HttpStatusCode.NoContent;
-
-                    //STORE TOKEN INFORMATION
-                    SetCurrentTokenValues(response.Headers);
-
-                    //PAUSE AS 4ME ALLOWS ONLY 10 REQUEST PER SECOND
-                    Sleep();
+                    return responseMessage.StatusCode == HttpStatusCode.OK || responseMessage.StatusCode == HttpStatusCode.NoContent;
                 }
             }
-            catch (WebException ex)
+        }
+
+        #endregion
+
+        #region storage
+
+        /// <summary>
+        /// Upload a file to 4me storage.
+        /// </summary>
+        /// <param name="path">The file to be uploaded.</param>
+        /// <param name="contentType">The content type of the file.</param>
+        /// <param name="key">The reference key of the file storage.</param>
+        /// <param name="size">The size, in bytes, of the file.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        /// <exception cref="Exception"></exception>
+        public bool UploadAttachment(string path, string contentType, out string key, out long size)
+        {
+            FileInfo file = new FileInfo(path);
+            if (!file.Exists)
+                throw new FileNotFoundException(path);
+
+            StorageFacility storageFacility = GetStorageFacility();
+            if (storageFacility != null)
             {
-                throw ConvertWebException(ex);
+                if (file.Length >= storageFacility.SizeLimit)
+                    throw new Sdk4meException($"File size exceeded, the maximum size is {storageFacility.SizeLimit} byte");
+
+                MultipartFormDataContent multipartContent = new MultipartFormDataContent
+                {
+                    { new StringContent(contentType), "Content-Type" },
+                    { new StringContent(storageFacility.Cloud.ACL), "acl" },
+                    { new StringContent(storageFacility.Cloud.Key), "key" },
+                    { new StringContent(storageFacility.Cloud.Policy), "policy" },
+                    { new StringContent(storageFacility.Cloud.SuccessActionStatus), "success_action_status" },
+                    { new StringContent(storageFacility.Cloud.Algorithm), "x-amz-algorithm" },
+                    { new StringContent(storageFacility.Cloud.Credential), "x-amz-credential" },
+                    { new StringContent(storageFacility.Cloud.Date), "x-amz-date" },
+                    { new StringContent(storageFacility.Cloud.ServerSideEncryption), "x-amz-server-side-encryption" },
+                    { new StringContent(storageFacility.Cloud.Signature), "x-amz-signature" },
+                    { new ByteArrayContent(File.ReadAllBytes(file.FullName)), "file", file.Name }
+                };
+
+                using (HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, storageFacility.UploadUri) { Content = multipartContent })
+                {
+                    WriteDebug(requestMessage);
+                    using (HttpResponseMessage responseMessage = client.Send(requestMessage))
+                    {
+                        using (StreamReader reader = new StreamReader(responseMessage.Content.ReadAsStream()))
+                        {
+                            string data = reader.ReadToEnd();
+
+                            Match match = Regex.Match(data, "(?<=<Key>)(.*?)(?=</Key>)");
+                            if (match.Success)
+                            {
+                                key = match.Value;
+                                size = file.Length;
+                                return true;
+                            }
+                            else
+                            {
+                                throw new Exception(data);
+                            }
+                        }
+                    }
+                }
             }
+            else
+            {
+                key = null;
+                size = 0;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Delete a file.
+        /// </summary>
+        /// <param name="item">The item to which the files belong.</param>
+        /// <param name="attachmentType">The attachment type.</param>
+        /// <param name="attachment">The attachment to be deleted.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        public bool DeleteAttachment(T item, AttachmentType attachmentType, Attachment attachment)
+        {
+            return DeleteAttachment(item, attachmentType, new List<Attachment> { attachment });
+        }
+
+        /// <summary>
+        /// Delete a collection of files.
+        /// </summary>
+        /// <param name="item">The item to which the files belong.</param>
+        /// <param name="attachmentType">The attachment type.</param>
+        /// <param name="attachments">The list of files to be deleted.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Sdk4meException"></exception>
+        public bool DeleteAttachment(T item, AttachmentType attachmentType, List<Attachment> attachments)
+        {
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
+
+            if (attachments is null)
+                throw new ArgumentNullException(nameof(attachments));
+
+            JArray data = new JArray();
+            foreach (Attachment attachment in attachments)
+                data.Add(new JObject() { { "key", attachment.Key }, { "_destroy", true } });
+            JObject jsonObject = new JObject { { $"{attachmentType.To4meString()}_attachments", data } };
+
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(HttpMethod.Patch, $"{url}/{item.ID}"))
+            {
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage, jsonObject))
+                {
+                    return responseMessage.IsSuccessStatusCode;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Request a storage facility object.
+        /// </summary>
+        /// <returns>A <see cref="StorageFacility"/> item when successful; otherwise null.</returns>
+        /// <exception cref="Sdk4meException"></exception>
+        private StorageFacility GetStorageFacility()
+        {
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(HttpMethod.Get, storageFacilityUrl))
+            {
+                using (HttpResponseMessage responseMessage = SendHttpRequest(requestMessage))
+                {
+                    if (responseMessage.IsSuccessStatusCode && responseMessage.Content.Headers.ContentType.MediaType == applicationJsonMediaType)
+                    {
+                        using (StreamReader streamReader = new StreamReader(responseMessage.Content.ReadAsStream()))
+                        {
+                            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                            {
+                                return (StorageFacility)serializer.Deserialize(jsonTextReader, TypeReferences.StorageFacilityType);
+                            }
+                        }
+                    }
+                    else if (responseMessage.Content.Headers.ContentType.MediaType == applicationJsonMediaType)
+                    {
+                        using (StreamReader streamReader = new StreamReader(responseMessage.Content.ReadAsStream()))
+                            throw new Sdk4meException(streamReader.ReadToEnd());
+                    }
+
+                    return null;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Audit
+
+        public virtual List<AuditTrail> GetAuditTrail(T item)
+        {
+            return GetChildHandler<AuditTrail>(item, "audit", SortOrder = SortOrder.None).Get();
+        }
+
+        #endregion
+
+        #region http helper methods
+
+        /// <summary>
+        /// Reads the <see cref="HttpResponseMessage"/> content stream and deserialize it into <see cref="T"/>.
+        /// </summary>
+        /// <param name="responseMessage">The http response message.</param>
+        /// <returns>Returns <see cref="T"/> object.</returns>
+        private T GetHttpContentAsItem(HttpResponseMessage responseMessage)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.NoContent)
+                return null;
+
+            using (StreamReader streamReader = new StreamReader(responseMessage.Content.ReadAsStream()))
+            {
+                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                {
+                    return (T)serializer.Deserialize(jsonTextReader, currentType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads the <see cref="HttpResponseMessage"/> content stream and deserialize it into <see cref="List{T}"/>.
+        /// </summary>
+        /// <param name="responseMessage">The http response message.</param>
+        /// <returns>Returns <see cref="List{T}"/> object.</returns>
+        private List<T> GetHttpContentAsCollection(HttpResponseMessage responseMessage)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.NoContent)
+                return new List<T>();
+
+            using (StreamReader streamReader = new StreamReader(responseMessage.Content.ReadAsStream()))
+            {
+                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                {
+                    return (List<T>)serializer.Deserialize(jsonTextReader, currentCollectionType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create the a new <see cref="HttpRequestMessage"/>.
+        /// </summary>
+        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="requestUri">A string that represents the request System.Uri.</param>
+        /// <param name="useAnyAuthenticationToken">Use the <see cref="AuthenticationToken"/> with the highest X-RateLimit-Remaining header value.</param>
+        /// <returns>The customized 4me HTTP request message.</returns>
+        private HttpRequestMessage CreateHttpRequest(HttpMethod httpMethod, string requestUri, bool useAnyAuthenticationToken = true)
+        {
+            HttpRequestMessage retval = new HttpRequestMessage(httpMethod, requestUri);
+            if (useAnyAuthenticationToken || currentToken is null)
+                currentToken = authenticationTokens.Get();
+            retval.Headers.Authorization = new AuthenticationHeaderValue("Bearer", currentToken.Token);
+            retval.Headers.Add("X-4me-Account", accountID);
+            return retval;
+        }
+
+        /// <summary>
+        /// Create an send an <see cref="HttpRequestMessage"/>.
+        /// </summary>
+        /// <param name="requestMessage">The http request message.</param>
+        /// <param name="data">The JSON data to send as http request content.</param>
+        /// <returns>The <see cref="HttpRequestMessage"/> object.</returns>
+        private HttpResponseMessage SendHttpRequest(HttpRequestMessage requestMessage, JObject content)
+        {
+            WriteDebug(requestMessage);
+            HttpResponseMessage retval;
+
+            if (content is null)
+            {
+                retval = client.Send(requestMessage);
+            }
+            else
+            {
+                string data = content.ToString(Formatting.None);
+
+                if (traceEnabled)
+                    WriteDebug(data);
+
+                requestMessage.Content = new StringContent(data, Encoding.UTF8, applicationJsonMediaType);
+                retval = client.Send(requestMessage);
+            }
+
+            if (!retval.IsSuccessStatusCode && retval.Content.Headers.ContentType.MediaType == applicationJsonMediaType)
+            {
+                using (StreamReader streamReader = new StreamReader(retval.Content.ReadAsStream()))
+                    throw new Sdk4meException(streamReader.ReadToEnd());
+            }
+
+            UpdateAccountRateLimits(retval);
+            Sleep.SleepRemainingTime();
 
             return retval;
         }
 
         /// <summary>
-        /// Create a WebRequest object.
+        /// Create an send an <see cref="HttpRequestMessage"/>.
         /// </summary>
-        /// <param name="requestUrl">The 4me API URL to be used.</param>
-        /// <param name="method">The protocol method used in the web request.</param>
-        /// <returns>A HttpWebRequest.</returns>
-        private HttpWebRequest BuildWebRequest(string requestUrl, string method, bool useMultipleToken = true)
+        /// <param name="requestMessage">The http request message.</param>
+        /// <param name="item">The item to send as http request content.</param>
+        /// <returns>The <see cref="HttpRequestMessage"/> object.</returns>
+        private HttpResponseMessage SendHttpRequest(HttpRequestMessage requestMessage, T item = default)
         {
-            DebugWriteLine(method, requestUrl);
+            WriteDebug(requestMessage);
+            HttpResponseMessage retval;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
-            request.PreAuthenticate = true;
-            if (useMultipleToken || this.currentToken == null)
-                this.currentToken = this.authenticationTokens.Get();
-            request.Headers["Authorization"] = this.currentToken?.Token;
-            request.Method = method;
-            if (!string.IsNullOrWhiteSpace(this.accountID))
-                request.Headers["X-4me-Account"] = this.accountID;
-            return request;
-        }
-
-        /// <summary>
-        /// Saves the current the web header value "x-ratelimit-limit", "x-ratelimit-remaining" and "X-RateLimit-Reset" to the currently used token.
-        /// </summary>
-        /// <param name="webHeaders"></param>
-        private void SetCurrentTokenValues(WebHeaderCollection webHeaders)
-        {
-            currentToken.RequestLimit = Convert.ToInt32(webHeaders["x-ratelimit-limit"]);
-            currentToken.RequestsRemaining = Convert.ToInt32(webHeaders["x-ratelimit-remaining"]);
-            currentToken.RequestLimitReset = epoch.AddSeconds(Convert.ToInt64(webHeaders["X-RateLimit-Reset"])).ToLocalTime();
-            currentToken.UpdatedAt = DateTime.Now;
-        }
-
-        /// <summary>
-        /// Stores the current Environment.TickCount value.
-        /// </summary>
-        private void RegisterTime()
-        {
-            startTickCount = Environment.TickCount;
-        }
-
-        /// <summary>
-        /// Puts the current thread in sleep for 116 milliseconds minus the elapsed milliseconds between now an the value stored via the RegisterStartTime method.
-        /// <param name="method">The name of the method calling the PauseTime method. This information will be written to the trace listeners in the Listeners collection.</param>
-        /// </summary>
-        private void Sleep()
-        {
-            int endTickCount = Environment.TickCount;
-
-            //THE TICKCOUNTER JUMPED BACK TO Int32.MinValue
-            if (endTickCount <= this.startTickCount)
+            if (item is null)
             {
-                DebugWriteLine("", "Response time: unknown");
-                System.Threading.Thread.Sleep(minimumDurationPerRequestInMiliseconds);
+                retval = client.Send(requestMessage);
             }
             else
             {
-                DebugWriteLine("", $"Response time: {endTickCount - this.startTickCount} ms");
-                int sleepTicks = minimumDurationPerRequestInMiliseconds - (endTickCount - this.startTickCount);
-                if (sleepTicks > 0)
+                if (traceEnabled)
                 {
-                    DebugWriteLine("", $"Force thread sleep: {sleepTicks} ms");
-                    System.Threading.Thread.Sleep(sleepTicks);
+                    using (StringWriter writer = new StringWriter())
+                    {
+                        serializer.Serialize(writer, item, currentType);
+                        WriteDebug(writer.ToString());
+                    }
                 }
+
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 16384, true))
+                    {
+                        using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
+                        {
+                            serializer.Serialize(jsonTextWriter, item, currentType);
+                            jsonTextWriter.Flush();
+                        }
+                    }
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    HttpContent httpContent = new StreamContent(memoryStream);
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue(applicationJsonMediaType);
+                    requestMessage.Content = httpContent;
+
+                    retval = client.Send(requestMessage);
+                }
+            }
+
+            if (!retval.IsSuccessStatusCode && retval.Content.Headers.ContentType.MediaType == applicationJsonMediaType)
+            {
+                using (StreamReader streamReader = new StreamReader(retval.Content.ReadAsStream()))
+                    throw new Sdk4meException(streamReader.ReadToEnd());
+            }
+
+            UpdateAccountRateLimits(retval);
+            Sleep.SleepRemainingTime();
+
+            return retval;
+        }
+
+        /// <summary>
+        /// Updates the current token's rate limit information.
+        /// </summary>
+        /// <param name="responseMessage">The <see cref="HttpRequestMessage"/> reference.</param>
+        private void UpdateAccountRateLimits(HttpResponseMessage responseMessage)
+        {
+            if (responseMessage != null)
+            {
+                currentToken.RequestLimit = Convert.ToInt32(responseMessage.Headers.GetValues("X-RateLimit-Limit").First());
+                currentToken.RequestsRemaining = Convert.ToInt32(responseMessage.Headers.GetValues("X-RateLimit-Remaining").First());
+                currentToken.RequestLimitReset = epochDateTimeMinValue.AddSeconds(Convert.ToInt64(responseMessage.Headers.GetValues("X-RateLimit-Reset").First())).ToLocalTime();
             }
         }
 
         /// <summary>
         /// Specify the attribute names that should be returned in the web response.
         /// </summary>
-        /// <param name="attributeNames">An array of attributes names.</param>
-        private void SetResponseAttributes(string[] attributeNames)
+        /// <param name="fieldNames">An array of attributes names.</param>
+        private void SetResponseFieldNames(string[] fieldNames)
         {
-            //USE PROVIDED ATTRIBUTE NAMES (IF NOT NULL OR EMTPY ARRA)
-            if (attributeNames != null && attributeNames.GetUpperBound(0) > -1)
-            {
-                //* = ALL ATTRIBUTES
-                if (Array.IndexOf(attributeNames, "*") > -1)
-                    this.responseAttributeNames = this.allAttributeNames;
-                else
-                    this.responseAttributeNames = string.Join(",", Common.ConvertTo4meAttributeNames(attributeNames));
-            }
+            if (fieldNames != null && fieldNames.Length > 0)
+                responseFieldNames = fieldNames.Contains("*") ? allFieldNames : string.Join(",", fieldNames.To4meString());
             else
-            {
-                this.responseAttributeNames = null;
-            }
+                responseFieldNames = null;
         }
 
+        #endregion
+
         /// <summary>
-        /// Returns an exception based on the WebException response stream.
+        /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
         /// </summary>
-        /// <param name="webException">The WebException to read from.</param>
-        /// <returns>An exception.</returns>
-        private Sdk4meException ConvertWebException(WebException webException)
+        /// <param name="method">The HttpMethod.</param>
+        /// <param name="url">The request url.</param>
+        private void WriteDebug(HttpRequestMessage requestMessage)
         {
             try
             {
-                using (StreamReader stream = new StreamReader(webException.Response.GetResponseStream()))
-                {
-                    using (JsonTextReader jsonTextReader = new JsonTextReader(stream))
-                    {
-                        WebResponseException exception = (WebResponseException)serializer.Deserialize(jsonTextReader, typeof(WebResponseException));
-                        return new Sdk4meException(exception.Message, exception.Errors, webException);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Sdk4meException(webException.Message ?? ex.Message ?? "", webException);
-            }
-        }
-
-        /// <summary>
-        /// Converts a SortOrder value to string sorting value for the web request.
-        /// </summary>
-        /// <param name="sortOrder">The SortOrder value to be used.</param>
-        private static string GetSortOrderStringValue(SortOrder sortOrder)
-        {
-            switch (sortOrder)
-            {
-                case SortOrder.ID:
-                    return "id";
-
-                case SortOrder.CreatedAt:
-                    return "created_at";
-
-                case SortOrder.CreatedAtAndID:
-                    return "created_at,id";
-
-                case SortOrder.UpdatedAt:
-                    return "updated_at";
-
-                case SortOrder.UpdatedAtAndID:
-                    return "updated_at,id";
-
-                default:
-                    return "";
-            }
-        }
-
-        /// <summary>
-        /// Writes debug information to the trace listeners in the Listeners collection.
-        /// </summary>
-        /// <param name="method">The method invoked.</param>
-        /// <param name="message">The output message.</param>
-        private static void DebugWriteLine(string method, string message)
-        {
-            try
-            {
-                Debug.WriteLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss.fff}\t{method}\t{message}");
+                if (traceEnabled)
+                    Trace.WriteLine($"{requestMessage.Method} \"{requestMessage.RequestUri.AbsoluteUri}\"");
             }
             catch
             {
+            }
+        }
 
+        /// <summary>
+        /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
+        /// </summary>
+        /// <param name="message"></param>
+        private void WriteDebug(string message)
+        {
+            try
+            {
+                if (traceEnabled && !string.IsNullOrWhiteSpace(message))
+                    Trace.WriteLine(message);
+            }
+            catch
+            {
             }
         }
     }
 }
+
+#endif

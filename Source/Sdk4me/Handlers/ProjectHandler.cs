@@ -1,92 +1,92 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class ProjectHandler : BaseHandler<Project, PredefinedProjectFilter>
     {
-        public ProjectHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/projects", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/projects", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ProjectHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/projects", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/projects", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region changes
+        #region Workflows
 
-        public List<Change> GetChanges(Project project, params string[] attributeNames)
+        public List<Workflow> GetWorkflows(Project project, params string[] fieldNames)
         {
-            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{this.URL}/{project.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Workflow>(project, "workflows").Get(fieldNames);
         }
 
-        public bool AddChange(Project project, Change change)
+        public bool AddWorkflow(Project project, Workflow workflow)
         {
-            return CreateRelation(project, "changes", change);
+            return CreateRelation(project, "workflows", workflow);
         }
 
-        public bool RemoveChange(Project project, Change change)
+        public bool RemoveWorkflow(Project project, Workflow workflow)
         {
-            return DeleteRelation(project, "changes", change);
+            return DeleteRelation(project, "workflows", workflow);
         }
 
-        public bool RemoveAllChanges(Project project)
+        public bool RemoveWorkflows(Project project)
         {
-            return DeleteAllRelations(project, "changes");
-        }
-
-        #endregion
-
-        #region notes
-
-        public List<Note> GetNotes(Project project, params string[] attributeNames)
-        {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{project.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return DeleteAllRelations(project, "workflows");
         }
 
         #endregion
 
-        #region phases
+        #region Notes
 
-        public List<ProjectPhase> GetProjectPhases(Project project, params string[] attributeNames)
+        public List<Note> GetNotes(Project project, params string[] fieldNames)
         {
-            DefaultHandler<ProjectPhase> handler = new DefaultHandler<ProjectPhase>($"{this.URL}/{project.ID}/phases", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
-        }
-
-        public bool AddProjectPhase(Project project, ProjectPhase projectPhase)
-        {
-            return CreateRelation(project, "phases", projectPhase);
-        }
-
-        public bool RemoveProjectPhase(Project project, ProjectPhase projectPhase)
-        {
-            return DeleteRelation(project, "phases", projectPhase);
-        }
-
-        public bool RemoveAllProjectPhases(Project project)
-        {
-            return DeleteAllRelations(project, "phases");
+            return GetChildHandler<Note>(project, "notes", SortOrder.None).Get(fieldNames);
         }
 
         #endregion
 
-        #region problems
+        #region Phases
 
-        public List<Problem> GetProblems(Project project, params string[] attributeNames)
+        public List<ProjectPhase> GetPhases(Project project)
         {
-            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{this.URL}/{project.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectPhase>(project, "phases", SortOrder.None).Get("*");
+        }
 
+        public ProjectPhase AddPhase(Project project, ProjectPhase projectPhase)
+        {
+            return GetChildHandler<ProjectPhase>(project, "phases").Insert(projectPhase);
+        }
+
+        public ProjectPhase UpdatePhase(Project project, ProjectPhase projectPhase)
+        {
+            return GetChildHandler<ProjectPhase>(project, "phases").Update(projectPhase);
+        }
+
+        public bool DeletePhase(Project project, ProjectPhase projectPhase)
+        {
+            return GetChildHandler<ProjectPhase>(project, "phases").Delete(projectPhase);
+        }
+
+        public bool DeleteAllPhases(Project project)
+        {
+            return GetChildHandler<ProjectPhase>(project, "phases").DeleteAll();
+        }
+
+        #endregion
+
+        #region Problems
+
+        public List<Problem> GetProblems(Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<Problem>(project, "problems").Get(fieldNames);
+        }
+
+        public List<Problem> GetProblems(PredefinedWorkflowProblemFilter filter, Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<Problem>(project, $"problems/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddProblem(Project project, Problem problem)
@@ -106,22 +106,30 @@ namespace Sdk4me
 
         #endregion
 
-        #region tasks
+        #region Project tasks
 
-        public List<ProjectTask> GetProjectTasks(Project project, params string[] attributeNames)
+        public List<ProjectTask> GetTasks(Project project, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTask> handler = new DefaultHandler<ProjectTask>($"{this.URL}/{project.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTask>(project, "tasks").Get(fieldNames);
+        }
+
+        public List<ProjectTask> GetTasks(PredefinedTaskStatusFilter filter, Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<ProjectTask>(project, $"tasks/{filter.To4meString()}").Get(fieldNames);
         }
 
         #endregion
 
-        #region requests
+        #region Requests
 
-        public List<Request> GetRequests(Project project, params string[] attributeNames)
+        public List<Request> GetRequests(Project project, params string[] fieldNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{project.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Request>(project, "requests").Get(fieldNames);
+        }
+
+        public List<Request> GetRequests(PredefinedOpenCompletedFilter filter, Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<Request>(project, $"requests/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddRequest(Project project, Request request)
@@ -141,5 +149,42 @@ namespace Sdk4me
 
         #endregion
 
+        #region Risks
+
+        public List<Risk> GetRisks(Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<Risk>(project, "risks").Get(fieldNames);
+        }
+
+        public List<Risk> GetRisks(PredefinedOpenClosedFilter filter, Project project, params string[] fieldNames)
+        {
+            return GetChildHandler<Risk>(project, $"risks/{filter.To4meString()}").Get(fieldNames);
+        }
+
+        #endregion
+
+        #region Archive, trash and restore
+
+        public Project Archive(Project project)
+        {
+            return GetChildHandler<Project>(project, "archive").Invoke("Post");
+        }
+
+        public Project Trash(Project project)
+        {
+            return GetChildHandler<Project>(project, "trash").Invoke("Post");
+        }
+
+        public Project Restore(Archive archive)
+        {
+            return GetChildHandler<Project>(new Project() { ID = archive.Details.ID }, "restore").Invoke("Post");
+        }
+
+        public Project Restore(Trash trash)
+        {
+            return GetChildHandler<Project>(new Project() { ID = trash.Details.ID }, "restore").Invoke("Post");
+        }
+
+        #endregion
     }
 }

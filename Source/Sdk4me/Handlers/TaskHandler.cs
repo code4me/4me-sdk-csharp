@@ -1,38 +1,59 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class TaskHandler : BaseHandler<Task, PredefinedTaskFilter>
     {
-        public TaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region notes
+        #region Approvals
 
-        public List<Note> GetNotes(Task task, params string[] attributeNames)
+        public List<TaskTemplateApproval> GetApprovals(Task task, params string[] fieldNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{task.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<TaskTemplateApproval>(task, "approvals", SortOrder.None).Get(fieldNames);
+        }
+
+        public TaskTemplateApproval AddApproval(Task task, TaskTemplateApproval taskTemplateApproval)
+        {
+            return GetChildHandler<TaskTemplateApproval>(task, "approvals").Insert(taskTemplateApproval);
+        }
+
+        public TaskTemplateApproval UpdateApproval(Task task, TaskTemplateApproval taskTemplateApproval)
+        {
+            return GetChildHandler<TaskTemplateApproval>(task, "approvals").Update(taskTemplateApproval);
+        }
+
+        public bool RemoveApproval(Task task, TaskTemplateApproval taskTemplateApproval)
+        {
+            return GetChildHandler<TaskTemplateApproval>(task, "approvals").Delete(taskTemplateApproval);
+        }
+
+        public bool RemoveAllApprovals(Task task)
+        {
+            return GetChildHandler<Contact>(task, "approvals").DeleteAll();
         }
 
         #endregion
 
-        #region configuration items
+        #region Configuration items
 
-        public List<ConfigurationItem> GetPeople(Task task, params string[] attributeNames)
+        public List<ConfigurationItem> GetConfigurationItems(Task task, params string[] fieldNames)
         {
-            DefaultHandler<ConfigurationItem> handler = new DefaultHandler<ConfigurationItem>($"{this.URL}/{task.ID}/cis", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItem>(task, "cis").Get(fieldNames);
+        }
+
+        public List<ConfigurationItem> GetConfigurationItems(PredefinedActiveInactiveFilter filter, Task task, params string[] fieldNames)
+        {
+            return GetChildHandler<ConfigurationItem>(task, $"cis/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddConfigurationItem(Task task, ConfigurationItem configurationItem)
@@ -45,29 +66,37 @@ namespace Sdk4me
             return DeleteRelation(task, "cis", configurationItem);
         }
 
-        public bool RemoveAllConfigurationItems(Task task)
+        public bool RemoveConfigurationItems(Task task)
         {
             return DeleteAllRelations(task, "cis");
         }
 
         #endregion
 
-        #region predecessors
+        #region Notes
 
-        public List<Task> GetPredecessors(Task task, params string[] attributeNames)
+        public List<Note> GetNotes(Task task, params string[] fieldNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{task.ID}/predecessors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Note>(task, "notes", SortOrder.None).Get(fieldNames);
         }
 
-        public bool AddPredecessor(Task task, Task predecessorTask)
+        #endregion
+
+        #region Predecessors
+
+        public List<Task> GetPredecessors(Task task, params string[] fieldNames)
         {
-            return CreateRelation(task, "predecessors", predecessorTask);
+            return GetChildHandler<Task>(task, "predecessors").Get(fieldNames);
         }
 
-        public bool RemovePredecessor(Task task, Task predecessorTask)
+        public bool AddPredecessor(Task task, Task predecessor)
         {
-            return DeleteRelation(task, "predecessors", predecessorTask);
+            return CreateRelation(task, "predecessors", predecessor);
+        }
+
+        public bool RemovePredecessor(Task task, Task predecessor)
+        {
+            return DeleteRelation(task, "predecessors", predecessor);
         }
 
         public bool RemoveAllPredecessors(Task task)
@@ -77,64 +106,55 @@ namespace Sdk4me
 
         #endregion
 
-        #region successors
+        #region Services instances
 
-        public List<Task> GetSuccessors(Task task, params string[] attributeNames)
+        public List<ServiceInstance> GetServiceInstances(Task task, params string[] fieldNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{task.ID}/successors", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceInstance>(task, "service_instances").Get(fieldNames);
         }
 
-        public bool AddSuccessor(Task task, Task successorTask)
+        public List<ServiceInstance> GetServiceInstances(PredefinedActiveInactiveFilter filter, Task task, params string[] fieldNames)
         {
-            return CreateRelation(task, "predecessors", successorTask);
+            return GetChildHandler<ServiceInstance>(task, $"service_instances/{filter.To4meString()}").Get(fieldNames);
         }
 
-        public bool RemoveSuccessor(Task task, Task successorTask)
+        public bool AddServiceInstance(Task task, ConfigurationItem configurationItem)
         {
-            return DeleteRelation(task, "predecessors", successorTask);
+            return CreateRelation(task, "service_instances", configurationItem);
         }
 
-        public bool RemoveAllSuccessors(Task task)
+        public bool RemoveServiceInstance(Task task, ConfigurationItem configurationItem)
         {
-            return DeleteAllRelations(task, "predecessors");
+            return DeleteRelation(task, "service_instances", configurationItem);
+        }
+
+        public bool RemoveServiceInstances(Task task)
+        {
+            return DeleteAllRelations(task, "service_instances");
         }
 
         #endregion
 
-        #region approval
+        #region Successors
 
-        public List<TaskApproval> GetApprovals(Task task, params string[] attributeNames)
+        public List<Task> GetSuccessors(Task task, params string[] fieldNames)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<Task>(task, "successors").Get(fieldNames);
         }
 
-        public TaskApproval AddApproval(Task task, TaskApproval approval)
+        public bool AddSuccessor(Task task, Task successor)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Insert(approval);
+            return CreateRelation(task, "successors", successor);
         }
 
-        public TaskApproval UpdateApproval(Task task, TaskApproval approval)
+        public bool RemoveSuccessor(Task task, Task successor)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Update(approval);
+            return DeleteRelation(task, "successors", successor);
         }
 
-        public bool RemoveApproval(Task task, TaskApproval approval)
+        public bool RemoveAllSuccessors(Task task)
         {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(approval);
-        }
-
-        public bool RemoveAllApprovals(Task task)
-        {
-            DefaultHandler<TaskApproval> handler = new DefaultHandler<TaskApproval>($"{this.URL}/{task.ID}/approvals", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return DeleteAllRelations(task, "successors");
         }
 
         #endregion

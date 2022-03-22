@@ -1,50 +1,59 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class TimeAllocationHandler : BaseHandler<TimeAllocation, PredefinedTimeAllocationFilter>
+    public class TimeAllocationHandler : BaseHandler<TimeAllocation, PredefinedEnabledDisabledFilter>
     {
-        public TimeAllocationHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/time_allocations", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimeAllocationHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/time_allocations", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public TimeAllocationHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/time_allocations", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public TimeAllocationHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/time_allocations", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region customers
+        #region Customers
 
-        public List<Organization> GetCustomers(TimeAllocation timeAllocation, params string[] attributeNames)
+        public List<Organization> GetCustomers(TimeAllocation timeAllocation, params string[] fieldNames)
         {
-            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{this.URL}/{timeAllocation.ID}/customers", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Organization>(timeAllocation, "customers").Get(fieldNames);
+        }
+
+        public List<Organization> GetCustomers(PredefinedEnabledDisabledFilter filter, TimeAllocation timeAllocation, params string[] fieldNames)
+        {
+            return GetChildHandler<Organization>(timeAllocation, $"customers/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddCustomer(TimeAllocation timeAllocation, Organization customer)
         {
-            return CreateRelation(timeAllocation, "services", customer);
+            return CreateRelation(timeAllocation, "customers", customer);
         }
 
         public bool RemoveCustomer(TimeAllocation timeAllocation, Organization customer)
         {
-            return DeleteRelation(timeAllocation, "services", customer);
+            return DeleteRelation(timeAllocation, "customers", customer);
         }
 
         public bool RemoveAllCustomers(TimeAllocation timeAllocation)
         {
-            return DeleteAllRelations(timeAllocation, "services");
+            return DeleteAllRelations(timeAllocation, "customers");
         }
 
         #endregion
 
-        #region services
+        #region Services
 
-        public List<Service> GetServices(TimeAllocation timeAllocation, params string[] attributeNames)
+        public List<Service> GetServices(TimeAllocation timeAllocation, params string[] fieldNames)
         {
-            DefaultHandler<Service> handler = new DefaultHandler<Service>($"{this.URL}/{timeAllocation.ID}/services", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Service>(timeAllocation, "services").Get(fieldNames);
+        }
+
+        public List<Service> GetServices(PredefinedEnabledDisabledFilter filter, TimeAllocation timeAllocation, params string[] fieldNames)
+        {
+            return GetChildHandler<Service>(timeAllocation, $"services/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddService(TimeAllocation timeAllocation, Service service)
@@ -64,12 +73,16 @@ namespace Sdk4me
 
         #endregion
 
-        #region organizations
+        #region Organizations
 
-        public List<Organization> GetOrganizations(TimeAllocation timeAllocation, params string[] attributeNames)
+        public List<Organization> GetOrganizations(TimeAllocation timeAllocation, params string[] fieldNames)
         {
-            DefaultHandler<Organization> handler = new DefaultHandler<Organization>($"{this.URL}/{timeAllocation.ID}/organizations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Organization>(timeAllocation, "organizations").Get(fieldNames);
+        }
+
+        public List<Organization> GetOrganizations(PredefinedEnabledDisabledFilter filter, TimeAllocation timeAllocation, params string[] fieldNames)
+        {
+            return GetChildHandler<Organization>(timeAllocation, $"organizations/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddOrganization(TimeAllocation timeAllocation, Organization organization)
@@ -82,12 +95,11 @@ namespace Sdk4me
             return DeleteRelation(timeAllocation, "organizations", organization);
         }
 
-        public bool RemoveAllOrganization(TimeAllocation timeAllocation)
+        public bool RemoveAllOrganizations(TimeAllocation timeAllocation)
         {
-            return DeleteAllRelations(timeAllocation, "services");
+            return DeleteAllRelations(timeAllocation, "organizations");
         }
 
         #endregion
-
     }
 }

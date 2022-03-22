@@ -1,78 +1,78 @@
-﻿using System.Collections.Generic;
-
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class ReleaseHandler : BaseHandler<Release, PredefinedReleaseFilter>
     {
-        public ReleaseHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ReleaseHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/releases", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ReleaseHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/releases", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ReleaseHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/releases", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region notes
+        #region Notes
 
-        public List<Note> GetNotes(Release release, params string[] attributeNames)
+        public List<Note> GetNotes(Release release, params string[] fieldNames)
         {
-            DefaultHandler<Note> handler = new DefaultHandler<Note>($"{this.URL}/{release.ID}/notes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.CreatedAt
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<Note>(release, "notes", SortOrder.None).Get(fieldNames);
         }
 
         #endregion
 
-        #region changes
+        #region Workflows
 
-        public List<Change> GetChanges(Release release, params string[] attributeNames)
+        public List<Workflow> GetWorkflows(Release release, params string[] fieldNames)
         {
-            DefaultHandler<Change> handler = new DefaultHandler<Change>($"{this.URL}/{release.ID}/changes", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Workflow>(release, "workflows").Get(fieldNames);
         }
 
-        public bool AddChange(Release release, Change change)
+        public List<Workflow> GetWorkflows(PredefinedOpenClosedFilter filter, Release release, params string[] fieldNames)
         {
-            return CreateRelation(release, "changes", change);
+            return GetChildHandler<Workflow>(release, $"workflows/{filter.To4meString()}").Get(fieldNames);
         }
 
-        public bool RemoveChange(Release release, Change change)
+        public bool AddWorkflow(Release release, Workflow workflow)
         {
-            return DeleteRelation(release, "changes", change);
+            return CreateRelation(release, "workflows", workflow);
         }
 
-        public bool RemoveAllChanges(Release release)
+        public bool RemoveWorkflow(Release release, Workflow workflow)
         {
-            return DeleteAllRelations(release, "changes");
+            return DeleteRelation(release, "workflows", workflow);
+        }
+
+        public bool RemoveWorkflows(Release release)
+        {
+            return DeleteAllRelations(release, "workflows");
         }
 
         #endregion
 
-        #region archive, trash and restore
+        #region Archive, trash and restore
 
         public Release Archive(Release release)
         {
-            return CustomWebRequest($"{release.ID}/archive", "POST");
+            return GetChildHandler<Release>(release, "archive").Invoke("Post");
         }
 
         public Release Trash(Release release)
         {
-            return CustomWebRequest($"{release.ID}/trash", "POST");
+            return GetChildHandler<Release>(release, "trash").Invoke("Post");
         }
 
         public Release Restore(Archive archive)
         {
-            return CustomWebRequest($"{archive.Details.ID}/restore", "POST");
+            return GetChildHandler<Release>(new Release() { ID = archive.Details.ID }, "restore").Invoke("Post");
         }
 
         public Release Restore(Trash trash)
         {
-            return CustomWebRequest($"{trash.Details.ID}/restore", "POST");
+            return GetChildHandler<Release>(new Release() { ID = trash.Details.ID }, "restore").Invoke("Post");
         }
 
         #endregion

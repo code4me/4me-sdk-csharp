@@ -2,24 +2,23 @@
 
 namespace Sdk4me
 {
-    public class UIExtensionHandler : DefaultHandler<UIExtension>
+    public class UIExtensionHandler : DefaultBaseHandler<UIExtension>
     {
-        public UIExtensionHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/ui_extensions", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public UIExtensionHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/ui_extensions", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public UIExtensionHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/ui_extensions", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public UIExtensionHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/ui_extensions", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region versions
+        #region Versions
 
-        public List<UIExtensionVersion> GetVersions(UIExtension uIExtension, params string[] attributeNames)
+        public List<UIExtensionVersion> GetVersions(UIExtension uiExtension, params string[] fieldNames)
         {
-            DefaultHandler<UIExtensionVersion> handler = new DefaultHandler<UIExtensionVersion>($"{this.URL}/{uIExtension.ID}/versions", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<UIExtensionVersion>(uiExtension, "versions").Get(fieldNames);
         }
 
         #endregion

@@ -1,59 +1,64 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
     public class ConfigurationItemHandler : BaseHandler<ConfigurationItem, PredefinedConfigurationItemFilter>
     {
-        public ConfigurationItemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ConfigurationItemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/cis", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ConfigurationItemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/cis", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ConfigurationItemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/cis", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region configuration item relations
+        #region Configuration item relations
 
-        public List<ConfigurationItemRelation> GetConfigurationItemRelations(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<ConfigurationItemRelation> GetConfigurationItemRelations(ConfigurationItem configurationItem)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ConfigurationItemRelation>(configurationItem, "ci_relations", SortOrder.None).Get();
+        }
+
+        public ConfigurationItemRelation AddConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItem relatedConfigurationItem, ConfigurationitemRelationType relationType)
+        {
+            return AddConfigurationItemRelation(configurationItem, new ConfigurationItemRelation() { ConfigurationItem = relatedConfigurationItem, RelationType = relationType });
         }
 
         public ConfigurationItemRelation AddConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Insert(configurationItemRelation);
+            return GetChildHandler<ConfigurationItemRelation>(configurationItem, "ci_relations").Insert(configurationItemRelation);
         }
 
         public ConfigurationItemRelation UpdateConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Update(configurationItemRelation);
+            return GetChildHandler<ConfigurationItemRelation>(configurationItem, "ci_relations").Update(configurationItemRelation);
         }
 
         public bool DeleteConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelation configurationItemRelation)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(configurationItemRelation);
+            return GetChildHandler<ConfigurationItemRelation>(configurationItem, "ci_relations").Delete(configurationItemRelation);
         }
 
         public bool DeleteAllConfigurationItemRelations(ConfigurationItem configurationItem)
         {
-            DefaultHandler<ConfigurationItemRelation> handler = new DefaultHandler<ConfigurationItemRelation>($"{this.URL}/{configurationItem.ID}/ci_relations", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<ConfigurationItemRelation>(configurationItem, "ci_relations").DeleteAll();
         }
 
         #endregion
 
-        #region contracts
+        #region Contracts
 
-        public List<Contract> GetContracts(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<Contract> GetContracts(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<Contract> handler = new DefaultHandler<Contract>($"{this.URL}/{configurationItem.ID}/contracts", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Contract>(configurationItem, "contracts").Get(fieldNames);
+        }
+
+        public List<Contract> GetContracts(PredefinedActiveInactiveFilter filter, ConfigurationItem contract, params string[] fieldNames)
+        {
+            return GetChildHandler<Contract>(contract, $"contracts/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddContract(ConfigurationItem configurationItem, Contract contract)
@@ -73,33 +78,44 @@ namespace Sdk4me
 
         #endregion
 
-        #region problems
+        #region Problems
 
-        public List<Problem> GetProblems(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<Problem> GetProblems(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<Problem> handler = new DefaultHandler<Problem>($"{this.URL}/{configurationItem.ID}/problems", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Problem>(configurationItem, "problems").Get(fieldNames);
+        }
+
+        public List<Problem> GetProblems(PredefinedWorkflowProblemFilter filter, ConfigurationItem configurationItem, params string[] fieldNames)
+        {
+            return GetChildHandler<Problem>(configurationItem, $"problems/{filter.To4meString()}").Get(fieldNames);
         }
 
         #endregion
 
-        #region requests
+        #region Requests
 
-        public List<Request> GetRequests(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<Request> GetRequests(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<Request> handler = new DefaultHandler<Request>($"{this.URL}/{configurationItem.ID}/requests", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Request>(configurationItem, "requests").Get(fieldNames);
         }
 
+        public List<Request> GetRequests(PredefinedOpenCompletedFilter filter, ConfigurationItem configurationItem, params string[] fieldNames)
+        {
+            return GetChildHandler<Request>(configurationItem, $"requests/{filter.To4meString()}").Get(fieldNames);
+        }
 
         #endregion
 
-        #region service instances
+        #region Service instances
 
-        public List<ServiceInstance> GetServiceInstances(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<ServiceInstance> GetServiceInstances(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<ServiceInstance> handler = new DefaultHandler<ServiceInstance>($"{this.URL}/{configurationItem.ID}/service_instances", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<ServiceInstance>(configurationItem, "service_instances").Get(fieldNames);
+        }
+
+        public List<ServiceInstance> GetServiceInstances(PredefinedActiveInactiveFilter filter, ConfigurationItem configurationItem, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceInstance>(configurationItem, $"service_instances/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddServiceInstance(ConfigurationItem configurationItem, ServiceInstance serviceInstance)
@@ -119,23 +135,30 @@ namespace Sdk4me
 
         #endregion
 
-        #region tasks
+        #region Tasks
 
-        public List<Task> GetTasks(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<Task> GetTasks(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<Task> handler = new DefaultHandler<Task>($"{this.URL}/{configurationItem.ID}/tasks", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Task>(configurationItem, "tasks").Get(fieldNames);
         }
 
+        public List<Task> GetMembers(PredefinedTaskStatusFilter filter, ConfigurationItem configurationItem, params string[] fieldNames)
+        {
+            return GetChildHandler<Task>(configurationItem, $"tasks/{filter.To4meString()}").Get(fieldNames);
+        }
 
         #endregion
 
-        #region user
+        #region Users
 
-        public List<Person> GetUsers(ConfigurationItem configurationItem, params string[] attributeNames)
+        public List<Person> GetUsers(ConfigurationItem configurationItem, params string[] fieldNames)
         {
-            DefaultHandler<Person> handler = new DefaultHandler<Person>($"{this.URL}/{configurationItem.ID}/users", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Get(attributeNames);
+            return GetChildHandler<Person>(configurationItem, "users").Get(fieldNames);
+        }
+
+        public List<Person> GetUsers(PredefinedConfigurationItemUserFilter filter, ConfigurationItem configurationItem, params string[] fieldNames)
+        {
+            return GetChildHandler<Person>(configurationItem, $"users/{filter.To4meString()}").Get(fieldNames);
         }
 
         public bool AddUser(ConfigurationItem configurationItem, Person person)

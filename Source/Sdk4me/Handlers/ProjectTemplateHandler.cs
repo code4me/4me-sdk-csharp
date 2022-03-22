@@ -1,84 +1,81 @@
-﻿using System.Collections.Generic;
+﻿using Sdk4me.Extensions;
+using System.Collections.Generic;
 
 namespace Sdk4me
 {
-    public class ProjectTemplateHandler : BaseHandler<ProjectTemplate, PredefinedProjectTemplateFilter>
+    public class ProjectTemplateHandler : BaseHandler<ProjectTemplate, PredefinedEnabledDisabledFilter>
     {
-        public ProjectTemplateHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTemplateHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_templates", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        public ProjectTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, int itemsPerRequest = 100, int maximumRecursiveRequests = 50) :
-            base($"{Common.GetBaseUrl(environmentType)}/v1/project_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
+        public ProjectTemplateHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environmentType = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+            : base($"{EnvironmentURL.Get(environmentType, environmentRegion)}/project_templates", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
-        #region phases
+        #region Phases
 
-        public List<ProjectTemplatePhase> GetProjectPhases(ProjectTemplate projectTemplate, params string[] attributeNames)
+        public List<ProjectTemplatePhase> GetPhases(ProjectTemplate projectTemplate)
         {
-            DefaultHandler<ProjectTemplatePhase> handler = new DefaultHandler<ProjectTemplatePhase>($"{this.URL}/{projectTemplate.ID}/phases", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTemplatePhase>(projectTemplate, "phases", SortOrder.None).Get("*");
         }
 
-        public bool AddProjectPhase(ProjectTemplate projectTemplate, ProjectTemplatePhase projectTemplatePhase)
+        public ProjectTemplatePhase AddPhase(ProjectTemplate projectTemplate, ProjectTemplatePhase projectTemplatePhase)
         {
-            return CreateRelation(projectTemplate, "phases", projectTemplatePhase);
+            return GetChildHandler<ProjectTemplatePhase>(projectTemplate, "phases").Insert(projectTemplatePhase);
         }
 
-        public bool RemoveProjectPhase(ProjectTemplate projectTemplate, ProjectTemplatePhase projectTemplatePhase)
+        public ProjectTemplatePhase UpdatePhase(ProjectTemplate projectTemplate, ProjectTemplatePhase projectTemplatePhase)
         {
-            return DeleteRelation(projectTemplate, "phases", projectTemplatePhase);
+            return GetChildHandler<ProjectTemplatePhase>(projectTemplate, "phases").Update(projectTemplatePhase);
         }
 
-        public bool RemoveAllProjectPhases(ProjectTemplate projectTemplate)
+        public bool DeletePhase(ProjectTemplate projectTemplate, ProjectTemplatePhase projectTemplatePhase)
         {
-            return DeleteAllRelations(projectTemplate, "phases");
+            return GetChildHandler<ProjectTemplatePhase>(projectTemplate, "phases").Delete(projectTemplatePhase);
+        }
+
+        public bool DeleteAllPhases(ProjectTemplate projectTemplate)
+        {
+            return GetChildHandler<ProjectTemplatePhase>(projectTemplate, "phases").DeleteAll();
         }
 
         #endregion
 
-        #region project tasks templates
+        #region Project task templates
 
-        public List<ProjectTaskTemplateReference> GetProjectTaskTemplates(ProjectTemplate projectTemplate, params string[] attributeNames)
+        public List<ProjectTaskTemplateRelation> GetProjectTaskTemplates(ProjectTemplate projectTemplate, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTaskTemplateReference> handler = new DefaultHandler<ProjectTaskTemplateReference>($"{this.URL}/{projectTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests)
-            {
-                SortOrder = SortOrder.None
-            };
-            return handler.Get(attributeNames);
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, "task_templates", SortOrder.None).Get(fieldNames);
         }
 
-        public ProjectTaskTemplateReference AddProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplate projectTaskTemplate, ProjectTemplatePhase projectTemplatePhase)
+        public List<ProjectTaskTemplateRelation> GetProjectTaskTemplates(PredefinedEnabledDisabledFilter filter, ProjectTemplate projectTemplate, params string[] fieldNames)
         {
-            DefaultHandler<ProjectTaskTemplateReference> handler = new DefaultHandler<ProjectTaskTemplateReference>($"{this.URL}/{projectTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest($"?task_template_id={projectTaskTemplate.ID}&phase_name={projectTemplatePhase.Name}", "POST");
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, $"task_templates/{filter.To4meString()}", SortOrder.None).Get(fieldNames);
         }
 
-        public ProjectTaskTemplateReference UpdateProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplateReference projectTaskTemplateReference, ProjectTemplatePhase projectTemplatePhase)
+        public ProjectTaskTemplateRelation AddProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplateRelation projectTaskTemplateRelation)
         {
-            DefaultHandler<ProjectTaskTemplateReference> handler = new DefaultHandler<ProjectTaskTemplateReference>($"{this.URL}/{projectTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.CustomWebRequest($"/{projectTaskTemplateReference.ID}?phase_name={projectTemplatePhase.Name}", "PATCH");
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, "task_templates").Insert(projectTaskTemplateRelation);
         }
 
-        public bool DeleteProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplateReference projectTaskTemplateReference)
+        public ProjectTaskTemplateRelation UpdateProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplateRelation projectTaskTemplateRelation)
         {
-            DefaultHandler<ProjectTaskTemplateReference> handler = new DefaultHandler<ProjectTaskTemplateReference>($"{this.URL}/{projectTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.Delete(projectTaskTemplateReference);
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, "task_templates").Update(projectTaskTemplateRelation);
+        }
+
+        public bool DeleteProjectTaskTemplate(ProjectTemplate projectTemplate, ProjectTaskTemplateRelation projectTaskTemplateRelation)
+        {
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, $"task_templates").Delete(projectTaskTemplateRelation);
         }
 
         public bool DeleteAllProjectTaskTemplates(ProjectTemplate projectTemplate)
         {
-            DefaultHandler<ProjectTaskTemplateReference> handler = new DefaultHandler<ProjectTaskTemplateReference>($"{this.URL}/{projectTemplate.ID}/task_templates", this.AuthenticationTokens, this.AccountID, this.ItemsPerRequest, this.MaximumRecursiveRequests);
-            return handler.DeleteAll();
+            return GetChildHandler<ProjectTaskTemplateRelation>(projectTemplate, $"task_templates").DeleteAll();
         }
 
         #endregion
-
-
     }
 }

@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Text;
 
 namespace Sdk4me
 {
     public sealed class AuthenticationToken
     {
-        private readonly string authenticationToken = null;
+        private readonly string authenticationToken;
         private int requestLimit = 3600;
         private int requestsRemaining = 3600;
-        private DateTime requestReset = DateTime.MinValue;
+        private DateTime requestLimitReset = DateTime.MinValue;
         private DateTime updatedAt = DateTime.MinValue;
 
         /// <summary>
-        /// The 4me authentication token.
+        /// Get the 4me authentication token.
         /// </summary>
         internal string Token
         {
@@ -42,8 +41,8 @@ namespace Sdk4me
         /// </summary>
         public DateTime RequestLimitReset
         {
-            get => requestReset;
-            internal set => requestReset = value;
+            get => requestLimitReset;
+            internal set => requestLimitReset = value;
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Sdk4me
         /// <param name="authenticationType">The 4me authentication token type.</param>
         public AuthenticationToken(string authenticationToken)
         {
-            this.authenticationToken = "Bearer " + authenticationToken;
+            this.authenticationToken = authenticationToken;
         }
     }
 }
