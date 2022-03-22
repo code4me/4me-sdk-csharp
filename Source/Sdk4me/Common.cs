@@ -132,7 +132,5 @@ namespace Sdk4me
                     return "https://api.4me.com";
             }
         }
-
-
     }
 }
