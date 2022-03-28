@@ -177,8 +177,8 @@ try
     AuthenticationToken token = new AuthenticationToken("TheBearerToken");
     Sdk4meClient client = new Sdk4meClient(token);
     Person person = client.People.Get(new Filter("SourceID", FilterCondition.Equality, "123456"), "Team", "ThrowAnExceptionField").FirstOrDefault();
-    List<Team> myTeams = client.People.GetTeams(me);
-    foreach (Team team in myTeams)
+    List<Team> teams = client.People.GetTeams(person);
+    foreach (Team team in teams)
         Console.WriteLine(team.Name);
 }
 catch (Sdk4meException ex)
