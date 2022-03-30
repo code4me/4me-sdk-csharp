@@ -36,6 +36,7 @@
     <RepositoryUrl>https://github.com/code4me/4me-sdk-csharp</RepositoryUrl>
     <PackageProjectUrl>https://developer.4me.com/</PackageProjectUrl>
     <PackageTags>4me</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
