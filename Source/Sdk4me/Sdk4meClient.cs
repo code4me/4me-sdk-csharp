@@ -184,6 +184,20 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/audit_entries/">audit entry</see> API.
+        /// </summary>
+        public AuditEntryHandler AuditEntries
+        {
+            get
+            {
+                if (!handlers.ContainsKey("audit_entries"))
+                    handlers.Add("audit_entries", new AuditEntryHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (AuditEntryHandler)handlers["audit_entries"];
+
+            }
+        }
+
+        /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/broadcasts/">broadcast</see> API.
         /// </summary>
         public BroadcastHandler Broadcasts

@@ -7,6 +7,12 @@
         {
         }
 
+        public DefaultBaseHandler(string endPointUrl, AuthenticationToken authenticationToken, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10, SortOrder sortOrder = SortOrder.None)
+            : base(endPointUrl, authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
+        {
+            SortOrder = sortOrder;
+        }
+
         public DefaultBaseHandler(string endPointUrl, AuthenticationTokenCollection authenticationTokens, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base(endPointUrl, authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {

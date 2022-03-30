@@ -22,6 +22,13 @@ namespace Sdk4me
 
         #endregion
 
+        #region nodeID
+
+        [JsonProperty("nodeID")]
+        internal string NodeID { get; set; }
+
+        #endregion
+
         [JsonProperty("action"), Sdk4meIgnoreInFieldSelection()]
         public string Action { get; internal set; }
 
@@ -34,14 +41,37 @@ namespace Sdk4me
         [JsonProperty("changes"), Sdk4meIgnoreInFieldSelection()]
         public Dictionary<string, JToken> Changes { get; internal set; }
 
+        [JsonProperty("audited"), Sdk4meIgnoreInFieldSelection()]
+        public string Audited { get; internal set; }
+
+        [JsonExtensionData, Sdk4meIgnoreInFieldSelection()]
+        public Dictionary<string, JToken> Data { get; internal set; }
+
+        /// <summary>
+        /// Get a data value.
+        /// </summary>
+        /// <typeparam name="T">The data type.</typeparam>
+        /// <param name="dataName">The data property name.</param>
+        /// <returns>The casted value.</returns>
+        public T GetDataValue<T>(string dataName)
+        {
+            if (Data == null)
+                return default(T);
+
+            return (T)Data[dataName].ToObject(typeof(T));
+        }
+
         /// <summary>
         /// Get a change value.
         /// </summary>
         /// <typeparam name="T">The data type.</typeparam>
-        /// <param name="changeName">The change name.</param>
+        /// <param name="changeName">The change property name.</param>
         /// <returns>The casted value.</returns>
-        public T GetValue<T>(string changeName)
+        public T GetChangeValue<T>(string changeName)
         {
+            if (Changes == null)
+                return default(T);
+
             return (T)Changes[changeName].ToObject(typeof(T));
         }
 
@@ -49,12 +79,14 @@ namespace Sdk4me
         /// Get change values.
         /// </summary>
         /// <typeparam name="T">The 4me object type.</typeparam>
-        /// <param name="changeName">The change name.</param>
+        /// <param name="changeName">The change property name.</param>
         /// <returns>A collection of casted values.</returns>
-        public List<T> GetValues<T>(string changeName)
+        public List<T> GetChangeValues<T>(string changeName)
         {
+            if (Changes == null)
+                return default(List<T>);
+
             return (List<T>)Changes[changeName].ToObject(typeof(List<T>));
-            //return JsonConvert.DeserializeObject<T>(Changes[changeName])
         }
     }
 }
