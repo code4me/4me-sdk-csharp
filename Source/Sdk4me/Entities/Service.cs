@@ -6,7 +6,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me <see href="https://developer.4me.com/v1/services/">services</see> object.
     /// </summary>
-    public class Service : BaseItem
+    public class Service : CustomFieldsBaseItem
     {
         private List<Attachment> attachments;
         private Person availabilityManager;
