@@ -30,6 +30,7 @@ namespace Sdk4me
         private WorkflowPhase phase;
         private TimeSpan plannedDuration;
         private TimeSpan? plannedEffort;
+        private bool providerNotAccountable;
         private int rejectionCount;
         private Request request;
         private RequestTemplate requestTemplate;
@@ -392,6 +393,20 @@ namespace Sdk4me
         {
             get => plannedEffort != null ? Convert.ToInt32(plannedEffort.Value.TotalMinutes) : (int?)null;
             set => plannedEffort = value != null ? TimeSpan.FromMinutes(value.Value) : (TimeSpan?)null;
+        }
+
+        #endregion
+
+        #region Provider not accountable
+
+        /// <summary>
+        /// The Provider not accountable field value is used to indicate when the provider is currently not to be accountable.
+        /// </summary>
+        [JsonProperty("provider_not_accountable")]
+        public bool ProviderNotAccountable
+        {
+            get => providerNotAccountable;
+            set => providerNotAccountable = SetValue("provider_not_accountable", providerNotAccountable, value);
         }
 
         #endregion

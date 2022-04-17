@@ -20,7 +20,7 @@ namespace Sdk4me.Tests
             if (requests.Count == 0)
                 return;
             Request request = requests[Random.Shared.Next(requests.Count)];
-            Trace.WriteLine($"Continue relation tests on requests: #{request.ID}");
+            Trace.WriteLine($"Continue relation tests on request: #{request.ID}");
 
 
             List<Note> notes = client.Requests.GetNotes(request, "*");

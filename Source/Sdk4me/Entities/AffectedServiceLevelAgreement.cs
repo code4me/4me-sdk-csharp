@@ -24,6 +24,7 @@ namespace Sdk4me
         private TimeSpan? maximumResolutionDuration;
         private TimeSpan? maximumResponseDuration;
         private string nextTargetAt;
+        private bool providerNotAccountable;
         private Request request;
         private DateTime? resolutionTargetAt;
         private DateTime? responseTargetAt;
@@ -269,6 +270,20 @@ namespace Sdk4me
         {
             get => nextTargetAt;
             internal set => nextTargetAt = value;
+        }
+
+        #endregion
+        
+        #region Provider not accountable
+
+        /// <summary>
+        /// The Provider not accountable field value is used to indicate when the provider is currently not to be accountable.
+        /// </summary>
+        [JsonProperty("provider_not_accountable")]
+        public bool ProviderNotAccountable
+        {
+            get => providerNotAccountable;
+            set => providerNotAccountable = SetValue("provider_not_accountable", providerNotAccountable, value);
         }
 
         #endregion

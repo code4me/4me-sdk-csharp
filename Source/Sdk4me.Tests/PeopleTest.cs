@@ -47,11 +47,9 @@ namespace Sdk4me.Tests
             Assert.IsNotNull(serviceInstances);
             Assert.IsInstanceOfType(serviceInstances, typeof(List<ServiceInstance>));
 
-            //TODO: Issue API endpoint - waiting to be resolved
-            //List<ServiceLevelAgreement> sla = client.People.GetServiceLevelAgreementCoverage(me, "*");
-            //Assert.IsNotNull(sla);
-            //Assert.IsInstanceOfType(sla, typeof(List<ServiceLevelAgreement>));
-            //Trace.WriteLine($"{me.Name} has {sla.Count} sla(s)");
+            List<ServiceLevelAgreement> sla = client.People.GetServiceLevelAgreementCoverage(me, "*");
+            Assert.IsNotNull(sla);
+            Assert.IsInstanceOfType(sla, typeof(List<ServiceLevelAgreement>));
 
             List<SkillPool> skillPools = client.People.GetSkillPools(me, "*");
             Assert.IsNotNull(skillPools);

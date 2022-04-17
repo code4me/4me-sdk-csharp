@@ -153,6 +153,19 @@ request = client.Requests.Update(request);
 ```
 The client will add a note with an attachment to the request.
 
+&nbsp;
+```csharp
+Service service = client.Services.Get(123);
+client.Services.UploadAttachment(".\\HelloWorld2.txt", "text/plain", out string key, out long size);
+if (service.CustomFields.ContainsKey("an_attachment"))
+    service.CustomFields["an_attachment"] = key;
+else
+    service.CustomFields.Add("an_attachment", key);
+service.ReferenceCustomFieldAttachment(key, size);
+service = client.Services.Update(service);
+```
+The client will add an attachment to a custom field of an existing service.
+
 ### Upload an inline attachment
 ```csharp
 ProductBacklog backlog = client.ProductBacklogs.Get(123);

@@ -43,6 +43,7 @@ namespace Sdk4me
         private ProductBacklog productBacklog;
         private int? productBacklogPosition;
         private Project project;
+        private bool providerNotAccountable;
         private int reopenCount;
         private Reservation reservation;
         private TimeSpan? resolutionDuration;
@@ -618,6 +619,20 @@ namespace Sdk4me
 
         [JsonProperty("project_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? ProjectID => project?.ID;
+
+        #endregion
+
+        #region Provider not accountable
+
+        /// <summary>
+        /// The Provider not accountable field value is used to indicate when the provider is currently not to be accountable.
+        /// </summary>
+        [JsonProperty("provider_not_accountable")]
+        public bool ProviderNotAccountable
+        {
+            get => providerNotAccountable;
+            set => providerNotAccountable = SetValue("provider_not_accountable", providerNotAccountable, value);
+        }
 
         #endregion
 
