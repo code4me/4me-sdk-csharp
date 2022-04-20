@@ -105,10 +105,16 @@ namespace Sdk4me
         public void AddOrUpdate(string id, string value)
         {
             if (collection.ContainsKey(id))
+            {
+                if (collection[id] != value)
+                    Changed?.Invoke(this, EventArgs.Empty);
                 collection[id] = value;
+            }
             else
+            {
                 collection.Add(id, value);
-            Changed?.Invoke(this, EventArgs.Empty);
+                Changed?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
