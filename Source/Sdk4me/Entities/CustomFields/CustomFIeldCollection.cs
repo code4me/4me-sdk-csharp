@@ -98,13 +98,35 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// Adds or updates the specified identifier's value.
+        /// </summary>
+        /// <param name="id">The identifier of the element to add or update.</param>
+        /// <param name="value">The value of the element to add or update. The value can be null for reference types.</param>
+        public void AddOrUpdate(string id, string value)
+        {
+            if (collection.ContainsKey(id))
+                collection[id] = value;
+            else
+                collection.Add(id, value);
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Adds the specified identifier and value to the collection.
         /// </summary>
         /// <param name="item">The object to add to the <see cref="CustomFieldCollection"/>.</param>
         public void Add(KeyValuePair<string, string> item)
         {
-            ((IDictionary<string, string>)collection).Add(item);
-            Changed?.Invoke(this, EventArgs.Empty);
+            Add(item.Key, item.Value);
+        }
+
+        /// <summary>
+        /// Adds the specified identifier and value to the collection; or updates the value when the identifier already exists.
+        /// </summary>
+        /// <param name="item">The object to add to the <see cref="CustomFieldCollection"/>.</param>
+        public void AddOrUpdate(KeyValuePair<string, string> item)
+        {
+            AddOrUpdate(item.Key, item.Value);
         }
 
         /// <summary>
