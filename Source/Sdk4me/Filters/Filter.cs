@@ -178,8 +178,8 @@ namespace Sdk4me
                     return $"{fieldName}{"=>="}{attributeValues[0]}<={attributeValues[1]}";
 
                 case FilterCondition.Negation:
-                    if (attributeValues is null || attributeValues.Length != 2)
-                        throw new ApplicationException($"The {filter} filter requires a two values.");
+                    if (attributeValues is null || attributeValues.Length != 1)
+                        throw new ApplicationException($"The {filter} filter requires a single value.");
                     return $"{fieldName}{"=!"}{attributeValues[0]}";
 
                 case FilterCondition.In:

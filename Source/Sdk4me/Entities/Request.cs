@@ -903,7 +903,7 @@ namespace Sdk4me
         public string SupportDomain
         {
             get => supportDomain;
-            internal set => supportDomain = value;
+            set => supportDomain = SetValue("support_domain", supportDomain, value);
         }
 
         #endregion
