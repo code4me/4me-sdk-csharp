@@ -72,7 +72,8 @@ This will return the default fields for a [request](https://developer.4me.com/v1
 
 ### Pagination
 ```csharp
-Sdk4meClient client = new Sdk4meClient(token, accountID, itemsPerRequest: 100, maximumRecursiveRequests: 1000);
+Sdk4meClient client = new Sdk4meClient(token, accountID,
+    itemsPerRequest: 100, maximumRecursiveRequests: 1000);
 ```
 or
 ```csharp
