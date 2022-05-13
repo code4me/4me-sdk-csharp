@@ -23,7 +23,7 @@ The Get method allows predefined and custom filtering. More information about fi
 The Get method allows field selection. If no fields are specified it will return the default field selection as documented on the [4me developer website](https://developer.4me.com/v1/general/field_selection/). To return all field values an asterisk (*) can be used.
 
 #### Pagination
-The API requests returning a collection are always paginated. A single API request will return at most 100 records. The client allows you to set the number of items per page, as well as the number of pages to be requested. More information about pagination is available on the [4me developer website](https://developer.4me.com/v1/general/pagination/).
+The API requests returning a collection are almost always paginated. A single API request will return at most 100 records. The client allows you to set the number of items per page, as well as the number of pages to be requested. More information about pagination is available on the [4me developer website](https://developer.4me.com/v1/general/pagination/).
 
 #### Attachments
 The UploadAttachment method makes it possible to upload attachments, which can be referenced later when inserting or updating an object.
@@ -37,7 +37,7 @@ Filtering and field selection requires references to fields. All endpoints and f
 The client supports the usage of multiple authentication tokens. The number of API requests is limited to 3600 request per hour, which in some cases in not enough. When multiple tokens are used, the client will always use the token with the highest remaining request value. More information about rate limiting can be found on the [4me developer website](https://developer.4me.com/v1/#rate-limiting).
 
 #### Response timing
-The 4me REST API limits the number of requests to 10 per second.  The client will keep track of the response time and lock the process to make sure it takes at lease 116 milliseconds per request.
+The 4me REST API limits the number of requests to 10 per second. The client will keep track of the response time and lock the process to make sure it takes at lease 116 milliseconds per request.
 
 #### Exception handling
 A custom, Sdk4meException, is implemented. It will convert the API exception response to a string value.
@@ -49,7 +49,7 @@ A custom, Sdk4meException, is implemented. It will convert the API exception res
 using Sdk4me;
 
 AuthenticationToken token = new AuthenticationToken("TheBearerToken");
-Sdk4meClient client = new Sdk4meClient(token);
+Sdk4meClient client = new Sdk4meClient(token, "accountID");
 Person me = client.Me.Get();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
 ```
@@ -69,6 +69,17 @@ foreach (Request request in requests)
 Console.WriteLine($"Requests found: {requests.Count}");
 ```
 This will return the default fields for a [request](https://developer.4me.com/v1/requests/#fields).
+
+### Pagination
+```csharp
+Sdk4meClient client = new Sdk4meClient(token, accountID, itemsPerRequest: 100, maximumRecursiveRequests: 1000);
+```
+or
+```csharp
+client.ItemsPerRequest = 100;
+client.MaximumRecursiveRequests = 1000;
+```
+This will set the items returned per page to 100 and the maximum number of recursive requests to 1000.
 
 ### Filtering
 ```csharp
