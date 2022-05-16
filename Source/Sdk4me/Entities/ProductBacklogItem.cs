@@ -7,9 +7,24 @@ namespace Sdk4me
     /// </summary>
     public class ProductBacklogItem : BaseItem
     {
+        private int estimate;
         private int position;
         private Problem problem;
         private Request request;
+
+        #region Estimate
+
+        /// <summary>
+        /// Estimate of the relative size of this item on the product backlog.
+        /// </summary>
+        [JsonProperty("estimate")]
+        public int Estimate
+        {
+            get => estimate;
+            internal set => estimate = value;
+        }
+
+        #endregion
 
         #region Position
 

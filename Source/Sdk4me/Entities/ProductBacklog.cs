@@ -12,8 +12,8 @@ namespace Sdk4me
         private bool disabled;
         private string name;
         private string pictureUri;
-        private string productGoal;
-        private List<AttachmentReference> productGoalAttachments;
+        private string description;
+        private List<AttachmentReference> descriptionAttachments;
         private Person productOwner;
         private string source;
         private string sourceID;
@@ -28,6 +28,51 @@ namespace Sdk4me
         {
             get => attachments;
             internal set => attachments = value;
+        }
+
+        #endregion
+
+        #region Description
+
+        /// <summary>
+        /// The Description field is used to enter a high-level description of the product backlog.
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description
+        {
+            get => description;
+            set => description = SetValue("description", description, value);
+        }
+
+        #endregion
+
+        #region Description attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded description attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferenceDescriptionAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (descriptionAttachments == null)
+                descriptionAttachments = new List<AttachmentReference>();
+
+            descriptionAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("description_attachments");
+        }
+
+        [JsonProperty("description_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> DescriptionAttachment
+        {
+            get => descriptionAttachments;
         }
 
         #endregion
@@ -70,51 +115,6 @@ namespace Sdk4me
         {
             get => pictureUri;
             set => pictureUri = SetValue("picture_uri", pictureUri, value);
-        }
-
-        #endregion
-
-        #region Product goal
-
-        /// <summary>
-        /// The Product goal field is used to enter a long-term objective or future state of the product.
-        /// </summary>
-        [JsonProperty("product_goal")]
-        public string ProductGoal
-        {
-            get => productGoal;
-            set => productGoal = SetValue("product_goal", productGoal, value);
-        }
-
-        #endregion
-
-        #region Product goal attachment
-
-        /// <summary>
-        /// Write-only. Add a reference to an uploaded information attachment. Use <see cref="Attachments"/> to get the existing attachments.
-        /// </summary>
-        /// <param name="key">The attachment key.</param>
-        /// <param name="fileSize">The attachment file size.</param>
-        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
-        public void ReferenceProductGoalAttachment(string key, long fileSize, bool inline = false)
-        {
-            if (productGoalAttachments == null)
-                productGoalAttachments = new List<AttachmentReference>();
-
-            productGoalAttachments.Add(new AttachmentReference()
-            {
-                Key = key,
-                FileSize = fileSize,
-                Inline = inline
-            });
-
-            base.PropertySerializationCollection.Add("product_goal_attachments");
-        }
-
-        [JsonProperty("product_goal_attachments"), Sdk4meIgnoreInFieldSelection()]
-        internal List<AttachmentReference> ProductGoalAttachments
-        {
-            get => productGoalAttachments;
         }
 
         #endregion
