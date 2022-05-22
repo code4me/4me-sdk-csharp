@@ -834,6 +834,7 @@ namespace Sdk4me
         private HttpWebResponse SendHttpRequest(HttpWebRequest requestMessage, JObject content)
         {
             WriteDebug(requestMessage);
+            Sleep.RegisterStartTime();
 
             try
             {
@@ -887,6 +888,7 @@ namespace Sdk4me
         private HttpWebResponse SendHttpRequest(HttpWebRequest requestMessage, T item = default)
         {
             WriteDebug(requestMessage);
+            Sleep.RegisterStartTime();
 
             try
             {

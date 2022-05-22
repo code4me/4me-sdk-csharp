@@ -802,6 +802,8 @@ namespace Sdk4me
             WriteDebug(requestMessage);
             HttpResponseMessage retval;
 
+            Sleep.RegisterStartTime();
+
             if (content is null)
             {
                 retval = client.Send(requestMessage);
@@ -839,6 +841,8 @@ namespace Sdk4me
         {
             WriteDebug(requestMessage);
             HttpResponseMessage retval;
+
+            Sleep.RegisterStartTime();
 
             if (item is null)
             {
