@@ -16,6 +16,9 @@ namespace Sdk4me
 
         #region Created at (override)
 
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
@@ -27,6 +30,9 @@ namespace Sdk4me
 
         #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {

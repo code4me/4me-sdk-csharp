@@ -13,8 +13,11 @@ namespace Sdk4me
         private bool reopen;
         private List<AttachmentReference> noteAttachments;
 
-        #region created_at (override)
+        #region Created at (override)
 
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
@@ -24,8 +27,11 @@ namespace Sdk4me
 
         #endregion
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
@@ -66,7 +72,7 @@ namespace Sdk4me
         #region Note attachment
 
         /// <summary>
-        /// Write-only. Add a reference to an uploaded internal note attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// Write-only. Add a reference to an uploaded internal note attachment. Use <see cref="Attachment"/> to get the existing attachments.
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>

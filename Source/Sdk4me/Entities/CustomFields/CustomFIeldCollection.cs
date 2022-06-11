@@ -14,6 +14,9 @@ namespace Sdk4me
     {
         private readonly Dictionary<string, string> collection = new Dictionary<string, string>();
 
+        /// <summary>
+        /// A change that occurs when a value is added, updated and deleted.
+        /// </summary>
         public event EventHandler Changed;
 
         /// <summary>
@@ -223,7 +226,7 @@ namespace Sdk4me
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="CustomFieldCollection"/>.
         /// </summary>
-        /// <returns>A <see cref="CustomFieldCollection"/>.Enumerator structure for the <see cref="CustomFieldCollection"/>./returns>
+        /// <returns>A <see cref="CustomFieldCollection"/>.Enumerator structure for the <see cref="CustomFieldCollection"/>.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return collection.GetEnumerator();

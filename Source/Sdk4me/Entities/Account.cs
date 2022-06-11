@@ -22,6 +22,10 @@ namespace Sdk4me
         private string timeZone;
         private string url;
 
+        /// <summary>
+        /// Converts an <see cref="Account"/> object to an <see cref="AccountReference"/> object.
+        /// </summary>
+        /// <param name="account">The account object.</param>
         public static implicit operator AccountReference(Account account) => new AccountReference() { ID = account.ID, Name = account.Name };
 
         #region ID

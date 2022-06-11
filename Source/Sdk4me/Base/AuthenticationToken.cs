@@ -2,6 +2,9 @@
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// The 4me authentication token.
+    /// </summary>
     public sealed class AuthenticationToken
     {
         private readonly string authenticationToken;
@@ -58,7 +61,6 @@ namespace Sdk4me
         /// Create a new instance of an <see cref="AuthenticationToken"/>.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
-        /// <param name="authenticationType">The 4me authentication token type.</param>
         public AuthenticationToken(string authenticationToken)
         {
             this.authenticationToken = authenticationToken;

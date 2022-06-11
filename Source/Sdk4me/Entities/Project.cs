@@ -200,7 +200,7 @@ namespace Sdk4me
         #region Note attachment
 
         /// <summary>
-        /// Write-only. Add a reference to an uploaded note attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// Write-only. Add a reference to an uploaded note attachment. Use <see cref="Attachment"/> to get the existing attachments.
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>

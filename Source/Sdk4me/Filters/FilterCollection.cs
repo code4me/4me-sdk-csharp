@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// A filter collection.
+    /// </summary>
     public class FilterCollection : IList<Filter>
     {
         private readonly List<Filter> filterItems = new List<Filter>();

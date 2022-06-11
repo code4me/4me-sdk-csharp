@@ -16,6 +16,11 @@ using System.Text.RegularExpressions;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// The base API handler.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <typeparam name="X">The predefined filter enumerator.</typeparam>
     public abstract class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
     {
         private readonly bool traceEnabled = Trace.Listeners != null && Trace.Listeners.Count > 0;
@@ -102,11 +107,31 @@ namespace Sdk4me
 
         #region constructors
 
+        /// <summary>
+        /// Create a new instance of the <see cref="BaseHandler{T, X}"/>.
+        /// </summary>
+        /// <param name="endPointUrl">The API end point URL.</param>
+        /// <param name="authenticationToken">The API authentication token.</param>
+        /// <param name="accountID">The 4me Account ID.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public BaseHandler(string endPointUrl, AuthenticationToken authenticationToken, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : this(endPointUrl, new AuthenticationTokenCollection(authenticationToken), accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
+        /// <summary>
+        /// Create a new instance of the <see cref="DefaultBaseHandler{T}"/>.
+        /// </summary>
+        /// <param name="endPointUrl">The API end point URL.</param>
+        /// <param name="authenticationTokens">The API authentication token collection.</param>
+        /// <param name="accountID">The 4me Account ID.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public BaseHandler(string endPointUrl, AuthenticationTokenCollection authenticationTokens, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
         {
             //validate string argument values
@@ -405,7 +430,7 @@ namespace Sdk4me
         /// Send a request without any content to the 4me API.
         /// </summary>
         /// <param name="httpMethod">The HTTP method.</param>
-        /// <returns><see cref="T"/> in case of success; otherwise false.</returns>
+        /// <returns>The object in case of success; otherwise false.</returns>
         public T Invoke(string httpMethod)
         {
             using (HttpRequestMessage requestMessage = CreateHttpRequest(new HttpMethod(httpMethod.ToUpperInvariant()), url))
@@ -454,7 +479,6 @@ namespace Sdk4me
         /// <summary>
         /// Delete all linked 4me objects.
         /// </summary>
-        /// <param name="item">The object to delete.</param>
         /// <returns>True is case of success; otherwise false.</returns>
         /// <exception cref="Sdk4meException"></exception>
         public bool DeleteAll()
@@ -727,6 +751,11 @@ namespace Sdk4me
 
         #region Audit
 
+        /// <summary>
+        /// Get the audit trail.
+        /// </summary>
+        /// <param name="item">The 4me object.</param>
+        /// <returns>Return the <see cref="AuditTrail"/>.</returns>
         public virtual List<AuditTrail> GetAuditTrail(T item)
         {
             return GetChildHandler<AuditTrail>(item, "audit", SortOrder = SortOrder.None).Get();
@@ -737,10 +766,10 @@ namespace Sdk4me
         #region http helper methods
 
         /// <summary>
-        /// Reads the <see cref="HttpResponseMessage"/> content stream and deserialize it into <see cref="T"/>.
+        /// Reads the <see cref="HttpResponseMessage"/> content stream and deserialize it.
         /// </summary>
         /// <param name="responseMessage">The http response message.</param>
-        /// <returns>Returns <see cref="T"/> object.</returns>
+        /// <returns>Returns the object.</returns>
         private T GetHttpContentAsItem(HttpResponseMessage responseMessage)
         {
             if (responseMessage.StatusCode == HttpStatusCode.NoContent)
@@ -795,7 +824,7 @@ namespace Sdk4me
         /// Create an send an <see cref="HttpRequestMessage"/>.
         /// </summary>
         /// <param name="requestMessage">The http request message.</param>
-        /// <param name="data">The JSON data to send as http request content.</param>
+        /// <param name="content">The JSON data to send as http request content.</param>
         /// <returns>The <see cref="HttpRequestMessage"/> object.</returns>
         private HttpResponseMessage SendHttpRequest(HttpRequestMessage requestMessage, JObject content)
         {
@@ -922,8 +951,7 @@ namespace Sdk4me
         /// <summary>
         /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
         /// </summary>
-        /// <param name="method">The HttpMethod.</param>
-        /// <param name="url">The request url.</param>
+        /// <param name="requestMessage">The debug http request message.</param>
         private void WriteDebug(HttpRequestMessage requestMessage)
         {
             try
@@ -939,7 +967,7 @@ namespace Sdk4me
         /// <summary>
         /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The debug message.</param>
         private void WriteDebug(string message)
         {
             try

@@ -10,6 +10,10 @@ namespace Sdk4me
         private string id;
         private string name;
 
+        /// <summary>
+        /// Convert an <see cref="AccountReference"/> object to an <see cref="Account"/> object.
+        /// </summary>
+        /// <param name="accountReference">The account reference object.</param>
         public static explicit operator Account(AccountReference accountReference) => new Account() { ID = accountReference.id, Name = accountReference.Name };
 
         #region ID

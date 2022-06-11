@@ -7,8 +7,17 @@ namespace Sdk4me
     /// </summary>
     public enum EnvironmentType
     {
+        /// <summary>
+        /// The 4me production environment.
+        /// </summary>
         Production,
+        /// <summary>
+        /// The 4me quality environment.
+        /// </summary>
         Quality,
+        /// <summary>
+        /// The 4me demo environment.
+        /// </summary>
         Demo
     }
 
@@ -17,7 +26,13 @@ namespace Sdk4me
     /// </summary>
     public enum EnvironmentRegion
     {
+        /// <summary>
+        /// The global region.
+        /// </summary>
         Global,
+        /// <summary>
+        /// The Australia region.
+        /// </summary>
         Australia
     }
 
@@ -133,16 +148,49 @@ namespace Sdk4me
     /// </summary>
     public enum AttachmentType
     {
+        /// <summary>
+        /// A charges attachment.
+        /// </summary>
         Charges,
+        /// <summary>
+        /// A description attachment.
+        /// </summary>
         Description,
+        /// <summary>
+        /// An information attachment.
+        /// </summary>
         Information,
+        /// <summary>
+        /// An instruction attachment.
+        /// </summary>
         Instructions,
+        /// <summary>
+        /// An internal note attachment.
+        /// </summary>
         InternalNote,
+        /// <summary>
+        /// A note attachment.
+        /// </summary>
         Note,
+        /// <summary>
+        /// A remarks attachment.
+        /// </summary>
         Remarks,
+        /// <summary>
+        /// A summary attachment.
+        /// </summary>
         Summary,
+        /// <summary>
+        /// A target details attachment.
+        /// </summary>
         TargetDetails,
+        /// <summary>
+        /// A work around attachment.
+        /// </summary>
         Workaround,
+        /// <summary>
+        /// A message attachment.
+        /// </summary>
         Message
     }
 }

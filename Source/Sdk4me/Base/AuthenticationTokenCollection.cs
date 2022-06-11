@@ -88,7 +88,6 @@ namespace Sdk4me
         /// Removes a 4me authentication token from the collection.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
-        /// <param name="authenticationType">The 4me authentication token type.</param>
         public void Remove(string authenticationToken)
         {
             Remove(new AuthenticationToken(authenticationToken));
@@ -98,7 +97,6 @@ namespace Sdk4me
         /// Removes a 4me authentication token from the collection.
         /// </summary>
         /// <param name="authenticationToken">The 4me authentication token.</param>
-        /// <param name="authenticationType">The 4me authentication token type.</param>
         public void Remove(AuthenticationToken authenticationToken)
         {
             if (authenticationToken is null)

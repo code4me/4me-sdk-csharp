@@ -13,6 +13,9 @@ namespace Sdk4me
 
         #region ID
 
+        /// <summary>
+        /// The unique identifier. 
+        /// </summary>
         [JsonProperty("id")]
         public long ID
         {
@@ -24,6 +27,9 @@ namespace Sdk4me
 
         #region HREF
 
+        /// <summary>
+        /// The hyper text reference.
+        /// </summary>
         [JsonProperty("href")]
         public string HypertextReference
         {
@@ -35,6 +41,9 @@ namespace Sdk4me
 
         #region Display name
 
+        /// <summary>
+        /// The display name.
+        /// </summary>
         [JsonProperty("display_name")]
         public string DisplayName
         {

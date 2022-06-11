@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Sdk4me.Extensions
 {
     /// <summary>
-    /// A class containing multiple <see cref="Enum"/> extension methods.
+    /// A class containing <see cref="Enum"/> extension methods.
     /// </summary>
     internal static class EnumExtensions
     {
@@ -23,10 +23,10 @@ namespace Sdk4me.Extensions
         }
 
         /// <summary>
-        /// Get the <see cref="AccessRoles"/> as a <see cref="List{string}"/> collection.
+        /// Get the <see cref="AccessRoles"/> as a <see cref="List{T}"/> collection.
         /// </summary>
         /// <param name="accessRoles">The access roles.</param>
-        /// <returns>Returns a <see cref="List{string}"/> collection.</returns>
+        /// <returns>Returns a <see cref="List{T}"/> collection.</returns>
         internal static List<string> Get4meStringCollection(this AccessRoles accessRoles)
         {
             List<string> retval = new List<string>();

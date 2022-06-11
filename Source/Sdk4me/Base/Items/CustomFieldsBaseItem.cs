@@ -57,7 +57,7 @@ namespace Sdk4me
         #region Custom field attachment
 
         /// <summary>
-        /// Write-only. Add a reference to an uploaded attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// Write-only. Add a reference to an uploaded attachment. Use <see cref="Attachment"/> to get the existing attachments.
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>

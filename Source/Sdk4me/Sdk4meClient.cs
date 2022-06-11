@@ -64,11 +64,11 @@ namespace Sdk4me
         /// <summary>
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
-        /// <param name="authenticationToken">The 4me authentication object.</param>
-        /// <param name="accountID">The 4me account name.</param>
+        /// <param name="authenticationToken">The API authentication token.</param>
+        /// <param name="accountID">The 4me account ID.</param>
         /// <param name="environment">The 4me environment.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
         {
@@ -77,12 +77,12 @@ namespace Sdk4me
         /// <summary>
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
-        /// <param name="authenticationToken">The 4me authentication object.</param>
-        /// <param name="accountID">The 4me account name.</param>
+        /// <param name="authenticationToken">The API authentication token.</param>
+        /// <param name="accountID">The 4me account ID.</param>
         /// <param name="environment">The 4me environment.</param>
         /// <param name="environmentRegion">The 4me environment region.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment, EnvironmentRegion environmentRegion, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests)
         {
@@ -91,12 +91,11 @@ namespace Sdk4me
         /// <summary>
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
-        /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
-        /// <param name="accountID">The 4me account name.</param>
+        /// <param name="authenticationTokens">The API authentication token collection.</param>
+        /// <param name="accountID">The 4me account ID.</param>
         /// <param name="environment">The 4me environment.</param>
-        /// <param name="environmentRegion">The 4me environment region.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : this(authenticationTokens, accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
         {
@@ -105,11 +104,12 @@ namespace Sdk4me
         /// <summary>
         /// Creates a new instance of the Sdk4meClient.
         /// </summary>
-        /// <param name="authenticationTokens">A collection of 4me authorization objects.</param>
-        /// <param name="accountID">The 4me account name.</param>
+        /// <param name="authenticationTokens">The API authentication token collection.</param>
+        /// <param name="accountID">The 4me account ID.</param>
         /// <param name="environment">The 4me environment.</param>
-        /// <param name="itemsPerRequest">The amount of items returned in one requests.</param>
-        /// <param name="maximumRecursiveRequests">The amount of recursive requests.</param>
+        /// <param name="environmentRegion">The 4me environment region.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment, EnvironmentRegion environmentRegion, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
         {
             if (string.IsNullOrWhiteSpace(accountID))
@@ -131,7 +131,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/account/">account</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/account/">account</see> API endpoint.
         /// </summary>
         public AccountHandler Account
         {
@@ -144,7 +144,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/affected_slas/">affected service level agreements</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/affected_slas/">affected service level agreements</see> API endpoint.
         /// </summary>
         public AffectedServiceLevelAgreementHandler AffectedServiceLevelAgreements
         {
@@ -157,7 +157,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/agile_boards/">affected service level agreements</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/agile_boards/">affected service level agreements</see> API endpoint.
         /// </summary>
         public AgileBoardHandler AgileBoards
         {
@@ -170,7 +170,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/archive/">archive</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/archive/">archive</see> API endpoint.
         /// </summary>
         public ArchiveHandler Archive
         {
@@ -184,7 +184,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/audit_entries/">audit entry</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/audit_entries/">audit entry</see> API endpoint.
         /// </summary>
         public AuditEntryHandler AuditEntries
         {
@@ -198,7 +198,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/broadcasts/">broadcast</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/broadcasts/">broadcast</see> API endpoint.
         /// </summary>
         public BroadcastHandler Broadcasts
         {
@@ -211,7 +211,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/calendars/">calendar</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/calendars/">calendar</see> API endpoint.
         /// </summary>
         public CalendarHandler Calendars
         {
@@ -224,7 +224,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/cis/">configuration item</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/cis/">configuration item</see> API endpoint.
         /// </summary>
         public ConfigurationItemHandler ConfigurationItems
         {
@@ -237,7 +237,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/contracts/">contract</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/contracts/">contract</see> API endpoint.
         /// </summary>
         public ContractHandler Contracts
         {
@@ -250,7 +250,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/custom_collections/">custom collection</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/custom_collections/">custom collection</see> API endpoint.
         /// </summary>
         public CustomCollectionHandler CustomCollections
         {
@@ -263,7 +263,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/custom_collection_elements/">custom collection element</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/custom_collection_elements/">custom collection element</see> API endpoint.
         /// </summary>
         public CustomCollectionElementHandler CustomCollectionElements
         {
@@ -276,7 +276,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/effort_classes/">effort class</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/effort_classes/">effort class</see> API endpoint.
         /// </summary>
         public EffortClassHandler EffortClasses
         {
@@ -289,7 +289,20 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/flsas/">first line support agreement</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/requests/events/">event</see> API endpoint.
+        /// </summary>
+        public RequestEventHandler Events
+        {
+            get
+            {
+                if (!handlers.ContainsKey("events"))
+                    handlers.Add("events", new RequestEventHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (RequestEventHandler)handlers["events"];
+            }
+        }
+
+        /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/flsas/">first line support agreement</see> API endpoint.
         /// </summary>
         public FirstLineSupportAgreementHandler FirstLineSupportAgreements
         {
@@ -302,7 +315,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/holidays/">holiday</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/holidays/">holiday</see> API endpoint.
         /// </summary>
         public HolidayHandler Holidays
         {
@@ -315,7 +328,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/invoices/">invoice</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/invoices/">invoice</see> API endpoint.
         /// </summary>
         public InvoiceHandler Invoices
         {
@@ -328,7 +341,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/knowledge_articles/">knowledge article</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/knowledge_articles/">knowledge article</see> API endpoint.
         /// </summary>
         public KnowledgeArticleHandler KnowledgeArticles
         {
@@ -341,7 +354,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/people/me/">Me</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/people/me/">Me</see> API endpoint.
         /// </summary>
         public MeHandler Me
         {
@@ -354,7 +367,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/organizations/">organization</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/organizations/">organization</see> API endpoint.
         /// </summary>
         public OrganizationHandler Organizations
         {
@@ -367,7 +380,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/out_of_office_periods/">out of office period</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/out_of_office_periods/">out of office period</see> API endpoint.
         /// </summary>
         public OutOfOfficePeriodHandler OutOfOfficePeriods
         {
@@ -380,7 +393,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/people/">people</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/people/">people</see> API endpoint.
         /// </summary>
         public PeopleHandler People
         {
@@ -393,7 +406,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/projects/">project</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/projects/">project</see> API endpoint.
         /// </summary>
         public ProjectHandler Projects
         {
@@ -406,7 +419,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/project_categories/">project category</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/project_categories/">project category</see> API endpoint.
         /// </summary>
         public ProjectCategoryHandler ProjectCategory
         {
@@ -419,7 +432,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/project_risk_levels/">project risk level</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/project_risk_levels/">project risk level</see> API endpoint.
         /// </summary>
         public ProjectRiskLevelHandler ProjectRiskLevels
         {
@@ -432,7 +445,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/project_tasks/">project task</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/project_tasks/">project task</see> API endpoint.
         /// </summary>
         public ProjectTaskHandler ProjectTasks
         {
@@ -445,7 +458,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/project_task_templates/">project task template</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/project_task_templates/">project task template</see> API endpoint.
         /// </summary>
         public ProjectTaskTemplateHandler ProjectTaskTemplates
         {
@@ -458,7 +471,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/project_templates/">project template</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/project_templates/">project template</see> API endpoint.
         /// </summary>
         public ProjectTemplateHandler ProjectTemplates
         {
@@ -471,7 +484,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/problems/">problem</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/problems/">problem</see> API endpoint.
         /// </summary>
         public ProblemHandler Problems
         {
@@ -484,7 +497,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/products/">product</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/products/">product</see> API endpoint.
         /// </summary>
         public ProductHandler Products
         {
@@ -497,7 +510,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/product_backlogs/">product backlog</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/product_backlogs/">product backlog</see> API endpoint.
         /// </summary>
         public ProductBacklogHandler ProductBacklogs
         {
@@ -510,7 +523,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/product_categories/">product category</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/product_categories/">product category</see> API endpoint.
         /// </summary>
         public ProductCategoryHandler ProductCategories
         {
@@ -523,7 +536,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/requests/">request</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/requests/">request</see> API endpoint.
         /// </summary>
         public RequestHandler Requests
         {
@@ -536,7 +549,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/request_templates/">request template</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/request_templates/">request template</see> API endpoint.
         /// </summary>
         public RequestTemplateHandler RequestTemplates
         {
@@ -549,7 +562,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/releases/">release</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/releases/">release</see> API endpoint.
         /// </summary>
         public ReleaseHandler Releases
         {
@@ -562,7 +575,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/reservations/">reservation</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/reservations/">reservation</see> API endpoint.
         /// </summary>
         public ReservationHandler Reservations
         {
@@ -575,7 +588,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/reservation_offerings/">reservation offering</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/reservation_offerings/">reservation offering</see> API endpoint.
         /// </summary>
         public ReservationOfferingHandler ReservationOfferings
         {
@@ -588,7 +601,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/risks/">risk</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/risks/">risk</see> API endpoint.
         /// </summary>
         public RiskHandler Risks
         {
@@ -601,7 +614,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/risk_severities/">risk severity</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/risk_severities/">risk severity</see> API endpoint.
         /// </summary>
         public RiskSeverityHandler RiskSeverities
         {
@@ -614,7 +627,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/services/">service</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/services/">service</see> API endpoint.
         /// </summary>
         public ServiceHandler Services
         {
@@ -627,7 +640,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/service_categories/">service category</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/service_categories/">service category</see> API endpoint.
         /// </summary>
         public ServiceCategoryHandler ServiceCategories
         {
@@ -640,7 +653,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/service_instances/">service instance</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/service_instances/">service instance</see> API endpoint.
         /// </summary>
         public ServiceInstanceHandler ServiceInstances
         {
@@ -653,7 +666,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/service_offerings/">service offering</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/service_offerings/">service offering</see> API endpoint.
         /// </summary>
         public ServiceOfferingHandler ServiceOfferings
         {
@@ -666,7 +679,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/slas/">service level agreement</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/slas/">service level agreement</see> API endpoint.
         /// </summary>
         public ServiceLevelAgreementHandler ServiceLevelAgreements
         {
@@ -679,7 +692,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/sites/">sites</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/sites/">sites</see> API endpoint.
         /// </summary>
         public SiteHandler Sites
         {
@@ -692,7 +705,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/skill_pools/">skill pool</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/skill_pools/">skill pool</see> API endpoint.
         /// </summary>
         public SkillPoolHandler SkillPools
         {
@@ -705,7 +718,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/surveys/">survey</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/surveys/">survey</see> API endpoint.
         /// </summary>
         public SurveyHandler Surveys
         {
@@ -718,7 +731,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/survey_responses/">survey response</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/survey_responses/">survey response</see> API endpoint.
         /// </summary>
         public SurveyResponseHandler SurveyResponses
         {
@@ -731,7 +744,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/tasks/">task</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/tasks/">task</see> API endpoint.
         /// </summary>
         public TaskHandler Tasks
         {
@@ -744,7 +757,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/task_templates/">task template</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/task_templates/">task template</see> API endpoint.
         /// </summary>
         public TaskTemplateHandler TaskTemplates
         {
@@ -757,7 +770,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/teams/">team</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/teams/">team</see> API endpoint.
         /// </summary>
         public TeamHandler Teams
         {
@@ -770,7 +783,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/time_allocations/">time allocation</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/time_allocations/">time allocation</see> API endpoint.
         /// </summary>
         public TimeAllocationHandler TimeAllocations
         {
@@ -783,7 +796,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/time_entries/">time entry</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/time_entries/">time entry</see> API endpoint.
         /// </summary>
         public TimeEntryHandler TimeEntries
         {
@@ -796,7 +809,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/timesheet_settings/">timesheet setting</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/timesheet_settings/">timesheet setting</see> API endpoint.
         /// </summary>
         public TimesheetSettingHandler TimesheetSettings
         {
@@ -809,7 +822,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/trash/">trash</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/trash/">trash</see> API endpoint.
         /// </summary>
         public TrashHandler Trash
         {
@@ -823,7 +836,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/ui_extensions/">user interface extension</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/ui_extensions/">user interface extension</see> API endpoint.
         /// </summary>
         public UIExtensionHandler UIExtensions
         {
@@ -836,7 +849,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/workflows/">workflow</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/workflows/">workflow</see> API endpoint.
         /// </summary>
         public WorkflowHandler Workflows
         {
@@ -849,7 +862,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/workflow_templates/">workflow template</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/workflow_templates/">workflow template</see> API endpoint.
         /// </summary>
         public WorkflowTemplateHandler WorkflowTemplates
         {
@@ -862,7 +875,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// The 4me <see href="https://developer.4me.com/v1/workflow_types/">workflow type</see> API.
+        /// The 4me <see href="https://developer.4me.com/v1/workflow_types/">workflow type</see> API endpoint.
         /// </summary>
         public WorkflowTypeHandler WorkflowTypes
         {

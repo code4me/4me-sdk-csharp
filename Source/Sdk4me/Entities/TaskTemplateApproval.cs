@@ -11,19 +11,25 @@ namespace Sdk4me
         private Person approver;
         private TimeSpan? plannedEffort;
 
-        #region created_at (override)
+        #region Created at (override)
 
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
             get => base.CreatedAt;
-            internal set => base.CreatedAt = value;
+            internal set => base.CreatedAt = null;
         }
 
         #endregion
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {

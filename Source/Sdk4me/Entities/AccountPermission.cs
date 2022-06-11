@@ -14,6 +14,8 @@ namespace Sdk4me
     {
         private List<AccessRoles> roles = new List<AccessRoles>();
 
+        #region ID
+
         /// <summary>
         /// The account identifier.
         /// </summary>
@@ -23,8 +25,13 @@ namespace Sdk4me
             get => Account?.ID;
         }
 
-        #region created_at (override)
+        #endregion
 
+        #region Created at (override)
+
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
@@ -34,8 +41,11 @@ namespace Sdk4me
 
         #endregion
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
@@ -57,6 +67,9 @@ namespace Sdk4me
             set => roles = value;
         }
 
+        /// <summary>
+        /// The roles the person has within the account
+        /// </summary>
         public AccessRoles Roles
         {
             get

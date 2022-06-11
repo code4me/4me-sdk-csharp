@@ -18,7 +18,7 @@ namespace Sdk4me
         #region Calendar hours
 
         /// <summary>
-        /// Readonly aggregated calendar hours
+        /// Read-only aggregated calendar hours
         /// </summary>
         [JsonProperty("calendar_hours")]
         public List<CalendarHours> CalendarHours

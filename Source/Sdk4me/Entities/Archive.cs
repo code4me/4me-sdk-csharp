@@ -15,8 +15,11 @@ namespace Sdk4me
         private Person archivedBy;
         private string archived;
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
@@ -28,6 +31,9 @@ namespace Sdk4me
 
         #region Archived
 
+        /// <summary>
+        /// The archived object.
+        /// </summary>
         [JsonProperty("archived")]
         public string Archived
         {
@@ -39,6 +45,9 @@ namespace Sdk4me
 
         #region Archive details
 
+        /// <summary>
+        /// The archived details.
+        /// </summary>
         [JsonIgnore, Sdk4meIgnoreInFieldSelection()]
         public ActionDetails Details
         {
@@ -49,6 +58,9 @@ namespace Sdk4me
 
         #region Archived by
 
+        /// <summary>
+        /// The person that archived this item.
+        /// </summary>
         [JsonProperty("archived_by")]
         public Person ArchivedBy
         {

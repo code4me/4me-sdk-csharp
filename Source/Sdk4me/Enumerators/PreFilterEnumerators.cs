@@ -190,6 +190,9 @@
         ManagedByMe
     }
 
+    /// <summary>
+    /// Predefined open or completed filter.
+    /// </summary>
     public enum PredefinedOpenCompletedFilter
     {
         /// <summary>

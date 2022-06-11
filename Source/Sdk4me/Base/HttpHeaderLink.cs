@@ -39,10 +39,10 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Returns the links specified in the HTTP repose header.
+        /// Returns the links specified in the HTTP response header.
         /// </summary>
-        /// <param name="linkHeader"></param>
-        /// <returns></returns>
+        /// <param name="linkHeader">The parsed link header.</param>
+        /// <returns>A <see cref="HttpHeaderLink"/> value.</returns>
         public static HttpHeaderLink GetLinksFromHeader(string linkHeader)
         {
             HttpHeaderLink retval = new HttpHeaderLink();

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// A 4me <see href="https://developer.4me.com/v1/knowledge_articles/translations/">knowledge article translation</see> object.
+    /// </summary>
     public class KnowledgeArticleTranslation : BaseItem
     {
         private List<Attachment> attachments;

@@ -225,7 +225,6 @@ namespace Sdk4me
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>
-        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
         public void ReferenceInstructionsAttachment(string key, long fileSize)
         {
             if (instructionsAttachments == null)

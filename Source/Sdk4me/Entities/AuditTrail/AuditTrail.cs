@@ -10,9 +10,11 @@ namespace Sdk4me
     /// </summary>
     public class AuditTrail : BaseItem
     {
+        #region Updated at (override)
 
-        #region updated_at (override)
-
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
@@ -29,21 +31,39 @@ namespace Sdk4me
 
         #endregion
 
+        /// <summary>
+        /// Indicates the type of transactions that caused the audit entry to be generated.
+        /// </summary>
         [JsonProperty("action"), Sdk4meIgnoreInFieldSelection()]
         public string Action { get; internal set; }
 
+        /// <summary>
+        /// Is set to the person who caused the audit entry to be generated.
+        /// </summary>
         [JsonProperty("created_by"), Sdk4meIgnoreInFieldSelection()]
         public Person CreatedBy { get; internal set; }
 
+        /// <summary>
+        /// Is set to the person who caused the audit entry to be generated.
+        /// </summary>
         [JsonProperty("user"), Sdk4meIgnoreInFieldSelection()]
         public AuditTrailUser User { get; internal set; }
 
+        /// <summary>
+        /// The old and the new value of each field’s value that was set or changed by the transaction that caused the audit entry to be generated.
+        /// </summary>
         [JsonProperty("changes"), Sdk4meIgnoreInFieldSelection()]
         public Dictionary<string, JToken> Changes { get; internal set; }
 
+        /// <summary>
+        /// Provides a reference to the record for which the audit entry was generated.
+        /// </summary>
         [JsonProperty("audited"), Sdk4meIgnoreInFieldSelection()]
         public string Audited { get; internal set; }
 
+        /// <summary>
+        /// The audit data.
+        /// </summary>
         [JsonExtensionData, Sdk4meIgnoreInFieldSelection()]
         public Dictionary<string, JToken> Data { get; internal set; }
 

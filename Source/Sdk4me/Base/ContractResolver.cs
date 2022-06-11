@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Sdk4me
 {
     /// <summary>
-    /// Custom Newtonsoft.Json contract resolver.
+    /// A custom Newtonsoft.Json contract resolver.
     /// </summary>
     internal sealed class ContractResolver : DefaultContractResolver
     {

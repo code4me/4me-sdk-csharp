@@ -307,6 +307,9 @@ namespace Sdk4me
             set => workday = SetValue("workday", workday, value);
         }
 
+        /// <summary>
+        /// The Workday field is used to specify the duration of a workday.
+        /// </summary>
         [JsonProperty("workday")]
         public int? WorkdayInMinutes
         {
@@ -327,6 +330,9 @@ namespace Sdk4me
             set => workweek = SetValue("workweek", workweek, value);
         }
 
+        /// <summary>
+        /// The Workweek field is used to specify the duration of a workweek.
+        /// </summary>
         [JsonProperty("workweek")]
         public int? WorkweekInMinutes
         {

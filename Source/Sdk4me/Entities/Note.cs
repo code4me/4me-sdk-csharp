@@ -16,12 +16,15 @@ namespace Sdk4me
         private Person person;
         private string text;
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
-            get => base.CreatedAt;
+            get => base.UpdatedAt;
             internal set => base.UpdatedAt = null;
         }
 
@@ -30,7 +33,9 @@ namespace Sdk4me
         #region Account
 
         /// <summary>
-        /// The account, only present for public notes.
+        /// <para>The account reference.</para>
+        /// <br>Public notes belong to the account in which the author’s person record is registered.</br>
+        /// <br>Internal notes belong to the account in which specialists are allowed to see the internal note.</br>
         /// </summary>
         [JsonProperty("account"), Sdk4meIgnoreInFieldSelection()]
         public new AccountReference Account
@@ -58,7 +63,9 @@ namespace Sdk4me
         #region Internal
 
         /// <summary>
-        /// When the note is internal, the Internal field is set to true.
+        /// <para>True when the note is internal; otherwise false.</para>
+        /// <br>Public notes belong to the account in which the author’s person record is registered.</br>
+        /// <br>Internal notes belong to the account in which specialists are allowed to see the internal note.</br>
         /// </summary>
         [JsonProperty("internal")]
         public bool Internal
@@ -74,6 +81,7 @@ namespace Sdk4me
         /// <summary>
         /// The internal account, only present for internal notes.
         /// </summary>
+        [Obsolete("Use the Internal and Account properties.")]
         [JsonProperty("internal_account"), Sdk4meIgnoreInFieldSelection()]
         public AccountReference InternalAccount
         {
@@ -100,7 +108,7 @@ namespace Sdk4me
         #region Person
 
         /// <summary>
-        /// The Manager field is used to select the manager of the organization.
+        /// The person.
         /// </summary>
         [JsonProperty("person")]
         public Person Person

@@ -17,6 +17,11 @@ using System.Threading.Tasks;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// The base API handler.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <typeparam name="X">The predefined filter enumerator.</typeparam>
     public abstract class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
     {
         private readonly bool traceEnabled = Trace.Listeners != null && Trace.Listeners.Count > 0;
@@ -102,11 +107,31 @@ namespace Sdk4me
 
         #region constructors
 
+        /// <summary>
+        /// Create a new instance of the <see cref="BaseHandler{T, X}"/>.
+        /// </summary>
+        /// <param name="endPointUrl">The API end point URL.</param>
+        /// <param name="authenticationToken">The API authentication token.</param>
+        /// <param name="accountID">The 4me Account ID.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public BaseHandler(string endPointUrl, AuthenticationToken authenticationToken, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : this(endPointUrl, new AuthenticationTokenCollection(authenticationToken), accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
+        /// <summary>
+        /// Create a new instance of the <see cref="DefaultBaseHandler{T}"/>.
+        /// </summary>
+        /// <param name="endPointUrl">The API end point URL.</param>
+        /// <param name="authenticationTokens">The API authentication token collection.</param>
+        /// <param name="accountID">The 4me Account ID.</param>
+        /// <param name="itemsPerRequest">The number of items per paged request.</param>
+        /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public BaseHandler(string endPointUrl, AuthenticationTokenCollection authenticationTokens, string accountID, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
         {
             //validate string argument values
@@ -399,7 +424,7 @@ namespace Sdk4me
         /// Send a request without any content to the 4me API.
         /// </summary>
         /// <param name="httpMethod">The HTTP method.</param>
-        /// <returns><see cref="T"/> in case of success; otherwise false.</returns>
+        /// <returns><see cref="T: BaseItem"/> in case of success; otherwise false.</returns>
         public T Invoke(string httpMethod)
         {
             HttpWebRequest requestMessage = CreateHttpRequest(httpMethod, url);
@@ -442,7 +467,6 @@ namespace Sdk4me
         /// <summary>
         /// Delete all linked 4me objects.
         /// </summary>
-        /// <param name="item">The object to delete.</param>
         /// <returns>True is case of success; otherwise false.</returns>
         /// <exception cref="Sdk4meException"></exception>
         public bool DeleteAll()
@@ -642,7 +666,7 @@ namespace Sdk4me
         /// Destroys a file.
         /// </summary>
         /// <param name="item">The item to which the files belong.</param>
-        /// <param name="jsonPropertyName">The file property name.</param>
+        /// <param name="attachmentType">The attachment type.</param>
         /// <param name="attachments">The list of files to be deleted.</param>
         /// <returns>True in case of success; otherwise false.</returns>
         /// <exception cref="ArgumentNullException"></exception>
@@ -671,7 +695,6 @@ namespace Sdk4me
         /// </summary>
         /// <param name="uploadUri">The upload endpoint uri.</param>
         /// <param name="file">The file to be uploaded.</param>
-        /// <param name="contentType">The content type of the file.</param>
         /// <param name="multipartContent">The multi part content.</param>
         private static HttpWebRequest CreateMultiPartFormDataRequestMessage(string uploadUri, FileInfo file, NameValueCollection multipartContent)
         {
@@ -743,7 +766,7 @@ namespace Sdk4me
             }
             catch (WebException ex)
             {
-                if (ex.Response != null && ex.Response.ContentType == applicationJsonMediaType && ex.Response.ContentLength > 0)
+                if (ex.Response != null && ex.Response.ContentType.Contains(applicationJsonMediaType) && ex.Response.ContentLength > 0)
                 {
                     using (StreamReader streamReader = new StreamReader(ex.Response.GetResponseStream()))
                         throw new Sdk4meException(streamReader.ReadToEnd());
@@ -759,6 +782,11 @@ namespace Sdk4me
 
         #region Audit
 
+        /// <summary>
+        /// Get the audit trail.
+        /// </summary>
+        /// <param name="item">The 4me object.</param>
+        /// <returns>Return the <see cref="AuditTrail"/>.</returns>
         public virtual List<AuditTrail> GetAuditTrail(T item)
         {
             return GetChildHandler<AuditTrail>(item, "audit", SortOrder = SortOrder.None).Get();
@@ -769,10 +797,10 @@ namespace Sdk4me
         #region http helper methods
 
         /// <summary>
-        /// Reads the <see cref="HttpWebResponse"/> content stream and deserialize it into <see cref="T"/>.
+        /// Reads the <see cref="HttpWebResponse"/> content stream and deserialize it.
         /// </summary>
         /// <param name="responseMessage">The http response message.</param>
-        /// <returns>Returns <see cref="T"/> object.</returns>
+        /// <returns>Returns <see cref="T:BaseItem"/> object.</returns>
         private T GetHttpContentAsItem(HttpWebResponse responseMessage)
         {
             if (responseMessage.StatusCode == HttpStatusCode.NoContent)
@@ -809,7 +837,7 @@ namespace Sdk4me
         /// <summary>
         /// Create the a new <see cref="HttpWebRequest"/>.
         /// </summary>
-        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="method">The HTTP method.</param>
         /// <param name="requestUri">A string that represents the request System.Uri.</param>
         /// <param name="useAnyAuthenticationToken">Use the <see cref="AuthenticationToken"/> with the highest X-RateLimit-Remaining header value.</param>
         /// <returns>The customized 4me HTTP request message.</returns>
@@ -826,11 +854,11 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Create an send an <see cref="HttpRequestMessage"/>.
+        /// Create an send an <see cref="HttpWebRequest"/>.
         /// </summary>
         /// <param name="requestMessage">The http request message.</param>
-        /// <param name="data">The JSON data to send as http request content.</param>
-        /// <returns>The <see cref="HttpRequestMessage"/> object.</returns>
+        /// <param name="content">The JSON data to send as http request content.</param>
+        /// <returns>The <see cref="HttpWebRequest"/> object.</returns>
         private HttpWebResponse SendHttpRequest(HttpWebRequest requestMessage, JObject content)
         {
             WriteDebug(requestMessage);
@@ -867,7 +895,7 @@ namespace Sdk4me
             }
             catch (WebException ex)
             {
-                if (ex.Response != null && ex.Response.ContentType == applicationJsonMediaType && ex.Response.ContentLength > 0)
+                if (ex.Response != null && ex.Response.ContentType.Contains(applicationJsonMediaType) && ex.Response.ContentLength > 0)
                 {
                     using (StreamReader streamReader = new StreamReader(ex.Response.GetResponseStream()))
                         throw new Sdk4meException(streamReader.ReadToEnd());
@@ -927,7 +955,7 @@ namespace Sdk4me
             }
             catch (WebException ex)
             {
-                if (ex.Response != null && ex.Response.ContentType == applicationJsonMediaType && ex.Response.ContentLength > 0)
+                if (ex.Response != null && ex.Response.ContentType.Contains(applicationJsonMediaType) && ex.Response.ContentLength > 0)
                 {
                     using (StreamReader streamReader = new StreamReader(ex.Response.GetResponseStream()))
                         throw new Sdk4meException(streamReader.ReadToEnd());
@@ -970,8 +998,7 @@ namespace Sdk4me
         /// <summary>
         /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
         /// </summary>
-        /// <param name="method">The HttpMethod.</param>
-        /// <param name="url">The request url.</param>
+        /// <param name="requestMessage">The debug http request message.</param>
         private void WriteDebug(WebRequest requestMessage)
         {
             try
@@ -987,7 +1014,7 @@ namespace Sdk4me
         /// <summary>
         /// Writes a message to the trace listeners in the System.Diagnostics.Trace.Listeners collection.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The debug message.</param>
         private void WriteDebug(string message)
         {
             try

@@ -3,6 +3,9 @@ using System;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// A filter object.
+    /// </summary>
     public class Filter
     {
         private readonly string fieldName = null;

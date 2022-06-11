@@ -15,12 +15,15 @@ namespace Sdk4me
         private Person trashedBy;
         private string trashed;
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
-            get => base.CreatedAt;
+            get => base.UpdatedAt;
             internal set => base.UpdatedAt = null;
         }
 
@@ -28,6 +31,9 @@ namespace Sdk4me
 
         #region Trashed
 
+        /// <summary>
+        /// A trashed object.
+        /// </summary>
         [JsonProperty("trashed")]
         public string Trashed
         {
@@ -39,6 +45,9 @@ namespace Sdk4me
 
         #region Trashed details
 
+        /// <summary>
+        /// The trashed object details.
+        /// </summary>
         [JsonIgnore, Sdk4meIgnoreInFieldSelection()]
         public ActionDetails Details
         {
@@ -49,6 +58,9 @@ namespace Sdk4me
 
         #region Trashed by
 
+        /// <summary>
+        /// The person that trashed the object.
+        /// </summary>
         [JsonProperty("trashed_by")]
         public Person TrashedBy
         {

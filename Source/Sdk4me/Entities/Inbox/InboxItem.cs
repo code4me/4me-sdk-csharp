@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// A 4me inbox item object.
+    /// </summary>
     [DebuggerDisplay("{ID}")]
     public class InboxItem : BaseItem
     {
@@ -16,8 +19,11 @@ namespace Sdk4me
             internal set => (Request ?? Task).ID = value;
         }
 
-        #region created_at (override)
+        #region Created at (override)
 
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
@@ -27,8 +33,11 @@ namespace Sdk4me
 
         #endregion
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {

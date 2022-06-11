@@ -146,7 +146,7 @@ namespace Sdk4me
         #region Category
 
         /// <summary>
-        /// The Category field is used to select the category of the task. Risk & impact tasks are used to help plan workflows. Approval tasks are used to collect approvals for workflows. These can be used at various stages in the life of the workflow. Implementation tasks are added to workflows for development, installation, configuration, test, transfer and administrative work that needs to be completed for the implementation of the workflow. 
+        /// The Category field is used to select the category of the task. Risk and impact tasks are used to help plan workflows. Approval tasks are used to collect approvals for workflows. These can be used at various stages in the life of the workflow. Implementation tasks are added to workflows for development, installation, configuration, test, transfer and administrative work that needs to be completed for the implementation of the workflow. 
         /// </summary>
         [JsonProperty("category")]
         public TaskCategory Category

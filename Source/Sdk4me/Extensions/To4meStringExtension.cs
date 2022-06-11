@@ -88,7 +88,7 @@ namespace Sdk4me.Extensions
         /// <para>Convert a string to a 4me compatible snake case string.</para>
         /// <para>Field names end with ID instead of _id and keep commas</para>
         /// </summary>
-        /// <param name="values">The values to be converted.</param>
+        /// <param name="value">The value to be converted.</param>
         /// <returns>A 4me compatible string value.</returns>
         internal static string Get4meString(string value)
         {

@@ -18,7 +18,7 @@ namespace Sdk4me
         #region End at
 
         /// <summary>
-        /// Required datetime.
+        /// Required date time.
         /// </summary>
         [JsonProperty("end_at")]
         public DateTime EndAt

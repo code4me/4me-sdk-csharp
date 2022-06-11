@@ -2,6 +2,9 @@
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// Get the 4me environment URL.
+    /// </summary>
     public static class EnvironmentURL
     {
         /// <summary>

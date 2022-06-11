@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Sdk4me
 {
+    /// <summary>
+    /// A 4me <see href="https://developer.4me.com/v1/account/usage_statements/">usage statement</see> object.
+    /// </summary>
     public sealed class UsageStatement : BaseItem
     {
         private List<long> billableUserIds;
@@ -14,8 +17,11 @@ namespace Sdk4me
         private int userMonths;
         private int year;
 
-        #region created_at (override)
+        #region Created at (override)
 
+        /// <summary>
+        /// The creation date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("created_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? CreatedAt
         {
@@ -25,8 +31,11 @@ namespace Sdk4me
 
         #endregion
 
-        #region updated_at (override)
+        #region Updated at (override)
 
+        /// <summary>
+        /// The updated date and time; which is obsolete for this object.
+        /// </summary>
         [JsonProperty("updated_at"), Sdk4meIgnoreInFieldSelection()]
         public override DateTime? UpdatedAt
         {
