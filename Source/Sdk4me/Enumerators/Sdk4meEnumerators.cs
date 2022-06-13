@@ -33,7 +33,11 @@ namespace Sdk4me
         /// <summary>
         /// The Australia region.
         /// </summary>
-        Australia
+        Australia,
+        /// <summary>
+        /// The United Kingdom region.
+        /// </summary>
+        UK
     }
 
     /// <summary>

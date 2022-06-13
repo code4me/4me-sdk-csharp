@@ -28,6 +28,17 @@ namespace Sdk4me
                             return "https://api.au.4me.com/v1";
                     }
 
+                case EnvironmentRegion.UK:
+                    switch (environment)
+                    {
+                        case EnvironmentType.Quality:
+                            return "https://api.uk.4me.qa/v1";
+                        case EnvironmentType.Demo:
+                            return "https://api.4me-demo.com/v1";
+                        default:
+                            return "https://api.uk.4me.com/v1";
+                    }
+
                 default:
                     switch (environment)
                     {
