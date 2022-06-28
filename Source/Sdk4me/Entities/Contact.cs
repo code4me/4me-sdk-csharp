@@ -127,10 +127,5 @@ namespace Sdk4me
         }
 
         #endregion
-
-        internal override HashSet<string> PropertySerializationCollection
-        {
-            get => HasChanged ? new HashSet<string>() { "email", "integration", "label", "telephone", "chat", "website" } : base.PropertySerializationCollection;
-        }
     }
 }
