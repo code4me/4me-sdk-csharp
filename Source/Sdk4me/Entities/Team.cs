@@ -6,7 +6,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me <see href="https://developer.4me.com/v1/teams/">team</see> object.
     /// </summary>
-    public class Team : BaseItem
+    public class Team : CustomFieldsBaseItem
     {
         private AgileBoard agileBoard;
         private bool autoAssign;
