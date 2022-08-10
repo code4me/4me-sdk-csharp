@@ -8,7 +8,7 @@ namespace Sdk4me
     /// </summary>
     internal static class Sleep
     {
-        private const int minimumDurationPerRequestInMiliseconds = 116;
+        private const int minimumDurationPerRequestInMiliseconds = 100;
         private static int startTickCount = 0;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Sdk4me
         }
 
         /// <summary>
-        /// Puts the current thread in sleep for 116 milliseconds minus the elapsed milliseconds between now an the value stored via the <see cref="RegisterStartTime"/> method.
+        /// Puts the current thread in sleep for 100 milliseconds minus the elapsed milliseconds between now an the value stored via the <see cref="RegisterStartTime"/> method.
         /// </summary>
         public static void SleepRemainingTime()
         {
@@ -32,9 +32,9 @@ namespace Sdk4me
             }
             else
             {
-                int sleepTicks = minimumDurationPerRequestInMiliseconds - endTickCount - startTickCount;
-                if (sleepTicks > 0)
-                    Thread.Sleep(sleepTicks);
+                long sleepTime = minimumDurationPerRequestInMiliseconds - ((endTickCount - startTickCount) / TimeSpan.TicksPerSecond);
+                if (sleepTime > 0 && sleepTime <= minimumDurationPerRequestInMiliseconds)
+                    Thread.Sleep(Convert.ToInt32(sleepTime));
             }
         }
     }

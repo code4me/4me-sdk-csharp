@@ -22,7 +22,6 @@ namespace Sdk4me.Tests
             Request request = requests[Random.Shared.Next(requests.Count)];
             Trace.WriteLine($"Continue relation tests on request: #{request.ID}");
 
-
             List<Note> notes = client.Requests.GetNotes(request, "*");
             Assert.IsNotNull(notes);
             Assert.IsInstanceOfType(notes, typeof(List<Note>));

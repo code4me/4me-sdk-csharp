@@ -22,13 +22,13 @@
 
   <PropertyGroup>
     <LangVersion>7.3</LangVersion>
-    <AssemblyVersion>2.0.3.1</AssemblyVersion>
-    <FileVersion>2.0.3.1</FileVersion>
+    <AssemblyVersion>2.0.3.2</AssemblyVersion>
+    <FileVersion>2.0.3.2</FileVersion>
     <AnalysisLevel>6.0</AnalysisLevel>
     <Authors>Klaas Vandeweerdt</Authors>
     <Description>A .NET client for accessing the 4me v1 REST API</Description>
     <Copyright>MIT License</Copyright>
-    <Version>2.0.3.1</Version>
+    <Version>2.0.3.2</Version>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>LogoDark128x218.png</PackageIcon>
