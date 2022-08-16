@@ -1088,40 +1088,30 @@ namespace Sdk4me
     public enum ProductDepreciationMethod
     {
         /// <summary>
-        /// Not applicable, cost is zero.
+        /// Not depreciated.
         /// </summary>
-        [EnumMember(Value = "na_cost_is_zero")]
-        NotApplicableCostIsZero = 1,
+        [EnumMember(Value = "not_depreciated")]
+        NotDepreciated = 1,
         /// <summary>
-        /// Not applicable, not capitalized.
-        /// </summary>
-        [EnumMember(Value = "na_not_capitalized")]
-        NotApplicableNotCapitilized,
-        /// <summary>
-        /// Not applicable, leased.
-        /// </summary>
-        [EnumMember(Value = "na_leased")]
-        NotApplicableLeased,
-        /// <summary>
-        /// Double declining balance.
+        /// Double Declining Balance.
         /// </summary>
         [EnumMember(Value = "double_declining_balance")]
         DoubleDecliningBalance,
         /// <summary>
-        /// Reducing balance.
+        /// Reducing Balance (or Diminishing Value)
         /// </summary>
         [EnumMember(Value = "reducing_balance")]
         ReducingBalance,
         /// <summary>
-        /// Straight line.
+        /// Straight Line (or Prime Cost)
         /// </summary>
         [EnumMember(Value = "straight_line")]
         StraightLine,
         /// <summary>
-        /// Sum of the years digits.
+        /// Sum of the Year’s Digits
         /// </summary>
         [EnumMember(Value = "sum_of_the_years_digits")]
-        SumOfTheYearsDigits
+        SumOfTheYearsDigits,
     }
 
     /// <summary>
@@ -2608,6 +2598,11 @@ namespace Sdk4me
         /// </summary>
         [EnumMember(Value = "product")]
         Product,
+        /// <summary>
+        /// Product category.
+        /// </summary>
+        [EnumMember(Value = "product_category")]
+        ProductCategory,
         /// <summary>
         /// Contract.
         /// </summary>
