@@ -8,7 +8,7 @@ namespace Sdk4me
     public sealed class CustomField
     {
         private string id;
-        private string value;
+        private object value;
 
         #region id
 
@@ -30,7 +30,7 @@ namespace Sdk4me
         /// The value of the <see cref="CustomField"/>.
         /// </summary>
         [JsonProperty("value")]
-        public string Value
+        public object Value
         {
             get => value;
             set => this.value = value;

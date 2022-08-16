@@ -10,9 +10,9 @@ namespace Sdk4me
     /// A <see cref="CustomField"/> collection.
     /// </summary>
     [DebuggerDisplay("Count = {Count}")]
-    public sealed class CustomFieldCollection : IDictionary<string, string>
+    public sealed class CustomFieldCollection : IDictionary<string, object>
     {
-        private readonly Dictionary<string, string> collection = new Dictionary<string, string>();
+        private readonly Dictionary<string, object> collection = new Dictionary<string, object>();
 
         /// <summary>
         /// A change that occurs when a value is added, updated and deleted.
@@ -46,7 +46,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="identifier">The identifier of the element to get or set.</param>
         /// <returns>The element with the specified identifier.</returns>
-        public string this[string identifier]
+        public object this[string identifier]
         {
             get => collection[identifier];
             set
@@ -55,6 +55,17 @@ namespace Sdk4me
                     Changed?.Invoke(this, EventArgs.Empty);
                 collection[identifier] = value;
             }
+        }
+
+        /// <summary>
+        /// Gets the element with the specified identifier.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="identifier">The identifier of the element to get.</param>
+        /// <returns>The element with the specified identifier.</returns>
+        public T Get<T>(string identifier)
+        {
+            return (T)collection[identifier];
         }
 
         /// <summary>
@@ -68,7 +79,7 @@ namespace Sdk4me
         /// <summary>
         /// Gets a collection containing the values in the <see cref="CustomFieldCollection"/>.
         /// </summary>
-        public ICollection<string> Values
+        public ICollection<object> Values
         {
             get => collection.Values;
         }
@@ -86,7 +97,7 @@ namespace Sdk4me
         /// </summary>
         public bool IsReadOnly
         {
-            get => ((IDictionary<string, string>)collection).IsReadOnly;
+            get => ((IDictionary<string, object>)collection).IsReadOnly;
         }
 
         /// <summary>
@@ -94,7 +105,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="id">The identifier of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be null for reference types.</param>
-        public void Add(string id, string value)
+        public void Add(string id, object value)
         {
             collection.Add(id, value);
             Changed?.Invoke(this, EventArgs.Empty);
@@ -105,7 +116,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="id">The identifier of the element to add or update.</param>
         /// <param name="value">The value of the element to add or update. The value can be null for reference types.</param>
-        public void AddOrUpdate(string id, string value)
+        public void AddOrUpdate(string id, object value)
         {
             if (collection.ContainsKey(id))
             {
@@ -124,7 +135,7 @@ namespace Sdk4me
         /// Adds the specified identifier and value to the collection.
         /// </summary>
         /// <param name="item">The object to add to the <see cref="CustomFieldCollection"/>.</param>
-        public void Add(KeyValuePair<string, string> item)
+        public void Add(KeyValuePair<string, object> item)
         {
             Add(item.Key, item.Value);
         }
@@ -133,7 +144,7 @@ namespace Sdk4me
         /// Adds the specified identifier and value to the collection; or updates the value when the identifier already exists.
         /// </summary>
         /// <param name="item">The object to add to the <see cref="CustomFieldCollection"/>.</param>
-        public void AddOrUpdate(KeyValuePair<string, string> item)
+        public void AddOrUpdate(KeyValuePair<string, object> item)
         {
             AddOrUpdate(item.Key, item.Value);
         }
@@ -152,7 +163,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(KeyValuePair<string, string> item)
+        public bool Contains(KeyValuePair<string, object> item)
         {
             return collection.Contains(item);
         }
@@ -172,16 +183,16 @@ namespace Sdk4me
         /// </summary>
         /// <param name="array">The one-dimensional System.Array that is the destination of the elements copied from <see cref="CustomFieldCollection"/>. The System.Array must have zero-based indexing.</param>
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            ((IDictionary<string, string>)collection).CopyTo(array, arrayIndex);
+            ((IDictionary<string, object>)collection).CopyTo(array, arrayIndex);
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="CustomFieldCollection"/>.
         /// </summary>
         /// <returns>A <see cref="CustomFieldCollection"/>.Enumerator structure for the <see cref="CustomFieldCollection"/>.</returns>
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             return collection.GetEnumerator();
         }
@@ -204,9 +215,9 @@ namespace Sdk4me
         /// </summary>
         /// <param name="item">The object to remove from the <see cref="CustomFieldCollection"/>.</param>
         /// <returns>true if item was successfully removed from the <see cref="CustomFieldCollection"/>; otherwise, false. This method also returns false if item is not found in the original <see cref="CustomFieldCollection"/>.</returns>
-        public bool Remove(KeyValuePair<string, string> item)
+        public bool Remove(KeyValuePair<string, object> item)
         {
-            bool result = ((IDictionary<string, string>)collection).Remove(item);
+            bool result = ((IDictionary<string, object>)collection).Remove(item);
             if (result)
                 Changed?.Invoke(this, EventArgs.Empty);
             return result;
@@ -215,10 +226,28 @@ namespace Sdk4me
         /// <summary>
         /// Gets the value associated with the specified identifier.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="identifier">The identifier whose value to get.</param>
         /// <param name="value">When this method returns, the value associated with the specified identifier, if the identifier is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
         /// <returns>True if the <see cref="CustomFieldCollection"/> contains an element with the specified identifier; otherwise, false.</returns>
-        public bool TryGetValue(string identifier, out string value)
+        public bool TryGetValue<T>(string identifier, out T value)
+        {
+            if (collection.TryGetValue(identifier, out object v))
+            {
+                value = (T)v;
+                return true;
+            }
+            value = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the value associated with the specified identifier.
+        /// </summary>
+        /// <param name="identifier">The identifier whose value to get.</param>
+        /// <param name="value">When this method returns, the value associated with the specified identifier, if the identifier is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+        /// <returns>True if the <see cref="CustomFieldCollection"/> contains an element with the specified identifier; otherwise, false.</returns>
+        public bool TryGetValue(string identifier, out object value)
         {
             return collection.TryGetValue(identifier, out value);
         }

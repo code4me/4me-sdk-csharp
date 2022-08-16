@@ -37,11 +37,10 @@ Filtering and field selection requires references to fields. All endpoints and f
 The client supports the usage of multiple authentication tokens. The number of API requests is limited to 3600 request per hour, which in some cases in not enough. When multiple tokens are used, the client will always use the token with the highest remaining request value. More information about rate limiting can be found on the [4me developer website](https://developer.4me.com/v1/#rate-limiting).
 
 #### Response timing
-The 4me REST API limits the number of requests to 10 per second. The client will keep track of the response time and lock the process to make sure it takes at lease 116 milliseconds per request.
+The 4me REST API limits the number of requests to 10 per second. The client will keep track of the response time and lock the process to make sure it takes at lease 100 milliseconds per request.
 
 #### Exception handling
 A custom, Sdk4meException, is implemented. It will convert the API exception response to a string value.
-
 
 # Sdk4meClient
 ### Minimum example
@@ -154,6 +153,18 @@ List<Address> addresses = client.Organizations.GetAddresses(organization);
 bool result = client.Organizations.DeleteAddress(organization, addresses[0]);
 ```
 The client exposes a Delete and DeleteAll method. Those can only be used to delete child or relational objects not an object itself.
+
+### Custom fields
+```csharp
+Person person = client.People.Get(new Filter("EmployeeID", FilterCondition.Equality, 100)).First();
+people.CustomFields.AddOrUpdate("support_countries", new JArray() { "BE", "NL" });
+people.CustomFields.AddOrUpdate("hire_date", new DateTime(2022, 08, 01));
+people.CustomFields.AddOrUpdate("working_hours", 8.45);
+person = client.People.Update(person);
+
+person.CustomFields.TryGetValue<DateTime>("hire_date", out DateTime date);
+double workingHours = person.CustomFields.Get<double>("working_hours");
+```
 
 ### Upload an attachment
 ```csharp
