@@ -6,7 +6,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me <see href="https://developer.4me.com/v1/service_instances/">service instance</see> object.
     /// </summary>
-    public class ServiceInstance : BaseItem
+    public class ServiceInstance : CustomFieldsBaseItem
     {
         private List<Attachment> attachments;
         private Team firstLineTeam;

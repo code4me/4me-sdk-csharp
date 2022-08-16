@@ -2594,6 +2594,16 @@ namespace Sdk4me
         [EnumMember(Value = "project_task_template")]
         ProjectTaskTemplate,
         /// <summary>
+        /// Service.
+        /// </summary>
+        [EnumMember(Value = "service")]
+        Service,
+        /// <summary>
+        /// Service Instance.
+        /// </summary>
+        [EnumMember(Value = "service_instance")]
+        ServiceInstance,
+        /// <summary>
         /// Product.
         /// </summary>
         [EnumMember(Value = "product")]
@@ -2637,7 +2647,12 @@ namespace Sdk4me
         /// SCIM user.
         /// </summary>
         [EnumMember(Value = "scim_user")]
-        ScimUser
+        ScimUser,
+        /// <summary>
+        /// App offering.
+        /// </summary>
+        [EnumMember(Value = "app_offering")]
+        AppOffering
     }
 
     /// <summary>
