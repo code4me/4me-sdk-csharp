@@ -37,7 +37,11 @@ namespace Sdk4me
         /// <summary>
         /// The United Kingdom region.
         /// </summary>
-        UK
+        UK,
+        /// <summary>
+        /// The United States region.
+        /// </summary>
+        US
     }
 
     /// <summary>
