@@ -24,6 +24,7 @@ namespace Sdk4me
         private string localizedKeywords;
         private string localizedName;
         private string name;
+        private string pictureUri;
         private Person problemManager;
         private Organization provider;
         private Person releaseManager;
@@ -287,6 +288,20 @@ namespace Sdk4me
         {
             get => name;
             set => name = SetValue("name", name, value);
+        }
+
+        #endregion
+
+        #region Picture uri
+
+        /// <summary>
+        /// The hyperlink to the image file for the agile board.
+        /// </summary>
+        [JsonProperty("picture_uri")]
+        public string PictureUri
+        {
+            get => pictureUri;
+            set => pictureUri = SetValue("picture_uri", pictureUri, value);
         }
 
         #endregion

@@ -25,6 +25,7 @@ namespace Sdk4me
         private Service service;
         private ServiceInstance serviceInstance;
         private ServiceLevelAgreement sla;
+        private DateTime? startedAt;
         private Task task;
         private TimeAllocation timeAllocation;
         private int timeSpent;
@@ -290,6 +291,20 @@ namespace Sdk4me
         {
             get => sla;
             internal set => sla = value;
+        }
+
+        #endregion
+
+        #region Started at
+
+        /// <summary>
+        /// The Date field is used to select the date on which the time was spent.
+        /// </summary>
+        [JsonProperty("started_at")]
+        public DateTime? StartedAt
+        {
+            get => startedAt;
+            set => startedAt = SetValue("started_at", date, value);
         }
 
         #endregion

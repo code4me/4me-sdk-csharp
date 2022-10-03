@@ -12,6 +12,7 @@ namespace Sdk4me
         private Team firstLineTeam;
         private ServiceInstanceImpact? impact;
         private string name;
+        private string pictureUri;
         private string remarks;
         private List<AttachmentReference> remarksAttachments;
         private Service service;
@@ -75,6 +76,20 @@ namespace Sdk4me
         {
             get => name;
             set => name = SetValue("name", name, value);
+        }
+
+        #endregion
+
+        #region Picture uri
+
+        /// <summary>
+        /// The hyperlink to the image file for the agile board.
+        /// </summary>
+        [JsonProperty("picture_uri")]
+        public string PictureUri
+        {
+            get => pictureUri;
+            set => pictureUri = SetValue("picture_uri", pictureUri, value);
         }
 
         #endregion
