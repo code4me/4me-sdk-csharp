@@ -128,7 +128,7 @@ namespace Sdk4me
         /// <summary>
         /// Translated Description in the current language, defaults to description in case no translation is provided.
         /// </summary>
-        [JsonProperty("localized_description")]
+        [JsonProperty("localized_description"), Sdk4meIgnoreInFieldSelection()]
         public string LocalizedDescription
         {
             get => localizedDescription;
@@ -142,7 +142,7 @@ namespace Sdk4me
         /// <summary>
         /// Translated Name in the current language, defaults to name in case no translation is provided.
         /// </summary>
-        [JsonProperty("localized_name")]
+        [JsonProperty("localized_name"), Sdk4meIgnoreInFieldSelection()]
         public string LocalizedName
         {
             get => localizedName;
