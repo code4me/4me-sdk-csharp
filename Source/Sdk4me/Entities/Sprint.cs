@@ -1,25 +1,24 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Sdk4me
 {
     /// <summary>
-    /// A 4me <see href="https://developer.4me.com/v1/scrum_workspaces/">scrum workspace</see> object.
+    /// A 4me <see href="https://developer.4me.com/v1/sprints/">sprint</see> object.
     /// </summary>
-    public class ScrumWorkspace : BaseItem
+    public class Sprint : BaseItem
     {
         private List<Attachment> attachments;
-        private AgileBoard agileBoard;
         private string description;
         private List<AttachmentReference> descriptionAttachments;
-        private bool disabled;
-        private string name;
-        private string pictureUri;
-        private ProductBacklog productBacklog;
+        private DateTime? endAt;
+        private int number;
+        private ScrumWorkspace scrumWorkspace;
         private string source;
         private string sourceID;
-        private int sprintLength;
-        private Team team;
+        private DateTime? startAt;
+        private SprintStatus status;
 
         #region Attachments
 
@@ -35,27 +34,10 @@ namespace Sdk4me
 
         #endregion
 
-        #region Agile board
-
-        /// <summary>
-        /// Agile board used to track the progress of this workspace’s active sprint.
-        /// </summary>
-        [JsonProperty("agile_board")]
-        public AgileBoard AgileBoard
-        {
-            get => agileBoard;
-            set => agileBoard = SetValue("agile_board_id", agileBoard, value);
-        }
-
-        [JsonProperty("agile_board_id"), Sdk4meIgnoreInFieldSelection()]
-        internal long? AgileBoardID => agileBoard?.ID;
-
-        #endregion
-
         #region Description
 
         /// <summary>
-        /// Additional information about the scrum workspace.
+        /// The description of this sprint (e.g. goal of this sprint).
         /// </summary>
         [JsonProperty("description")]
         public string Description
@@ -96,62 +78,48 @@ namespace Sdk4me
 
         #endregion
 
-        #region Disabled
+        #region End at
 
         /// <summary>
-        /// Whether the scrum workspace is in use.
+        /// The date and time the sprint ended, or will end.
         /// </summary>
-        [JsonProperty("disabled")]
-        public bool Disabled
+        [JsonProperty("end_at")]
+        public DateTime? EndAt
         {
-            get => disabled;
-            set => disabled = SetValue("disabled", disabled, value);
+            get => endAt;
+            set => endAt = SetValue("end_at", endAt, value);
         }
 
         #endregion
 
-        #region Name
+        #region Number
 
         /// <summary>
-        /// Name of the scrum workspace.
+        /// Sequence number of this sprint.
         /// </summary>
-        [JsonProperty("name")]
-        public string Name
+        [JsonProperty("number")]
+        public int Number
         {
-            get => name;
-            set => name = SetValue("name", name, value);
+            get => number;
+            set => number = SetValue("number", number, value);
         }
 
         #endregion
 
-        #region Picture uri
+        #region Scrum workspace
 
         /// <summary>
-        /// The hyperlink to the image file for the scrum workspace.
+        /// Scrum workspace this sprint belongs to.
         /// </summary>
-        [JsonProperty("picture_uri")]
-        public string PictureUri
+        [JsonProperty("scrum_workspace")]
+        public ScrumWorkspace ScrumWorkspace
         {
-            get => pictureUri;
-            set => pictureUri = SetValue("picture_uri", pictureUri, value);
+            get => scrumWorkspace;
+            set => scrumWorkspace = SetValue("scrum_workspace_id", scrumWorkspace, value);
         }
 
-        #endregion
-
-        #region Product backlog
-
-        /// <summary>
-        /// Product backlog used when planning sprints.
-        /// </summary>
-        [JsonProperty("product_backlog")]
-        public ProductBacklog ProductBacklog
-        {
-            get => productBacklog;
-            set => productBacklog = SetValue("product_backlog_id", productBacklog, value);
-        }
-
-        [JsonProperty("product_backlog_id"), Sdk4meIgnoreInFieldSelection()]
-        internal long? ProductBacklogID => productBacklog?.ID;
+        [JsonProperty("scrum_workspace_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? ScrumWorkspaceID => scrumWorkspace?.ID;
 
         #endregion
 
@@ -183,42 +151,37 @@ namespace Sdk4me
 
         #endregion
 
-        #region Sprint length
+        #region Start at
 
         /// <summary>
-        /// Standard length in weeks of new sprints planned in this scrum workspace.
+        /// The date and time the sprint started, or will start.
         /// </summary>
-        [JsonProperty("sprint_length")]
-        public int SprintLength
+        [JsonProperty("start_at")]
+        public DateTime? StartAt
         {
-            get => sprintLength;
-            set => sprintLength = SetValue("sprint_length", sprintLength, value);
+            get => startAt;
+            set => startAt = SetValue("start_at", startAt, value);
         }
 
         #endregion
 
-        #region Team
+        #region Status
 
         /// <summary>
-        /// Team planning their work using this scrum workspace.
+        /// The current status of the sprint. 
         /// </summary>
-        [JsonProperty("team")]
-        public Team Team
+        [JsonProperty("status")]
+        public SprintStatus Status
         {
-            get => team;
-            set => team = SetValue("team_id", team, value);
+            get => status;
+            internal set => status = value;
         }
-
-        [JsonProperty("team_id"), Sdk4meIgnoreInFieldSelection()]
-        internal long? TeamID => team?.ID;
 
         #endregion
 
         internal override void ResetPropertySerializationCollection()
         {
-            agileBoard?.ResetPropertySerializationCollection();
-            productBacklog?.ResetPropertySerializationCollection();
-            team?.ResetPropertySerializationCollection();
+            scrumWorkspace?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
     }

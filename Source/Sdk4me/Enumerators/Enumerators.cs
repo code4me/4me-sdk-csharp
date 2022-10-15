@@ -2282,6 +2282,32 @@ namespace Sdk4me
 
     #endregion
 
+    #region Sprint
+
+    /// <summary>
+    /// A 4me survey question type.
+    /// </summary>
+    public enum SprintStatus
+    {
+        /// <summary>
+        /// Registered.
+        /// </summary>
+        [EnumMember(Value = "registered")]
+        Registered = 1,
+        /// <summary>
+        /// Active.
+        /// </summary>
+        [EnumMember(Value = "active")]
+        Active,
+        /// <summary>
+        /// Completed.
+        /// </summary>
+        [EnumMember(Value = "completed")]
+        Completed,
+    }
+
+    #endregion
+
     #region Survey
 
     /// <summary>

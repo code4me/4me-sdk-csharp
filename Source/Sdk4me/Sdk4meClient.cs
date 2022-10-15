@@ -13,7 +13,7 @@ namespace Sdk4me
         private readonly AuthenticationTokenCollection authenticationTokens = null;
         private readonly string accountID = null;
         private readonly EnvironmentType environment = EnvironmentType.Production;
-        private readonly EnvironmentRegion environmentRegion = EnvironmentRegion.Europe;
+        private readonly EnvironmentRegion environmentRegion = EnvironmentRegion.Global;
         private int itemsPerRequest = 25;
         private int maximumRecursiveRequests = 10;
 
@@ -70,7 +70,7 @@ namespace Sdk4me
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
-            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, EnvironmentRegion.Europe, itemsPerRequest, maximumRecursiveRequests)
+            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -97,7 +97,7 @@ namespace Sdk4me
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
-            : this(authenticationTokens, accountID, environment, EnvironmentRegion.Europe, itemsPerRequest, maximumRecursiveRequests)
+            : this(authenticationTokens, accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -727,6 +727,19 @@ namespace Sdk4me
                 if (!handlers.ContainsKey("skill_pools"))
                     handlers.Add("skill_pools", new SkillPoolHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
                 return (SkillPoolHandler)handlers["skill_pools"];
+            }
+        }
+
+        /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/sprints/">sprint</see> API endpoint.
+        /// </summary>
+        public SprintHandler Sprints
+        {
+            get
+            {
+                if (!handlers.ContainsKey("sprints"))
+                    handlers.Add("sprints", new SprintHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (SprintHandler)handlers["sprints"];
             }
         }
 
