@@ -21,6 +21,12 @@ namespace Sdk4me
         public long ID { get; set; }
 
         /// <summary>
+        /// The unique GraphQL identifier.
+        /// </summary>
+        [JsonProperty("nodeID"), Sdk4meIgnoreInFieldSelection()]
+        public string NodeID { get; set; }
+
+        /// <summary>
         /// The creation date and time.
         /// </summary>
         [JsonProperty("created_at")]

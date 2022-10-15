@@ -24,13 +24,6 @@ namespace Sdk4me
 
         #endregion
 
-        #region nodeID
-
-        [JsonProperty("nodeID")]
-        internal string NodeID { get; set; }
-
-        #endregion
-
         /// <summary>
         /// Indicates the type of transactions that caused the audit entry to be generated.
         /// </summary>
