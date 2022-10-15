@@ -12,7 +12,7 @@ namespace Sdk4me
         private DateTime? actualResolutionAt;
         private TimeSpan? actualResolutionDuration;
         private int? maximumResolutionDurationInDays;
-        private DateTime actualResponseAt;
+        private DateTime? actualResponseAt;
         private TimeSpan? actualResponseDuration;
         private int? maximumResponseDurationInDays;
         private DateTime? desiredCompletionAt;
@@ -104,7 +104,7 @@ namespace Sdk4me
         /// The Actual response field is empty when the service instance (SI) that is selected in the request is the same as the related SI, and the request has not yet been saved with one of the following status values since this SI was linked to it:
         /// </summary>
         [JsonProperty("actual_response_at")]
-        public DateTime ActualResponseAt
+        public DateTime? ActualResponseAt
         {
             get => actualResponseAt;
             internal set => actualResponseAt = value;
