@@ -9,6 +9,7 @@ namespace Sdk4me
     public class AgileBoard : BaseItem
     {
         private List<Attachment> attachments;
+        private Sprint currentSprint;
         private string description;
         private List<AttachmentReference> descriptionAttachments;
         private bool disabled;
@@ -29,6 +30,23 @@ namespace Sdk4me
             get => attachments;
             internal set => attachments = value;
         }
+
+        #endregion
+
+        #region Current sprint
+
+        /// <summary>
+        /// The scrum sprint the agile board is currently linked to.
+        /// </summary>
+        [JsonProperty("current_sprint")]
+        public Sprint CurrentSprint
+        {
+            get => currentSprint;
+            internal set => currentSprint = value;
+        }
+
+        [JsonProperty("current_sprint_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? CurrentSprintID => currentSprint?.ID;
 
         #endregion
 
@@ -165,6 +183,7 @@ namespace Sdk4me
 
         internal override void ResetPropertySerializationCollection()
         {
+            currentSprint?.ResetPropertySerializationCollection();
             manager?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }

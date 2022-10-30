@@ -115,7 +115,7 @@ namespace Sdk4me
         public ScrumWorkspace ScrumWorkspace
         {
             get => scrumWorkspace;
-            set => scrumWorkspace = SetValue("scrum_workspace_id", scrumWorkspace, value);
+            internal set => scrumWorkspace = SetValue("scrum_workspace_id", scrumWorkspace, value);
         }
 
         [JsonProperty("scrum_workspace_id"), Sdk4meIgnoreInFieldSelection()]

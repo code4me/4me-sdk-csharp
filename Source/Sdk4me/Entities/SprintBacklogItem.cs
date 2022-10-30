@@ -10,10 +10,11 @@ namespace Sdk4me
         private bool done;
         private int? estimate;
         private bool planned;
-        private int position;
+        private int? position;
         private Problem problem;
         private ProjectTask projectTask;
         private Request request;
+        private Sprint sprint;
         private Task task;
 
         #region Done
@@ -25,7 +26,7 @@ namespace Sdk4me
         public bool Done
         {
             get => done;
-            set => done = SetValue("done", done, value);
+            internal set => done = value;
         }
 
         #endregion
@@ -53,7 +54,7 @@ namespace Sdk4me
         public bool Planned
         {
             get => planned;
-            set => planned = SetValue("planned", planned, value);
+            internal set => planned = value;
         }
 
         #endregion
@@ -64,7 +65,7 @@ namespace Sdk4me
         /// Position of this record on the sprint backlog. The top item has position 1.
         /// </summary>
         [JsonProperty("position")]
-        public int Position
+        public int? Position
         {
             get => position;
             set => position = SetValue("position", position, value);
@@ -81,7 +82,7 @@ namespace Sdk4me
         public Problem Problem
         {
             get => problem;
-            set => problem = SetValue("problem_id", problem, value);
+            internal set => problem = value;
         }
 
         [JsonProperty("problem_id"), Sdk4meIgnoreInFieldSelection()]
@@ -98,7 +99,7 @@ namespace Sdk4me
         public ProjectTask ProjectTask
         {
             get => projectTask;
-            set => projectTask = SetValue("project_task_id", projectTask, value);
+            internal set => projectTask = value;
         }
 
         [JsonProperty("project_task_id"), Sdk4meIgnoreInFieldSelection()]
@@ -115,11 +116,28 @@ namespace Sdk4me
         public Request Request
         {
             get => request;
-            set => request = SetValue("request_id", request, value);
+            internal set => request = value;
         }
 
         [JsonProperty("request_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? RequestID => request?.ID;
+
+        #endregion
+
+        #region Sprint
+
+        /// <summary>
+        /// The sprint this backlog item is part of.
+        /// </summary>
+        [JsonProperty("sprint")]
+        public Sprint Sprint
+        {
+            get => sprint;
+            internal set => sprint = value;
+        }
+
+        [JsonProperty("sprint_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? SprintID => sprint?.ID;
 
         #endregion
 
@@ -132,7 +150,7 @@ namespace Sdk4me
         public Task Task
         {
             get => task;
-            set => task = SetValue("task_id", task, value);
+            internal set => task = value;
         }
 
         [JsonProperty("task_id"), Sdk4meIgnoreInFieldSelection()]

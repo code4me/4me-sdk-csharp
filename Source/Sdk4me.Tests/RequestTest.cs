@@ -38,6 +38,10 @@ namespace Sdk4me.Tests
             List<Request> groupedRequests = client.Requests.GetGroupedRequests(request, "*");
             Assert.IsNotNull(groupedRequests);
             Assert.IsInstanceOfType(groupedRequests, typeof(List<Request>));
+
+            List<SprintBacklogItem> sprintBacklogItems = client.Requests.GetSprintBacklogItems(request, "*");
+            Assert.IsNotNull(sprintBacklogItems);
+            Assert.IsInstanceOfType(sprintBacklogItems, typeof(List<SprintBacklogItem>));
         }
     }
 }

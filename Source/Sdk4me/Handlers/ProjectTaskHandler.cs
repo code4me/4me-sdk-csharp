@@ -16,7 +16,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ProjectTaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ProjectTaskHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/project_tasks", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -30,7 +30,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ProjectTaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ProjectTaskHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/project_tasks", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -150,6 +150,21 @@ namespace Sdk4me
         public bool RemoveAllPredecessors(ProjectTask projectTask)
         {
             return DeleteAllRelations(projectTask, "predecessors");
+        }
+
+        #endregion
+
+        #region Sprint backlog items
+
+        /// <summary>
+        /// Get all sprint backlog items related to a project task.
+        /// </summary>
+        /// <param name="projectTask">The project task.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A list of sprint backlog items.</returns>
+        public List<SprintBacklogItem> GetSprintBacklogItems(ProjectTask projectTask, params string[] fieldNames)
+        {
+            return GetChildHandler<SprintBacklogItem>(projectTask, "sprint_backlog_items").Get(fieldNames);
         }
 
         #endregion

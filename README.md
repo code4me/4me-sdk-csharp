@@ -97,6 +97,12 @@ This will return all [configuration items](https://developer.4me.com/v1/configur
 
 &nbsp;
 ```csharp
+List<Request> requests = client.Requests.Get(new Filter("RequestedByID", FilterCondition.Equality, person.ID));
+```
+This will return all [requests](https://developer.4me.com/v1/requests/) requested by a specific person.
+
+&nbsp;
+```csharp
 List<ProjectTaskTemplate> projectTaskTemplates = client.ProjectTaskTemplates.Get(PredefinedEnabledDisabledFilter.Enabled);
 foreach (ProjectTaskTemplate projectTaskTemplate in projectTaskTemplates)
     Console.WriteLine(projectTaskTemplate.Subject);

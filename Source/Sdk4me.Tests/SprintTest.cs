@@ -17,7 +17,7 @@ namespace Sdk4me.Tests
 
             if (sprints.FirstOrDefault() is Sprint sprint)
             {
-                List<SprintBacklogItem> sprintBacklogItems = client.Sprints.GetBacklogItems(sprint);
+                List<SprintBacklogItem> sprintBacklogItems = client.Sprints.GetBacklogItems(sprint, "*");
                 Assert.IsNotNull(sprintBacklogItems);
                 Assert.IsInstanceOfType(sprintBacklogItems, typeof(List<SprintBacklogItem>));
 

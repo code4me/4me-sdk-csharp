@@ -13,7 +13,7 @@ namespace Sdk4me
         private readonly AuthenticationTokenCollection authenticationTokens = null;
         private readonly string accountID = null;
         private readonly EnvironmentType environment = EnvironmentType.Production;
-        private readonly EnvironmentRegion environmentRegion = EnvironmentRegion.Global;
+        private readonly EnvironmentRegion environmentRegion = EnvironmentRegion.EU;
         private int itemsPerRequest = 25;
         private int maximumRecursiveRequests = 10;
 
@@ -70,7 +70,7 @@ namespace Sdk4me
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
-            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
+            : this(new AuthenticationTokenCollection(authenticationToken), accountID, environment, EnvironmentRegion.EU, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 
@@ -97,7 +97,7 @@ namespace Sdk4me
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
         public Sdk4meClient(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
-            : this(authenticationTokens, accountID, environment, EnvironmentRegion.Global, itemsPerRequest, maximumRecursiveRequests)
+            : this(authenticationTokens, accountID, environment, EnvironmentRegion.EU, itemsPerRequest, maximumRecursiveRequests)
         {
         }
 

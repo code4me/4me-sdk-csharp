@@ -17,7 +17,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public RequestHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public RequestHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/requests", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -31,7 +31,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public RequestHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public RequestHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/requests", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -173,6 +173,21 @@ namespace Sdk4me
         public bool Dissatisfied(Request request, RequestDissatisfied dissatisfied)
         {
             return GetChildHandler<RequestDissatisfied>(request, "dissatisfied").Insert(dissatisfied) is null;
+        }
+
+        #endregion
+
+        #region Sprint backlog items
+
+        /// <summary>
+        /// Get all sprint backlog items related to a request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A list of sprint backlog items.</returns>
+        public List<SprintBacklogItem> GetSprintBacklogItems(Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<SprintBacklogItem>(request, "sprint_backlog_items").Get(fieldNames);
         }
 
         #endregion

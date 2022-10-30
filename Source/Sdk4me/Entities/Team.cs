@@ -20,6 +20,7 @@ namespace Sdk4me
         private string pictureUri;
         private string remarks;
         private List<AttachmentReference> remarksAttachments;
+        private ScrumWorkspace scrumWorkspace;
         private string source;
         private string sourceID;
         private string timeZone;
@@ -221,6 +222,23 @@ namespace Sdk4me
 
         #endregion
 
+        #region Scrum workspace
+
+        /// <summary>
+        /// The Scrum Workspace used by this team to plan their work.
+        /// </summary>
+        [JsonProperty("scrum_workspace")]
+        public ScrumWorkspace ScrumWorkspace
+        {
+            get => scrumWorkspace;
+            internal set => scrumWorkspace = value;
+        }
+
+        [JsonProperty("scrum_workspace_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? ScrumWorkspaceID => scrumWorkspace?.ID;
+
+        #endregion
+
         #region Source
 
         /// <summary>
@@ -285,6 +303,7 @@ namespace Sdk4me
             configurationManager?.ResetPropertySerializationCollection();
             coordinator?.ResetPropertySerializationCollection();
             manager?.ResetPropertySerializationCollection();
+            scrumWorkspace?.ResetPropertySerializationCollection();
             workHours?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
