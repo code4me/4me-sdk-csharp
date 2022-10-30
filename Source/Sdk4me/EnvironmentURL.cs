@@ -17,7 +17,7 @@ namespace Sdk4me
         {
             switch (environmentRegion)
             {
-                case EnvironmentRegion.Australia:
+                case EnvironmentRegion.AU:
                     switch (environment)
                     {
                         case EnvironmentType.Quality:

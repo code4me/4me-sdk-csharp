@@ -17,7 +17,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ProblemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ProblemHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/problems", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -31,7 +31,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ProblemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ProblemHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/problems", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -214,6 +214,21 @@ namespace Sdk4me
         public bool RemoveServiceInstance(Problem problem, ServiceInstance serviceInstance)
         {
             return DeleteRelation(problem, "service_instances", serviceInstance);
+        }
+
+        #endregion
+
+        #region Sprint backlog items
+
+        /// <summary>
+        /// Get all sprint backlog items related to a problem.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A list of sprint backlog items.</returns>
+        public List<SprintBacklogItem> GetSprintBacklogItems(Problem problem, params string[] fieldNames)
+        {
+            return GetChildHandler<SprintBacklogItem>(problem, "sprint_backlog_items").Get(fieldNames);
         }
 
         #endregion

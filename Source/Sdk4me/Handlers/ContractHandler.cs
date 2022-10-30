@@ -17,7 +17,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ContractHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ContractHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/contracts", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -31,7 +31,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public ContractHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public ContractHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/contracts", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }

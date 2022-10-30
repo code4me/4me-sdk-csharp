@@ -14,7 +14,7 @@
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public AuditEntryHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public AuditEntryHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/audit_lines", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests, SortOrder.CreatedAt)
         {
         }
@@ -28,7 +28,7 @@
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public AuditEntryHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public AuditEntryHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/audit_lines", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests, SortOrder.CreatedAt)
         {
         }

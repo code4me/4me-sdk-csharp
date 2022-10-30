@@ -14,7 +14,7 @@
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public FirstLineSupportAgreementHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public FirstLineSupportAgreementHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/flsas", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -28,7 +28,7 @@
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public FirstLineSupportAgreementHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public FirstLineSupportAgreementHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/flsas", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }

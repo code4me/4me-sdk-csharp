@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Sdk4me
 {
@@ -17,6 +18,7 @@ namespace Sdk4me
         Quality,
         /// <summary>
         /// The 4me demo environment.
+        /// <br>The environment region is obsolete for the 4me demo environment.</br>
         /// </summary>
         Demo
     }
@@ -27,13 +29,13 @@ namespace Sdk4me
     public enum EnvironmentRegion
     {
         /// <summary>
-        /// The global region.
+        /// The European region.
         /// </summary>
-        Global,
+        EU,
         /// <summary>
         /// The Australia region.
         /// </summary>
-        Australia,
+        AU,
         /// <summary>
         /// The United Kingdom region.
         /// </summary>

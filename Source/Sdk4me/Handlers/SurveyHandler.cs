@@ -16,7 +16,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public SurveyHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public SurveyHandler(AuthenticationToken authenticationToken, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/surveys", authenticationToken, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
@@ -30,7 +30,7 @@ namespace Sdk4me
         /// <param name="environmentRegion">The 4me environment region.</param>
         /// <param name="itemsPerRequest">The number of items per paged request.</param>
         /// <param name="maximumRecursiveRequests">The number of recursive requests.</param>
-        public SurveyHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.Global, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
+        public SurveyHandler(AuthenticationTokenCollection authenticationTokens, string accountID, EnvironmentType environment = EnvironmentType.Production, EnvironmentRegion environmentRegion = EnvironmentRegion.EU, int itemsPerRequest = 25, int maximumRecursiveRequests = 10)
             : base($"{EnvironmentURL.Get(environment, environmentRegion)}/surveys", authenticationTokens, accountID, itemsPerRequest, maximumRecursiveRequests)
         {
         }
