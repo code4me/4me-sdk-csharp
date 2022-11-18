@@ -152,6 +152,33 @@ namespace Sdk4me
 
         #endregion
 
+        #region Contracts
+
+        /// <summary>
+        /// Get all contracts.
+        /// </summary>
+        /// <param name="organization">The organization.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of contracts.</returns>
+        public List<Contract> GetContracts(Organization organization, params string[] fieldNames)
+        {
+            return GetChildHandler<Contract>(organization, "contracts").Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Get all contracts.
+        /// </summary>
+        /// <param name="filter">The predefined filter.</param>
+        /// <param name="organization">The organization.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of contracts.</returns>
+        public List<Contract> GetContracts(PredefinedActiveInactiveFilter filter, Organization organization, params string[] fieldNames)
+        {
+            return GetChildHandler<Contract>(organization, $"contracts/{filter.To4meString()}").Get(fieldNames);
+        }
+
+        #endregion
+
         #region Organizations
 
         /// <summary>
