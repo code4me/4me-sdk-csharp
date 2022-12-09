@@ -1730,7 +1730,12 @@ namespace Sdk4me
         /// Reservation pending.
         /// </summary>
         [EnumMember(Value = "reservation_pending")]
-        ReservationPending
+        ReservationPending,
+        /// <summary>
+        /// Project pending.
+        /// </summary>
+        [EnumMember(Value = "project_pending")]
+        ProjectPending
     }
 
     #endregion
