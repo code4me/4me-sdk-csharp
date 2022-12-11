@@ -730,6 +730,20 @@ namespace Sdk4me
             }
         }
 
+        //
+        /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/sla_notification_schemes/">service level agreement notification scheme</see> API endpoint.
+        /// </summary>
+        public ServiceLevelAgreementNotificationSchemeHandler ServiceLevelAgreementNotificationSchemes
+        {
+            get
+            {
+                if (!handlers.ContainsKey("sla_notification_schemes"))
+                    handlers.Add("sla_notification_schemes", new ServiceLevelAgreementNotificationSchemeHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (ServiceLevelAgreementNotificationSchemeHandler)handlers["sla_notification_schemes"];
+            }
+        }
+
         /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/sprints/">sprint</see> API endpoint.
         /// </summary>
