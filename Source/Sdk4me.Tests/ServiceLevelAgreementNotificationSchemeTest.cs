@@ -61,6 +61,11 @@ namespace Sdk4me.Tests
 
             //get existing
             ServiceLevelAgreementNotificationScheme scheme = client.ServiceLevelAgreementNotificationSchemes.Get(new Filter("sourceID", FilterCondition.Equality, "100"), "*").FirstOrDefault();
+            if (scheme == null)
+            {
+                CreateUpdateAndDisable();
+                scheme = client.ServiceLevelAgreementNotificationSchemes.Get(new Filter("sourceID", FilterCondition.Equality, "100"), "*").FirstOrDefault();
+            }
             Assert.IsNotNull(scheme);
 
             //add rule

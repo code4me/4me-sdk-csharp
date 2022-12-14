@@ -18,6 +18,7 @@ namespace Sdk4me
         private string financialID;
         private Person manager;
         private string name;
+        private RequestTemplate orderTemplate;
         private Organization parent;
         private string pictureUri;
         private string region;
@@ -157,6 +158,23 @@ namespace Sdk4me
             get => name;
             set => name = SetValue("name", name, value);
         }
+
+        #endregion
+
+        #region Order template
+
+        /// <summary>
+        /// Refers to the order template that is used for purchases of people defined in this organization or its descendants.
+        /// </summary>
+        [JsonProperty("order_template")]
+        public RequestTemplate OrderTemplate
+        {
+            get => orderTemplate;
+            set => orderTemplate = SetValue("order_template_id", orderTemplate, value);
+        }
+
+        [JsonProperty("order_template_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? OrderTemplateID => orderTemplate?.ID;
 
         #endregion
 

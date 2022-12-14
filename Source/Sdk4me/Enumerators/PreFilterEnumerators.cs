@@ -553,4 +553,46 @@
         /// </summary>
         Internal
     }
+
+    /// <summary>
+    /// Predefined shop article filter.
+    /// </summary>
+    public enum PredefinedShopArticleFilter
+    {
+        /// <summary>
+        /// List all shop articles that are enabled.
+        /// </summary>
+        Disabled,
+        /// <summary>
+        /// List all shop articles that are disabled.
+        /// </summary>
+        Enabled,
+        /// <summary>
+        /// List all shop articles with the information (name, pricing, etc.) as it is on offer in the shop.
+        /// </summary>
+        OnOffer
+    }
+
+    /// <summary>
+    /// Predefined shop order line filter.
+    /// </summary>
+    public enum PredefinedShopOrderLineFilter
+    {
+        /// <summary>
+        /// List all shop order lines that are not completed.
+        /// </summary>
+        Open,
+        /// <summary>
+        /// List all shop order lines that are completed.
+        /// </summary>
+        Completed,
+        /// <summary>
+        /// List all shop order lines that are canceled.
+        /// </summary>
+        Canceled,
+        /// <summary>
+        /// List all shop order lines that are requested by me.
+        /// </summary>
+        Personal
+    }
 }

@@ -1514,6 +1514,16 @@ namespace Sdk4me
         [EnumMember(Value = "reservation")]
         Reservation,
         /// <summary>
+        /// An order.
+        /// </summary>
+        [EnumMember(Value = "order")]
+        Order,
+        /// <summary>
+        /// An order fulfillment.
+        /// </summary>
+        [EnumMember(Value = "fulfillment")]
+        Fulfillment,
+        /// <summary>
         /// A complaint.
         /// </summary>
         [EnumMember(Value = "complaint")]
@@ -2287,6 +2297,59 @@ namespace Sdk4me
 
     #endregion
 
+    #region Shop
+
+    /// <summary>
+    /// A 4me shop recurring period.
+    /// </summary>
+    public enum ShopRecurringPeriod
+    {
+        /// <summary>
+        /// Monthly.
+        /// </summary>
+        [EnumMember(Value = "monthly")]
+        Monthly = 1,
+        /// <summary>
+        /// Yearly.
+        /// </summary>
+        [EnumMember(Value = "yearly")]
+        Yearly
+    }
+
+    /// <summary>
+    /// A 4me shop order line status
+    /// </summary>
+    public enum ShopOrderLineStatus
+    {
+        /// <summary>
+        /// In cart.
+        /// </summary>
+        [EnumMember(Value = "in_cart")]
+        InCart = 1,
+        /// <summary>
+        /// Workflow pending.
+        /// </summary>
+        [EnumMember(Value = "workflow_pending")]
+        WorkflowPending,
+        /// <summary>
+        /// Fulfillment pending.
+        /// </summary>
+        [EnumMember(Value = "fulfillment_pending")]
+        FulfillmentPending,
+        /// <summary>
+        /// Completed.
+        /// </summary>
+        [EnumMember(Value = "completed")]
+        Completed,
+        /// <summary>
+        /// Canceled.
+        /// </summary>
+        [EnumMember(Value = "canceled")]
+        Canceled
+    }
+
+    #endregion
+
     #region Sprint
 
     /// <summary>
@@ -2355,7 +2418,12 @@ namespace Sdk4me
         /// Implementation.
         /// </summary>
         [EnumMember(Value = "implementation")]
-        Implementation
+        Implementation,
+        /// <summary>
+        /// Fulfillment placeholder.
+        /// </summary>
+        [EnumMember(Value = "fulfillment_placeholder")]
+        FulfillmentPlaceholder
     }
 
     /// <summary>
@@ -2718,20 +2786,25 @@ namespace Sdk4me
     public enum WorkflowCategory
     {
         /// <summary>
-        /// Standard.
+        /// Standard - Approved Workflow Template Was Used.
         /// </summary>
         [EnumMember(Value = "standard")]
         Standard = 1,
         /// <summary>
-        /// Non standard.
+        /// Non-Standard - Approved Workflow Template Not Available.
         /// </summary>
         [EnumMember(Value = "non_standard")]
         NonStandard,
         /// <summary>
-        /// Emergency.
+        /// Standard - Approved Workflow Template Was Used.
         /// </summary>
         [EnumMember(Value = "emergency")]
-        Emergency
+        Emergency,
+        /// <summary>
+        /// Order - Organization Order Workflow.
+        /// </summary>
+        [EnumMember(Value = "order")]
+        Order
     }
 
     /// <summary>

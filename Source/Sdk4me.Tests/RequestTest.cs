@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -17,15 +16,13 @@ namespace Sdk4me.Tests
             Assert.IsNotNull(requests);
             Assert.IsInstanceOfType(requests, typeof(List<Request>));
 
-            if (requests.Count == 0)
-                return;
-            Request request = requests[Random.Shared.Next(requests.Count)];
+            Request request = client.Requests.Get(70454);
             Trace.WriteLine($"Continue relation tests on request: #{request.ID}");
 
             List<Note> notes = client.Requests.GetNotes(request, "*");
             Assert.IsNotNull(notes);
             Assert.IsInstanceOfType(notes, typeof(List<Note>));
-            Assert.IsTrue(notes.Count > 1);
+            Assert.IsTrue(notes.Count > 0);
 
             List<ConfigurationItem> configurationItems = client.Requests.GetConfigurationItems(request, "*");
             Assert.IsNotNull(configurationItems);

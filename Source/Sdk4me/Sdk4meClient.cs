@@ -692,6 +692,32 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/shop_articles/">shop article</see> API endpoint.
+        /// </summary>
+        public ShopArticleHandler ShopArticles
+        {
+            get
+            {
+                if (!handlers.ContainsKey("shop_articles"))
+                    handlers.Add("shop_articles", new ShopArticleHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (ShopArticleHandler)handlers["shop_articles"];
+            }
+        }
+
+        /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/shop_order_lines/">shop order line</see> API endpoint.
+        /// </summary>
+        public ShopOrderLineHandler ShopOrderLines
+        {
+            get
+            {
+                if (!handlers.ContainsKey("shop_order_lines"))
+                    handlers.Add("shop_order_lines", new ShopOrderLineHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (ShopOrderLineHandler)handlers["shop_order_lines"];
+            }
+        }
+
+        /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/slas/">service level agreement</see> API endpoint.
         /// </summary>
         public ServiceLevelAgreementHandler ServiceLevelAgreements

@@ -22,7 +22,7 @@ namespace Sdk4me.Tests
             }
 
             //connect to the client
-            client = new(new AuthenticationToken(token), account, EnvironmentType.Quality, 25, 3);
+            client = new(new AuthenticationToken(token), account, EnvironmentType.Demo, 25, 3);
             return client;
         }
     }
