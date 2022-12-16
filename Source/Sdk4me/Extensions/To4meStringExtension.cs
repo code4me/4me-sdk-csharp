@@ -20,7 +20,8 @@ namespace Sdk4me.Extensions
             "sourceID",
             "supplierRequestID",
             "supportID",
-            "systemID"
+            "systemID",
+            "supplier_requestID"
         };
 
         /// <summary>
