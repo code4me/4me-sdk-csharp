@@ -2202,6 +2202,23 @@ namespace Sdk4me
         Expired
     }
 
+    /// <summary>
+    /// A 4me service level agreement - service level relation status.
+    /// </summary>
+    public enum ServiceLevelAgreementServiceInstanceRelationStatus
+    {
+        /// <summary>
+        /// Service Instance of SLA is Down or Degraded.
+        /// </summary>
+        [EnumMember(Value = "degraded")]
+        Degraded = 1,
+        /// <summary>
+        /// Service Instance of SLA is Down.
+        /// </summary>
+        [EnumMember(Value = "down")]
+        Down
+    }
+
     #endregion
 
     #region Service offering

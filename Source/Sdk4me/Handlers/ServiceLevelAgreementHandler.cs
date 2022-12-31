@@ -201,6 +201,64 @@ namespace Sdk4me
 
         #endregion
 
+        #region service instances
+
+        /// <summary>
+        /// Get all parent service instances of a service level agreement.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of people.</returns>
+        public List<ServiceLevelAgreementServiceInstanceRelation> GetServiceInstances(ServiceLevelAgreement serviceLevelAgreement, params string[] fieldNames)
+        {
+            return GetChildHandler<ServiceLevelAgreementServiceInstanceRelation>(serviceLevelAgreement, "service_instances").Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a service instance relation.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="serviceLevelAgreementServiceInstanceRelation">The service instance relation.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public ServiceLevelAgreementServiceInstanceRelation AddServiceInstance(ServiceLevelAgreement serviceLevelAgreement, ServiceLevelAgreementServiceInstanceRelation serviceLevelAgreementServiceInstanceRelation)
+        {
+            return GetChildHandler<ServiceLevelAgreementServiceInstanceRelation>(serviceLevelAgreement, "service_instances").Insert(serviceLevelAgreementServiceInstanceRelation);
+        }
+
+        /// <summary>
+        /// Update a service instance relation.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="serviceLevelAgreementServiceInstanceRelation">The service instance relation.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public ServiceLevelAgreementServiceInstanceRelation UpdateServiceInstance(ServiceLevelAgreement serviceLevelAgreement, ServiceLevelAgreementServiceInstanceRelation serviceLevelAgreementServiceInstanceRelation)
+        {
+            return GetChildHandler<ServiceLevelAgreementServiceInstanceRelation>(serviceLevelAgreement, "service_instances").Update(serviceLevelAgreementServiceInstanceRelation);
+        }
+
+        /// <summary>
+        /// Delete a service instance relation.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="serviceLevelAgreementServiceInstanceRelation">The service instance relation.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteServiceInstance(ServiceLevelAgreement serviceLevelAgreement, ServiceLevelAgreementServiceInstanceRelation serviceLevelAgreementServiceInstanceRelation)
+        {
+            return GetChildHandler<ServiceLevelAgreementServiceInstanceRelation>(serviceLevelAgreement, "service_instances").Delete(serviceLevelAgreementServiceInstanceRelation);
+        }
+
+        /// <summary>
+        /// Delete all service instance relations.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteServiceInstances(ServiceLevelAgreement serviceLevelAgreement)
+        {
+            return GetChildHandler<ServiceLevelAgreementServiceInstanceRelation>(serviceLevelAgreement, "service_instances").DeleteAll();
+        }
+
+        #endregion
+
         #region Sites
 
         /// <summary>
