@@ -2440,7 +2440,12 @@ namespace Sdk4me
         /// Fulfillment placeholder.
         /// </summary>
         [EnumMember(Value = "fulfillment_placeholder")]
-        FulfillmentPlaceholder
+        FulfillmentPlaceholder,
+        /// <summary>
+        /// Automation.
+        /// </summary>
+        [EnumMember(Value = "automation")]
+        Automation
     }
 
     /// <summary>
