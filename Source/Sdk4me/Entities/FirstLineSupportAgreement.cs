@@ -18,14 +18,20 @@ namespace Sdk4me
         private int? firstCallResolutions;
         private string name;
         private DateTime? noticeDate;
+        private long? pickupTarget;
+        private long? pickupsWithinTarget;
+        private long? rejectedSolutions;
         private Organization provider;
         private string remarks;
         private List<AttachmentReference> remarksAttachments;
         private Team serviceDeskTeam;
+        private long? serviceDeskOnlyResolutions;
+        private long? serviceDeskResolutions;
         private string source;
         private string sourceID;
         private DateTime? startDate;
         private FirstLineSupportAgreementStatus? status;
+        private long? supportChatPickupTarget;
         private Calendar supportHours;
         private string targetDetails;
         private List<AttachmentReference> targetDetailsAttachments;
@@ -179,6 +185,48 @@ namespace Sdk4me
 
         #endregion
 
+        #region Pickup target
+
+        /// <summary>
+        /// The number of minutes within which a new or existing request that has been assigned to the service desk team is assigned to a specific member within the service desk team, is assigned to another team, or is set to a status other than assigned.
+        /// </summary>
+        [JsonProperty("pickup_target")]
+        public long? PickupTarget
+        {
+            get => pickupTarget;
+            set => pickupTarget = SetValue("pickup_target", pickupTarget, value);
+        }
+
+        #endregion
+
+        #region Pickup within target
+
+        /// <summary>
+        /// The minimum percentage of requests that are to be picked up by the service desk team within the pickup target.
+        /// </summary>
+        [JsonProperty("pickups_within_target")]
+        public long? PickupsWithinTarget
+        {
+            get => pickupsWithinTarget;
+            set => pickupsWithinTarget = SetValue("pickups_within_target", pickupsWithinTarget, value);
+        }
+
+        #endregion
+
+        #region Rejected solutions
+
+        /// <summary>
+        /// The maximum percentage of requests that were reopened (i.e. which status in the account that is covered by the first line support agreement was updated from completed to another status).
+        /// </summary>
+        [JsonProperty("rejected_solutions")]
+        public long? RejectedSolutions
+        {
+            get => rejectedSolutions;
+            set => rejectedSolutions = SetValue("rejected_solutions", rejectedSolutions, value);
+        }
+
+        #endregion
+
         #region Provider
 
         /// <summary>
@@ -258,6 +306,34 @@ namespace Sdk4me
 
         #endregion
 
+        #region Service desk only resolutions
+
+        /// <summary>
+        /// The minimum percentage of requests that are to be completed by the service desk team without having been assigned to any other team within the account that is covered by the first line support agreement.
+        /// </summary>
+        [JsonProperty("service_desk_only_resolutions")]
+        public long? ServiceDeskOnlyResolutions
+        {
+            get => serviceDeskOnlyResolutions;
+            set => serviceDeskOnlyResolutions = SetValue("service_desk_only_resolutions", serviceDeskOnlyResolutions, value);
+        }
+
+        #endregion
+
+        #region Service desk resolutions
+
+        /// <summary>
+        /// The minimum percentage of requests that are to be completed by the service desk team without having been assigned to any other team within the account that is covered by the first line support agreement.
+        /// </summary>
+        [JsonProperty("service_desk_resolutions")]
+        public long? ServiceDeskResolutions
+        {
+            get => serviceDeskResolutions;
+            set => serviceDeskResolutions = SetValue("service_desk_resolutions", serviceDeskResolutions, value);
+        }
+
+        #endregion
+
         #region Source
 
         /// <summary>
@@ -310,6 +386,20 @@ namespace Sdk4me
         {
             get => status;
             set => status = SetValue("status", status, value);
+        }
+
+        #endregion
+
+        #region Support chat pickup target
+
+        /// <summary>
+        /// The number of minutes within which a new or existing chat request that has been assigned to the service desk team is assigned to a specific member within the service desk team, is assigned to another team, or is set to a status other than assigned.
+        /// </summary>
+        [JsonProperty("support_chat_pickup_target")]
+        public long? SupportChatPickupTarget
+        {
+            get => supportChatPickupTarget;
+            set => supportChatPickupTarget = SetValue("support_chat_pickup_target", supportChatPickupTarget, value);
         }
 
         #endregion
