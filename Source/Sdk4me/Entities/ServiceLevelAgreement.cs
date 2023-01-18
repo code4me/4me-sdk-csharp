@@ -12,6 +12,7 @@ namespace Sdk4me
         private List<Attachment> attachments;
         private ServiceLevelCoverage? coverage;
         private Organization customer;
+        private Account customerAccount;
         private DateTime? expiryDate;
         private string name;
         private DateTime? noticeDate;
@@ -68,6 +69,23 @@ namespace Sdk4me
 
         [JsonProperty("customer_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? CustomerID => customer?.ID;
+
+        #endregion
+
+        #region Customer account
+
+        /// <summary>
+        /// This field is used to specify the Account which service level managers are allowed to update the parts of the SLA that are intended to be maintained by the service level managers of the customer. More importantly, this field is used to specify whether specialists of the customer are allowed to see the requests that include this SLA in their Affected SLAs section.
+        /// </summary>
+        [JsonProperty("customer_account")]
+        public Account CustomerAccount
+        {
+            get => customerAccount;
+            set => customerAccount = SetValue("customer_account_id", customerAccount, value);
+        }
+
+        [JsonProperty("customer_account_id"), Sdk4meIgnoreInFieldSelection()]
+        internal string CustomerAccountID => customerAccount.ID;
 
         #endregion
 
