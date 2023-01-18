@@ -1579,7 +1579,22 @@ namespace Sdk4me
         /// Duplicate.
         /// </summary>
         [EnumMember(Value = "duplicate")]
-        Duplicate
+        Duplicate,
+        /// <summary>
+        /// No reply.
+        /// </summary>
+        [EnumMember(Value = "no_reply")]
+        NoReply,
+        /// <summary>
+        /// Rejected.
+        /// </summary>
+        [EnumMember(Value = "rejected")]
+        Rejected,
+        /// <summary>
+        /// Declined.
+        /// </summary>
+        [EnumMember(Value = "declined")]
+        Declined
     }
 
     /// <summary>
