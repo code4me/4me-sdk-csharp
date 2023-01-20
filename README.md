@@ -20,7 +20,9 @@ The default implementation has a set of built-in functionalities to optimize the
 The Get method allows predefined and custom filtering. More information about filters can be found on the [4me developer website](https://developer.4me.com/v1/general/filtering/).
 
 #### Field selection
-The Get method allows field selection. If no fields are specified it will return the default field selection as documented on the [4me developer website](https://developer.4me.com/v1/general/field_selection/). To return all field values an asterisk (*) can be used.
+The Get method allows you to select the fields that you want to retrieve. It is recommended to specify the fields you need, as not all fields may be available in production and retrieving fields that you do not need may have a performance impact.
+If no fields are specified, the default field selection as specified on the [4me developer website](https://developer.4me.com/v1/general/field_selection/) will be returned.
+However, if you do need all fields, you can use an asterisk (*) as the field selector, but please note that it may include fields that are not yet available in production and it will have an impact on performance.
 
 #### Pagination
 The API requests returning a collection are almost always paginated. A single API request will return at most 100 records. The client allows you to set the number of items per page, as well as the number of pages to be requested. More information about pagination is available on the [4me developer website](https://developer.4me.com/v1/general/pagination/).
