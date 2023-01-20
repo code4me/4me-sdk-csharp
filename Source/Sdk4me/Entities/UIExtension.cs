@@ -14,6 +14,7 @@ namespace Sdk4me
         private string compiledCss;
         private string css;
         private bool disabled;
+        private string description;
         private string html;
         private string javascript;
         private string localizedHtml;
@@ -104,6 +105,20 @@ namespace Sdk4me
         {
             get => disabled;
             set => disabled = SetValue("disabled", disabled, value);
+        }
+
+        #endregion
+
+        #region Description
+
+        /// <summary>
+        /// The Description field is used to enter a very short description of the UI extension.
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description
+        {
+            get => description;
+            set => description = SetValue("description", description, value);
         }
 
         #endregion
