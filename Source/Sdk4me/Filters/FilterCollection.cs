@@ -71,6 +71,18 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// Adds an object to the end of the collection.
+        /// </summary>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="filter">The filter to be used.</param>
+        /// <param name="value1">The first attribute value.</param>
+        /// <param name="value2">The second attribute value.</param>
+        public void Add(string fieldName, FilterCondition filter, DateTime value1, DateTime value2)
+        {
+            filterItems.Add(new Filter(fieldName, filter, value1, value2));
+        }
+
+        /// <summary>
         /// Creates a new filter instance.
         /// </summary>
         /// <param name="fieldName">The field name.</param>
