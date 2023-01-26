@@ -30,6 +30,7 @@ namespace Sdk4me
         private readonly HttpClient client = new HttpClient();
         private readonly JsonSerializer serializer = new JsonSerializer();
         private readonly string url;
+        private readonly string oauth2Url;
         private readonly string storageFacilityUrl;
         private readonly AuthenticationTokenCollection authenticationTokens;
         private readonly string accountID;
@@ -160,6 +161,7 @@ namespace Sdk4me
 
             //set global variables
             url = endPointUrl.TrimEnd('/');
+            oauth2Url = EnvironmentURL.GetOAuth2Url(url);
             this.authenticationTokens = authenticationTokens;
             this.accountID = accountID;
             this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 25 : itemsPerRequest;
@@ -815,9 +817,33 @@ namespace Sdk4me
             HttpRequestMessage retval = new HttpRequestMessage(httpMethod, requestUri);
             if (useAnyAuthenticationToken || currentToken is null)
                 currentToken = authenticationTokens.Get();
-            retval.Headers.Authorization = new AuthenticationHeaderValue("Bearer", currentToken.Token);
+            GetAuthenticationToken();
+            retval.Headers.Authorization = new AuthenticationHeaderValue(currentToken.TokenType, currentToken.Token);
             retval.Headers.Add("X-4me-Account", accountID);
             return retval;
+        }
+
+        /// <summary>
+        /// Sets the authentication method, which can be a Personal Access Token or a OAuth 2.0 Client Credential Grant.
+        /// </summary>
+        private void GetAuthenticationToken()
+        {
+            if (currentToken.IsTokenExpired())
+            {
+                using (HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, oauth2Url))
+                {
+                    requestMessage.Content = new FormUrlEncodedContent(new Dictionary<string, string>() { { "grant_type", "client_credentials" }, { "client_id", currentToken.ClientID }, { "client_secret", currentToken.ClientSecret } });
+                    using (HttpResponseMessage responseMessage = client.Send(requestMessage))
+                    {
+                        responseMessage.EnsureSuccessStatusCode();
+                        string content = responseMessage.Content.ReadAsStringAsync().Result;
+                        AuthenticationOAuth2Reponse response = JsonConvert.DeserializeObject<AuthenticationOAuth2Reponse>(content) ?? throw new Sdk4meException("Invalid authentication response");
+                        currentToken.Token = response.AccessToken;
+                        currentToken.TokenType = response.TokenType;
+                        currentToken.AuthenticationTokenExpires = DateTime.Now.AddSeconds(response.ExpiresIn);
+                    }
+                }
+            }
         }
 
         /// <summary>

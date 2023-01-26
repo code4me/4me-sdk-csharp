@@ -16,6 +16,10 @@ Finally, there is an overall class, the Sdk4meClient, which exposes all availabl
 ### BaseHandler Built-in features
 The default implementation has a set of built-in functionalities to optimize the 4me REST API usage.
 
+#### Authentication
+The SDK supports both Personal Access Token and OAuth 2.0 Client Credential Grant authentication methods.
+It automatically renews the token 1 minute before it expires when using OAuth 2.0 Client Credential Grant.
+
 #### Filtering
 The Get method allows predefined and custom filtering. More information about filters can be found on the [4me developer website](https://developer.4me.com/v1/general/filtering/).
 
@@ -49,7 +53,7 @@ A custom, Sdk4meException, is implemented. It will convert the API exception res
 ```csharp
 using Sdk4me;
 
-AuthenticationToken token = new AuthenticationToken("TheBearerToken");
+AuthenticationToken token = new AuthenticationToken("clientID", "ClientSecret");
 Sdk4meClient client = new Sdk4meClient(token, "accountID");
 Person me = client.Me.Get();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
@@ -236,8 +240,8 @@ Returns a Sdk4meException with the following message: ```Unknown fields: throw_a
 ```csharp
 AuthenticationTokenCollection tokens = new AuthenticationTokenCollection()
 {
-    new AuthenticationToken("TheFirstBearerToken"),
-    new AuthenticationToken("TheSecondBearerToken")
+    new AuthenticationToken("clientID", "ClientSecret"),
+    new AuthenticationToken("PersonalAccessToken")
 };
 Sdk4meClient client = new Sdk4meClient(tokens, "account-name", EnvironmentType.Production, EnvironmentRegion.Global);
 ```

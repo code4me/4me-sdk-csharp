@@ -63,6 +63,17 @@ namespace Sdk4me
             }
         }
 
+        internal static string GetOAuth2Url(string url) 
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentException($"'{nameof(url)}' cannot be null or whitespace.", nameof(url));
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult) || uriResult.Scheme != Uri.UriSchemeHttps)
+                throw new ArgumentException($"'{nameof(url)}' is invalid.", nameof(url));
+
+            return $"{uriResult.Scheme}://{uriResult.Host.Replace("api.","oauth.")}/token";
+        }
+
         internal static string GetStorageFacilityUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Sdk4me
         private readonly string allFieldNames = null;
         private readonly JsonSerializer serializer = new JsonSerializer();
         private readonly string url;
+        private readonly string oauth2Url;
         private readonly string storageFacilityUrl;
         private readonly AuthenticationTokenCollection authenticationTokens;
         private readonly string accountID;
@@ -160,6 +162,7 @@ namespace Sdk4me
 
             //set global variables
             url = endPointUrl.TrimEnd('/');
+            oauth2Url = EnvironmentURL.GetOAuth2Url(url);
             this.authenticationTokens = authenticationTokens;
             this.accountID = accountID;
             this.itemsPerRequest = (itemsPerRequest < 1 || itemsPerRequest > 100) ? 25 : itemsPerRequest;
@@ -848,9 +851,41 @@ namespace Sdk4me
             retval.Method = method.ToUpperInvariant();
             if (useAnyAuthenticationToken || currentToken is null)
                 currentToken = authenticationTokens.Get();
-            retval.Headers["Authorization"] = $"Bearer {currentToken?.Token}";
+            GetAuthenticationToken();
+            retval.Headers["Authorization"] = $"{currentToken.TokenType} {currentToken?.Token}";
             retval.Headers.Add("X-4me-Account", accountID);
             return retval;
+        }
+
+        /// <summary>
+        /// Sets the authentication method, which can be a Personal Access Token or a OAuth 2.0 Client Credential Grant.
+        /// </summary>
+        private void GetAuthenticationToken()
+        {
+            if (currentToken.IsTokenExpired())
+            {
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(oauth2Url);
+                byte[] dataBytes = Encoding.ASCII.GetBytes($"grant_type=client_credentials&client_id={currentToken.ClientID}&client_secret={currentToken.ClientSecret}");
+                httpRequest.PreAuthenticate = true;
+                httpRequest.ContentType = "application/x-www-form-urlencoded";
+                httpRequest.Method = "POST";
+                httpRequest.ContentLength = dataBytes.Length;
+
+                using (Stream stream = httpRequest.GetRequestStream())
+                    stream.Write(dataBytes, 0, dataBytes.Length);
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+                using (StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                    {
+                        AuthenticationOAuth2Reponse response = (AuthenticationOAuth2Reponse)serializer.Deserialize(jsonTextReader, typeof(AuthenticationOAuth2Reponse));
+                        currentToken.Token = response.AccessToken;
+                        currentToken.TokenType = response.TokenType;
+                        currentToken.AuthenticationTokenExpires = DateTime.Now.AddSeconds(response.ExpiresIn);
+                    }
+                }
+            }
         }
 
         /// <summary>
