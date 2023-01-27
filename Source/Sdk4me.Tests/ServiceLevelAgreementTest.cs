@@ -18,8 +18,17 @@ namespace Sdk4me.Tests
 
             if (serviceLevelAgreements.Count == 0)
                 return;
+
             ServiceLevelAgreement serviceLevelAgreement = serviceLevelAgreements[Random.Shared.Next(serviceLevelAgreements.Count)];
             Trace.WriteLine($"Continue relation tests on service level agreement: {serviceLevelAgreement.Name}");
+
+            List<EffortClassChargeID> effortClassChargeID = client.ServiceLevelAgreements.GetEffortClassChargeIDs(serviceLevelAgreement, "*");
+            Assert.IsNotNull(effortClassChargeID);
+            Assert.IsInstanceOfType(effortClassChargeID, typeof(List<EffortClassChargeID>));
+
+            List<StandardServiceRequestActivityID> standardServiceRequestActivityIDs = client.ServiceLevelAgreements.GetStandardServiceRequestActivityIDs(serviceLevelAgreement, "*");
+            Assert.IsNotNull(standardServiceRequestActivityIDs);
+            Assert.IsInstanceOfType(standardServiceRequestActivityIDs, typeof(List<StandardServiceRequestActivityID>));
 
             List<Person> people = client.ServiceLevelAgreements.GetCustomerRepresentatives(serviceLevelAgreement, "*");
             Assert.IsNotNull(people);

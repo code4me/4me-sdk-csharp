@@ -9,7 +9,14 @@ namespace Sdk4me
     /// </summary>
     public class ServiceLevelAgreement : BaseItem
     {
+        private string activityidLow;
+        private string activityidMedium;
+        private string activityidHigh;
+        private string activityidTop;
+        private string activityidRfc;
+        private string activityidRfi;
         private List<Attachment> attachments;
+        private string billingID;
         private ServiceLevelCoverage? coverage;
         private Organization customer;
         private AccountReference customerAccount;
@@ -27,6 +34,90 @@ namespace Sdk4me
         private ServiceLevelAgreementStatus? status;
         private bool useKnowledgeFromServiceProvider;
 
+        #region Activityid low
+
+        /// <summary>
+        /// Represents the activityID for low incidents. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_low")]
+        public string ActivityidLow
+        {
+            get => activityidLow;
+            set => activityidLow = SetValue("activityID_low", activityidLow, value);
+        }
+
+        #endregion
+
+        #region Activityid medium
+
+        /// <summary>
+        /// Represents the activityID for medium incidents. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_medium")]
+        public string ActivityidMedium
+        {
+            get => activityidMedium;
+            set => activityidMedium = SetValue("activityID_medium", activityidMedium, value);
+        }
+
+        #endregion
+
+        #region Activityid high
+
+        /// <summary>
+        /// Represents the activityID for high incidents. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_high")]
+        public string ActivityidHigh
+        {
+            get => activityidHigh;
+            set => activityidHigh = SetValue("activityID_high", activityidHigh, value);
+        }
+
+        #endregion
+
+        #region Activityid top
+
+        /// <summary>
+        /// Represents the activityID for top incidents. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_top")]
+        public string ActivityidTop
+        {
+            get => activityidTop;
+            set => activityidTop = SetValue("activityID_top", activityidTop, value);
+        }
+
+        #endregion
+
+        #region Activityid rfc
+
+        /// <summary>
+        /// Represents the activityID for RFCs. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_rfc")]
+        public string ActivityidRfc
+        {
+            get => activityidRfc;
+            set => activityidRfc = SetValue("activityID_rfc", activityidRfc, value);
+        }
+
+        #endregion
+
+        #region Activityid rfi
+
+        /// <summary>
+        /// Represents the activityID for RFIs. The Activity ID is the unique identifier by which an activity that is performed in the context of a service offering is known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("activityID_rfi")]
+        public string ActivityidRfi
+        {
+            get => activityidRfi;
+            set => activityidRfi = SetValue("activityID_rfi", activityidRfi, value);
+        }
+
+        #endregion
+
         #region Attachments
 
         /// <summary>
@@ -37,6 +128,20 @@ namespace Sdk4me
         {
             get => attachments;
             internal set => attachments = value;
+        }
+
+        #endregion
+
+        #region BillingID
+
+        /// <summary>
+        /// The Billing ID is the unique identifier by which all the activities that are performed through the coverage of the SLA are known in the billing system of the service provider.
+        /// </summary>
+        [JsonProperty("billingID")]
+        public string BillingID
+        {
+            get => billingID;
+            set => billingID = SetValue("billingID", billingID, value);
         }
 
         #endregion

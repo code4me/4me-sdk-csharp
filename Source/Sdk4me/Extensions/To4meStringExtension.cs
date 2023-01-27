@@ -21,7 +21,10 @@ namespace Sdk4me.Extensions
             "supplierRequestID",
             "supportID",
             "systemID",
-            "supplier_requestID"
+            "supplier_requestID",
+            "billingID",
+            "activityID",
+            "chargeID"
         };
 
         /// <summary>

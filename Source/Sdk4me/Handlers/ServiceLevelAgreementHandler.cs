@@ -83,6 +83,54 @@ namespace Sdk4me
 
         #endregion
 
+        #region Effort class charge ID
+
+        /// <summary>
+        /// Get all related effort class charge IDs.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of effort class charge IDs.</returns>
+        public List<EffortClassChargeID> GetEffortClassChargeIDs(ServiceLevelAgreement serviceLevelAgreement, params string[] fieldNames)
+        {
+            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs", SortOrder.None).Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add an effort class charge ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="effortClassChargeID">The effort class charge ID to add.</param>
+        /// <returns>The updated effort class charge ID.</returns>
+        public EffortClassChargeID AddEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        {
+            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Insert(effortClassChargeID);
+        }
+
+        /// <summary>
+        /// Update an effort class charge ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="effortClassChargeID">The effort class charge ID to update.</param>
+        /// <returns>The updated effort class charge ID.</returns>
+        public EffortClassChargeID UpdateEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        {
+            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Update(effortClassChargeID);
+        }
+
+        /// <summary>
+        /// Delete an effort class charge ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The person.</param>
+        /// <param name="effortClassChargeID">The effort class charge ID to delete.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        {
+            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Delete(effortClassChargeID);
+        }
+
+        #endregion
+
         #region Organizations
 
         /// <summary>
@@ -373,6 +421,54 @@ namespace Sdk4me
         public bool RemoveAllSkillPools(ServiceLevelAgreement serviceLevelAgreement)
         {
             return DeleteAllRelations(serviceLevelAgreement, "skill_pools");
+        }
+
+        #endregion
+
+        #region Standard service request activity ID
+
+        /// <summary>
+        /// Get all related standard service request activity IDs.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of standard service request activity ID.</returns>
+        public List<StandardServiceRequestActivityID> GetStandardServiceRequestActivityIDs(ServiceLevelAgreement serviceLevelAgreement, params string[] fieldNames)
+        {
+            return GetChildHandler<StandardServiceRequestActivityID>(serviceLevelAgreement, "standard_service_request_activityIDs", SortOrder.None).Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a standard service request activity ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="standardServiceRequestActivityID">The standard service request activity ID to add.</param>
+        /// <returns>The updated standard service request activity ID.</returns>
+        public StandardServiceRequestActivityID AddStandardServiceRequestActivityID(ServiceLevelAgreement serviceLevelAgreement, StandardServiceRequestActivityID standardServiceRequestActivityID)
+        {
+            return GetChildHandler<StandardServiceRequestActivityID>(serviceLevelAgreement, "standard_service_request_activityIDs").Insert(standardServiceRequestActivityID);
+        }
+
+        /// <summary>
+        /// Update a standard service request activity ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="standardServiceRequestActivityID">The standard service request activity ID to update.</param>
+        /// <returns>The updated standard service request activity ID.</returns>
+        public StandardServiceRequestActivityID UpdateStandardServiceRequestActivityID(ServiceLevelAgreement serviceLevelAgreement, StandardServiceRequestActivityID standardServiceRequestActivityID)
+        {
+            return GetChildHandler<StandardServiceRequestActivityID>(serviceLevelAgreement, "standard_service_request_activityIDs").Update(standardServiceRequestActivityID);
+        }
+
+        /// <summary>
+        /// Delete a standard service request activity ID.
+        /// </summary>
+        /// <param name="serviceLevelAgreement">The service level agreement.</param>
+        /// <param name="standardServiceRequestActivityID">The standard service request activity ID to delete.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteStandardServiceRequestActivityID(ServiceLevelAgreement serviceLevelAgreement, StandardServiceRequestActivityID standardServiceRequestActivityID)
+        {
+            return GetChildHandler<StandardServiceRequestActivityID>(serviceLevelAgreement, "standard_service_request_activityIDs").Delete(standardServiceRequestActivityID);
         }
 
         #endregion
