@@ -190,6 +190,20 @@ The client will add a note with an attachment to the request.
 
 &nbsp;
 ```csharp
+Request task = client.Tasks.Get(123);
+client.Tasks.UploadAttachment(".\\HelloWorld.txt", "text/plain", out string key, out long size);
+NoteCreate newNote = new NoteCreate()
+{
+    Text = "Hello World",
+    SuppressNoteAddedNotifications = true
+};
+newNote.ReferenceAttachment(key, size, false);
+client.Tasks.AddNote(task, newNote);
+```
+The client will add an note with an attachment to the request suppressing the note add notification.
+
+&nbsp;
+```csharp
 Service service = client.Services.Get(123);
 client.Services.UploadAttachment(".\\HelloWorld2.txt", "text/plain", out string key, out long size);
 if (service.CustomFields.ContainsKey("an_attachment"))

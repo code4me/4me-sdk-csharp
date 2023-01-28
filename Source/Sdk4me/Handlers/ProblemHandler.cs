@@ -108,6 +108,17 @@ namespace Sdk4me
             return GetChildHandler<Note>(problem, "notes", SortOrder.None).Get(fieldNames);
         }
 
+        /// <summary>
+        /// Add a note to a problem.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="item">The note to add.</param>
+        public void AddNote(Problem problem, NoteCreate item)
+        {
+            BaseItem retval = GetChildHandler<NoteCreate>(problem, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
+        }
+
         #endregion
 
         #region Requests

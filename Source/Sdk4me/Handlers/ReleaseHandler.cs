@@ -49,6 +49,17 @@ namespace Sdk4me
             return GetChildHandler<Note>(release, "notes", SortOrder.None).Get(fieldNames);
         }
 
+        /// <summary>
+        /// Add a note to a release.
+        /// </summary>
+        /// <param name="release">The release.</param>
+        /// <param name="item">The note to add.</param>
+        public void AddNote(Release release, NoteCreate item)
+        {
+            BaseItem retval = GetChildHandler<NoteCreate>(release, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
+        }
+
         #endregion
 
         #region Workflows

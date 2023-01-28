@@ -19,6 +19,11 @@ namespace Sdk4me.Tests
             Request request = client.Requests.Get(70454);
             Trace.WriteLine($"Continue relation tests on request: #{request.ID}");
 
+            client.Requests.AddNote(request, new NoteCreate()
+            {
+                Text = "A new note",
+            }, true);
+
             List<Note> notes = client.Requests.GetNotes(request, "*");
             Assert.IsNotNull(notes);
             Assert.IsInstanceOfType(notes, typeof(List<Note>));

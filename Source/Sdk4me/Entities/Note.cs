@@ -14,7 +14,7 @@ namespace Sdk4me
         private AccountReference internalAccount;
         private NoteMedium medium;
         private Person person;
-        private string text;
+        private string text = string.Empty;
 
         #region Updated at (override)
 

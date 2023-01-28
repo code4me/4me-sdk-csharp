@@ -1,5 +1,7 @@
 ﻿using Sdk4me.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Sdk4me
 {
@@ -148,6 +150,19 @@ namespace Sdk4me
         public List<Note> GetNotes(PredefinedRequestNoteFilter filter, Request request, params string[] fieldNames)
         {
             return GetChildHandler<Note>(request, $"notes/{filter.To4meString()}", SortOrder.None).Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a note to a request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="item">The note to add.</param>
+        /// <param name="internal">True if this in an internal note; otherwise false.</param>
+        public void AddNote(Request request, NoteCreate item, bool @internal = false)
+        {
+            item.Internal = @internal;
+            BaseItem retval = GetChildHandler<NoteCreate>(request, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
         }
 
         #endregion

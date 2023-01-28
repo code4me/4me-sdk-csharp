@@ -50,6 +50,17 @@ namespace Sdk4me
             return GetChildHandler<Note>(risk, "notes", SortOrder.None).Get(fieldNames);
         }
 
+        /// <summary>
+        /// Add a note to a risk.
+        /// </summary>
+        /// <param name="risk">The risk.</param>
+        /// <param name="item">The note to add.</param>
+        public void AddNote(Risk risk, NoteCreate item)
+        {
+            BaseItem retval = GetChildHandler<NoteCreate>(risk, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
+        }
+
         #endregion
 
         #region Organizations

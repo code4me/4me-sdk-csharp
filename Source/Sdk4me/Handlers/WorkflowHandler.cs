@@ -225,6 +225,17 @@ namespace Sdk4me
             return GetChildHandler<Note>(workflow, "notes", SortOrder.None).Get(fieldNames);
         }
 
+        /// <summary>
+        /// Add a note to a workflow.
+        /// </summary>
+        /// <param name="workflow">The workflow.</param>
+        /// <param name="item">The note to add.</param>
+        public void AddNote(Workflow workflow, NoteCreate item)
+        {
+            BaseItem retval = GetChildHandler<NoteCreate>(workflow, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
+        }
+
         #endregion
 
         #region Tasks

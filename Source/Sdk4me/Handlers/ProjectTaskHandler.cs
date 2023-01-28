@@ -105,6 +105,17 @@ namespace Sdk4me
             return GetChildHandler<Note>(projectTask, "notes", SortOrder.None).Get(fieldNames);
         }
 
+        /// <summary>
+        /// Add a note to a project task.
+        /// </summary>
+        /// <param name="projectTask">The project task.</param>
+        /// <param name="item">The note to add.</param>
+        public void AddNote(ProjectTask projectTask, NoteCreate item)
+        {
+            BaseItem retval = GetChildHandler<NoteCreate>(projectTask, "notes", SortOrder.None).Insert(item);
+            item.ID = retval.ID;
+        }
+
         #endregion
 
         #region Predecessors
