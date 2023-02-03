@@ -21,7 +21,7 @@ namespace Sdk4me.Tests
 
             if (articles.Count == 0)
                 return;
-            ShopArticle article = articles[Random.Shared.Next(articles.Count)];
+            ShopArticle article = articles.First(x => x.ID == 6);
             Trace.WriteLine($"Continue relation tests on shop article: {article.Name}");
 
             List<AuditTrail> auditTrails = client.ShopArticles.GetAuditTrail(article);

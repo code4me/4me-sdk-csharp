@@ -207,6 +207,64 @@ namespace Sdk4me
 
         #endregion
 
+        #region Watches
+
+        /// <summary>
+        /// Get all related watches.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of request watches.</returns>
+        public List<RequestWatch> GetWatches(Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<RequestWatch>(request, "watches", SortOrder.None).Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a request watch.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="requestWatch">The request watch to add.</param>
+        /// <returns>The updated request watch.</returns>
+        public RequestWatch AddWatch(Request request, RequestWatch requestWatch)
+        {
+            return GetChildHandler<RequestWatch>(request, "watches").Insert(requestWatch);
+        }
+
+        /// <summary>
+        /// Update a request watch.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="requestWatch">The request watch to update.</param>
+        /// <returns>The updated request watch.</returns>
+        public RequestWatch UpdateWatch(Request request, RequestWatch requestWatch)
+        {
+            return GetChildHandler<RequestWatch>(request, "watches").Update(requestWatch);
+        }
+
+        /// <summary>
+        /// Delete a request watch.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="requestWatch">The request watch to delete.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteWatch(Request request, RequestWatch requestWatch)
+        {
+            return GetChildHandler<RequestWatch>(request, "watches").Delete(requestWatch);
+        }
+
+        /// <summary>
+        /// Delete all request watches.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteAllWatches(Request request)
+        {
+            return GetChildHandler<RequestWatch>(request, "watches").DeleteAll();
+        }
+
+        #endregion
+
         #region Archive, trash and restore
 
         /// <summary>
