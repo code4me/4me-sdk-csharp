@@ -50,6 +50,17 @@ namespace Sdk4me
                             return "https://api.us.4me.com/v1";
                     }
 
+                case EnvironmentRegion.CH:
+                    switch (environment)
+                    {
+                        case EnvironmentType.Quality:
+                            return "https://api.ch.4me.qa/v1";
+                        case EnvironmentType.Demo:
+                            return "https://api.4me-demo.com/v1";
+                        default:
+                            return "https://api.ch.4me.com/v1";
+                    }
+
                 default:
                     switch (environment)
                     {

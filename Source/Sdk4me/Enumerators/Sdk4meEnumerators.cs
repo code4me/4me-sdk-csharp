@@ -43,7 +43,11 @@ namespace Sdk4me
         /// <summary>
         /// The United States region.
         /// </summary>
-        US
+        US,
+        /// <summary>
+        /// The switzerland region.
+        /// </summary>
+        CH
     }
 
     /// <summary>
