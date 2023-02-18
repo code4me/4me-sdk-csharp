@@ -34,6 +34,7 @@ namespace Sdk4me
         private float quantity;
         private float providerTotalPrice;
         private float? providerTotalRecurringPrice;
+        private Person requestedBy;
         private Person requestedFor;
         private string shopArticle;
         private string source;
@@ -418,6 +419,23 @@ namespace Sdk4me
 
         #endregion
 
+        #region Requested by
+
+        /// <summary>
+        /// The person who submitted the order.
+        /// </summary>
+        [JsonProperty("requested_by")]
+        public Person RequestedBy
+        {
+            get => requestedBy;
+            internal set => requestedBy = value;
+        }
+
+        [JsonProperty("requested_by_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? RequestedByID => requestedBy?.ID;
+
+        #endregion
+
         #region Requested for
 
         /// <summary>
@@ -524,6 +542,7 @@ namespace Sdk4me
             fulfillmentRequest?.ResetPropertySerializationCollection();
             fulfillmentTask?.ResetPropertySerializationCollection();
             fulfillmentTemplate?.ResetPropertySerializationCollection();
+            requestedBy?.ResetPropertySerializationCollection();
             requestedFor?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
