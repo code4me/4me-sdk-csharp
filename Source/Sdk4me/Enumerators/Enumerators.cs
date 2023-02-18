@@ -1461,18 +1461,26 @@ namespace Sdk4me
         /// <summary>
         /// Risk and impact.
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "risk_and_impact")]
         RiskAndimpact,
         /// <summary>
         /// Approval
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "approval")]
         Approval,
         /// <summary>
         /// Implementation
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "implementation")]
         Implementation,
+        /// <summary>
+        /// In Progress.
+        /// </summary>
+        [EnumMember(Value = "in_progress")]
+        InProgress,
         /// <summary>
         /// Progress halted.
         /// </summary>
@@ -3005,18 +3013,26 @@ namespace Sdk4me
         /// <summary>
         /// Risk and impact.
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "risk_and_impact")]
         RiskAndImpact,
         /// <summary>
         /// Approval.
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "approval")]
         Approval,
         /// <summary>
         /// Implementation.
         /// </summary>
+        [Obsolete("Replaced by 'InProgress'")]
         [EnumMember(Value = "implementation")]
         Implementation,
+        /// <summary>
+        /// In Progress.
+        /// </summary>
+        [EnumMember(Value = "in_progress")]
+        InProgress,
         /// <summary>
         /// Progress halted.
         /// </summary>
