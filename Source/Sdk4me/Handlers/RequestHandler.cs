@@ -1,7 +1,5 @@
 ﻿using Sdk4me.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace Sdk4me
 {
@@ -123,6 +121,21 @@ namespace Sdk4me
         public List<Request> GetGroupedRequests(Request requestGroup, params string[] fieldNames)
         {
             return GetChildHandler<Request>(requestGroup, "grouped_requests").Get(fieldNames);
+        }
+
+        #endregion
+
+        #region Knowledge articles
+
+        /// <summary>
+        /// Get all knowledge articles for a specific request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of knowledge articles.</returns>
+        public List<KnowledgeArticle> GetKnowledgeArticles(Request request, params string[] fieldNames)
+        {
+            return GetChildHandler<KnowledgeArticle>(request, "knowledge_articles").Get(fieldNames);
         }
 
         #endregion
