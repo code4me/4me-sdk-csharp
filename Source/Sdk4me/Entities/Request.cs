@@ -69,6 +69,9 @@ namespace Sdk4me
         private EffortClass timeSpentEffortClass;
         private bool urgent;
         private DateTime? waitingUntil;
+        private WorkflowCategory workflowCategory;
+        private WorkflowTemplate workflowTemplate;
+        private WorkflowType workflowType;
 
         #region Addressed
 
@@ -1024,6 +1027,51 @@ namespace Sdk4me
 
         #endregion
 
+        #region Workflow category
+
+        /// <summary>
+        /// The Workflow Category field is used to select the category of the workflow. A workflow is either planned or unplanned. Select the category “Emergency” for workflows that were not planned. Workflows that were planned by applying a standard workflow template are automatically set to the category “Standard”. When a workflow template is used that is not approved as a standard workflow, then the option “Non-Standard” is automatically selected in this field.
+        /// </summary>
+        [JsonProperty("workflow_category")]
+        public WorkflowCategory WorkflowCategory
+        {
+            get => workflowCategory;
+            internal set => workflowCategory = value;
+        }
+
+        #endregion
+
+        #region Workflow template
+
+        /// <summary>
+        /// The Workflow Template field contains the link to the workflow template that was used to register the workflow.
+        /// </summary>
+        [JsonProperty("workflow_template")]
+        public WorkflowTemplate WorkflowTemplate
+        {
+            get => workflowTemplate;
+            internal set => workflowTemplate = value;
+        }
+
+        [JsonProperty("workflow_template_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? WorkflowTemplateID => workflowTemplate?.ID;
+
+        #endregion
+
+        #region Workflow type
+
+        /// <summary>
+        /// The type of the workflow. It contains the value of the Reference field of a Workflow Type.
+        /// </summary>
+        [JsonProperty("workflow_type")]
+        public WorkflowType WorkflowType
+        {
+            get => workflowType;
+            internal set => workflowType = value;
+        }
+
+        #endregion
+
         internal override void ResetPropertySerializationCollection()
         {
             configurationItem?.ResetPropertySerializationCollection();
@@ -1043,6 +1091,7 @@ namespace Sdk4me
             team?.ResetPropertySerializationCollection();
             template?.ResetPropertySerializationCollection();
             timeSpentEffortClass?.ResetPropertySerializationCollection();
+            workflowTemplate?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
     }
