@@ -20,6 +20,7 @@ namespace Sdk4me
         private WorkflowJustification? justification;
         private string note;
         private List<AttachmentReference> noteAttachments;
+        private string recurrence;
         private Service service;
         private string source;
         private string sourceID;
@@ -226,6 +227,20 @@ namespace Sdk4me
         internal List<AttachmentReference> NoteAttachments
         {
             get => noteAttachments;
+        }
+
+        #endregion
+
+        #region Recurrence
+
+        /// <summary>
+        /// The recurrence settings hash, missing in case the reservation has no recurrence defined.<br>See <see href="https://developer.4me.com/v1/recurrences/">Recurrence</see> for the fields in the recurrence hash.</br> 
+        /// </summary>
+        [JsonProperty("recurrence")]
+        public string Recurrence
+        {
+            get => recurrence;
+            set => recurrence = SetValue("recurrence", recurrence, value);
         }
 
         #endregion
