@@ -115,13 +115,13 @@ namespace Sdk4me
         #region Recurrence
 
         /// <summary>
-        /// The recurrence settings hash, missing in case the reservation has no recurrence defined. See Recurrence for the fields in the recurrence hash.
+        /// The recurrence settings hash, missing in case the reservation has no recurrence defined.<br>See <see href="https://developer.4me.com/v1/recurrences/">Recurrence</see> for the fields in the recurrence hash.</br> 
         /// </summary>
         [JsonProperty("recurrence")]
         public string Recurrence
         {
             get => recurrence;
-            internal set => recurrence = value;
+            set => recurrence = SetValue("recurrence", recurrence, value);
         }
 
         #endregion
