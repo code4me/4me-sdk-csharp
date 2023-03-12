@@ -19,6 +19,7 @@ namespace Sdk4me
         private string pictureUri;
         private string productID;
         private int? rate;
+        private string recurrence;
         private string remarks;
         private List<AttachmentReference> remarksAttachments;
         private ProductRuleSet ruleSet;
@@ -31,6 +32,8 @@ namespace Sdk4me
         private Team supportTeam;
         private UIExtension uiExtension;
         private int? usefulLife;
+        private WorkflowTemplate workflowTemplate;
+        private Person workflowManager;
 
         #region Attachments
 
@@ -185,6 +188,20 @@ namespace Sdk4me
         {
             get => rate;
             set => rate = SetValue("rate", rate, value);
+        }
+
+        #endregion
+
+        #region Recurrence
+
+        /// <summary>
+        /// The recurrence settings hash, missing in case the reservation has no recurrence defined.<br>See <see href="https://developer.4me.com/v1/recurrences/">Recurrence</see> for the fields in the recurrence hash.</br> 
+        /// </summary>
+        [JsonProperty("recurrence")]
+        public string Recurrence
+        {
+            get => recurrence;
+            set => recurrence = SetValue("recurrence", recurrence, value);
         }
 
         #endregion
@@ -385,6 +402,40 @@ namespace Sdk4me
 
         #endregion
 
+        #region Workflow template
+
+        /// <summary>
+        /// The workflow template that is used to periodically maintain configuration items created from the product.
+        /// </summary>
+        [JsonProperty("workflow_template")]
+        public WorkflowTemplate WorkflowTemplate
+        {
+            get => workflowTemplate;
+            set => workflowTemplate = SetValue("workflow_template_id", workflowTemplate, value);
+        }
+
+        [JsonProperty("workflow_template_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? WorkflowTemplateID => workflowTemplate?.ID;
+
+        #endregion
+
+        #region Workflow manager
+
+        /// <summary>
+        /// The person who will be responsible for coordinating the workflows that will be generated automatically in accordance with the recurrence schedule.
+        /// </summary>
+        [JsonProperty("workflow_manager")]
+        public Person WorkflowManager
+        {
+            get => workflowManager;
+            set => workflowManager = SetValue("workflow_manager_id", workflowManager, value);
+        }
+
+        [JsonProperty("workflow_manager_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? WorkflowManagerID => workflowManager?.ID;
+
+        #endregion
+
         internal override void ResetPropertySerializationCollection()
         {
             financialOwner?.ResetPropertySerializationCollection();
@@ -392,6 +443,8 @@ namespace Sdk4me
             supplier?.ResetPropertySerializationCollection();
             supportTeam?.ResetPropertySerializationCollection();
             uiExtension?.ResetPropertySerializationCollection();
+            WorkflowTemplate?.ResetPropertySerializationCollection();
+            WorkflowManager?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
     }
