@@ -12,6 +12,7 @@ namespace Sdk4me
         private TimeSpan? responseTarget;
         private TimeSpan? resolutionTarget;
         private Calendar supportHours;
+        private ServiceLevelAgreementNotificationScheme slaNotificationScheme;
 
         #region Request template
 
@@ -87,10 +88,28 @@ namespace Sdk4me
 
         #endregion
 
+        #region SLA notification scheme
+
+        /// <summary>
+        /// The ID of the SLA notification scheme for a request when it affects an active SLA that is based on the service offering. Only enabled SLA notification schemes that are linked to the same account as the service offering can be selected.
+        /// </summary>
+        [JsonProperty("sla_notification_scheme")]
+        public ServiceLevelAgreementNotificationScheme SlaNotificationScheme
+        {
+            get => slaNotificationScheme;
+            set => slaNotificationScheme = SetValue("sla_notification_scheme_id", slaNotificationScheme, value);
+        }
+
+        [JsonProperty("sla_notification_scheme_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? SlaNotificationSchemeID => slaNotificationScheme?.ID;
+
+        #endregion
+
         internal override void ResetPropertySerializationCollection()
         {
             requestTemplate?.ResetPropertySerializationCollection();
             supportHours?.ResetPropertySerializationCollection();
+            slaNotificationScheme?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }
     }
