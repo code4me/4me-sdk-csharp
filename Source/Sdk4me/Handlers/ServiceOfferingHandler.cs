@@ -1,5 +1,6 @@
 ﻿using Sdk4me.Extensions;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Sdk4me
 {
@@ -117,6 +118,54 @@ namespace Sdk4me
         public bool DeleteStandardServiceRequests(ServiceOffering serviceOffering)
         {
             return GetChildHandler<StandardServiceRequest>(serviceOffering, "standard_service_requests").DeleteAll();
+        }
+
+        #endregion
+
+        #region Effort class rates
+
+        /// <summary>
+        /// Get all effort class rates.
+        /// </summary>
+        /// <param name="serviceOffering">The service offering.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of effort class rates.</returns>
+        public List<EffortClassRate> GetEffortClassRates(ServiceOffering serviceOffering, params string[] fieldNames)
+        {
+            return GetChildHandler<EffortClassRate>(serviceOffering, "effort_class_rates", SortOrder.None).Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a effort class rate.
+        /// </summary>
+        /// <param name="serviceOffering">The service offering.</param>
+        /// <param name="effortClassRate">The effort class rate to add.</param>
+        /// <returns>An updated effort class rate.</returns>
+        public EffortClassRate AddEffortClassRate(ServiceOffering serviceOffering, EffortClassRate effortClassRate)
+        {
+            return GetChildHandler<EffortClassRate>(serviceOffering, "effort_class_rates").Insert(effortClassRate);
+        }
+
+        /// <summary>
+        /// Update a effort class rate.
+        /// </summary>
+        /// <param name="serviceOffering">The service offering.</param>
+        /// <param name="effortClassRate">The effort class rate to update.</param>
+        /// <returns>An updated effort class rate.</returns>
+        public EffortClassRate UpdateEffortClassRate(ServiceOffering serviceOffering, EffortClassRate effortClassRate)
+        {
+            return GetChildHandler<EffortClassRate>(serviceOffering, "effort_class_rates").Update(effortClassRate);
+        }
+
+        /// <summary>
+        /// Delete an effort class rate.
+        /// </summary>
+        /// <param name="serviceOffering">The service offering.</param>
+        /// <param name="effortClassRate">The effort class rate to remove.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool DeleteStandardServiceRequest(ServiceOffering serviceOffering, EffortClassRate effortClassRate)
+        {
+            return GetChildHandler<EffortClassRate>(serviceOffering, "effort_class_rates").Delete(effortClassRate);
         }
 
         #endregion

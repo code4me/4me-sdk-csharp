@@ -17,6 +17,9 @@ namespace Sdk4me.Tests
 
             List<StandardServiceRequest> serviceRequests = client.ServiceOfferings.GetStandardServiceRequests(serviceOfferings.First(x => x.ID == 27), "*");
             Assert.IsTrue(serviceRequests.Any());
+
+            List<EffortClassRate> effortClassRates = client.ServiceOfferings.GetEffortClassRates(new ServiceOffering() { ID = 52 }, "*");
+            Assert.IsNotNull(effortClassRates);
         }
     }
 }
