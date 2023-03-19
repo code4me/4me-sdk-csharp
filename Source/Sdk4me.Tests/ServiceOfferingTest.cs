@@ -15,7 +15,7 @@ namespace Sdk4me.Tests
             Assert.IsNotNull(serviceOfferings);
             Assert.IsInstanceOfType(serviceOfferings, typeof(List<ServiceOffering>));
 
-            List<StandardServiceRequest> serviceRequests = client.ServiceOfferings.GetStandardServiceRequests(serviceOfferings.First(x => x.ID == 27));
+            List<StandardServiceRequest> serviceRequests = client.ServiceOfferings.GetStandardServiceRequests(serviceOfferings.First(x => x.ID == 27), "*");
             Assert.IsTrue(serviceRequests.Any());
         }
     }

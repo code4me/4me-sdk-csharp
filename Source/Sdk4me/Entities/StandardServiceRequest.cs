@@ -8,11 +8,57 @@ namespace Sdk4me
     /// </summary>
     public class StandardServiceRequest : BaseItem
     {
+
+        private ChargeType? chargeType;
+        private float? rate;
+        private string rateCurrency;
         private RequestTemplate requestTemplate;
         private TimeSpan? responseTarget;
         private TimeSpan? resolutionTarget;
         private Calendar supportHours;
         private ServiceLevelAgreementNotificationScheme slaNotificationScheme;
+
+        #region Charge type
+
+        /// <summary>
+        /// Defines how the standard service request must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type")]
+        public ChargeType? ChargeType
+        {
+            get => chargeType;
+            set => chargeType = SetValue("charge_type", chargeType, value);
+        }
+
+        #endregion
+
+        #region Rate
+
+        /// <summary>
+        /// Defines the fixed price rate for the standard service request.
+        /// </summary>
+        [JsonProperty("rate")]
+        public float? Rate
+        {
+            get => rate;
+            set => rate = SetValue("rate", rate, value);
+        }
+
+        #endregion
+
+        #region Rate currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of the standard service request.
+        /// </summary>
+        [JsonProperty("rate_currency")]
+        public string RateCurrency
+        {
+            get => rateCurrency;
+            set => rateCurrency = SetValue("rate_currency", rateCurrency, value);
+        }
+
+        #endregion
 
         #region Request template
 
