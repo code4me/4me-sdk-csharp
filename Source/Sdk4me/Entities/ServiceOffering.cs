@@ -20,6 +20,7 @@ namespace Sdk4me
         private string charges;
         private List<AttachmentReference> chargesAttachments;
         private string continuity;
+        private EffortClass defaultEffortClass;
         private string limitations;
         private string name;
         private string penalties;
@@ -254,6 +255,20 @@ namespace Sdk4me
         {
             get => continuity;
             set => continuity = SetValue("continuity", continuity, value);
+        }
+
+        #endregion
+
+        #region Default effort class
+
+        /// <summary>
+        /// The default effort class.
+        /// </summary>
+        [JsonProperty("default_effort_class")]
+        public EffortClass DefaultEffortClass
+        {
+            get => defaultEffortClass;
+            set => defaultEffortClass = SetValue("default_effort_class", defaultEffortClass, value);
         }
 
         #endregion
