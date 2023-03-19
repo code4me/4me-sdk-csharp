@@ -10,7 +10,11 @@ namespace Sdk4me
     {
         private string activityID;
         private string billingID;
+        private float charge;
+        private string chargeCurrency;
         private string chargeID;
+        private float chargeRate;
+        private ChargeType? chargeType;
         private bool correction;
         private float? cost;
         private string costCurrency;
@@ -61,6 +65,34 @@ namespace Sdk4me
 
         #endregion
 
+        #region Charge
+
+        /// <summary>
+        /// For a Time and Materials activity the charge is calculated by multiplying the time spent by the charge rate of the person’s who spent the time based on the selected effort class. For a Fixed Price activity the charge is the amount defined for the fixed price activity in the service offering (of the billable SLA related to the request).
+        /// </summary>
+        [JsonProperty("charge")]
+        public float Charge
+        {
+            get => charge;
+            internal set => charge = value;
+        }
+
+        #endregion
+
+        #region Charge currency
+
+        /// <summary>
+        /// The currency of the charge field value of the time entry.
+        /// </summary>
+        [JsonProperty("charge_currency")]
+        public string ChargeCurrency
+        {
+            get => chargeCurrency;
+            internal set => chargeCurrency = value;
+        }
+
+        #endregion
+
         #region ChargeID
 
         /// <summary>
@@ -71,6 +103,34 @@ namespace Sdk4me
         {
             get => chargeID;
             internal set => chargeID = value;
+        }
+
+        #endregion
+
+        #region Charge rate
+
+        /// <summary>
+        /// Shows the charging rate per hour and is defined by the effort class that was selected when the person registered the time entry.
+        /// </summary>
+        [JsonProperty("charge_rate")]
+        public float ChargeRate
+        {
+            get => chargeRate;
+            internal set => chargeRate = value;
+        }
+
+        #endregion
+
+        #region Charge type
+
+        /// <summary>
+        /// The charge type field defines how the activity is charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type")]
+        public ChargeType? ChargeType
+        {
+            get => chargeType;
+            set => chargeType = SetValue("charge_type", chargeType, value);
         }
 
         #endregion
