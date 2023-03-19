@@ -418,6 +418,27 @@ namespace Sdk4me
 
     #endregion
 
+    #region Charge type
+
+    /// <summary>
+    /// A 4me service offering charge type.
+    /// </summary>
+    public enum ChargeType
+    {
+        /// <summary>
+        /// Fixed price.
+        /// </summary>
+        [EnumMember(Value = "fixed_price")]
+        FixedPrice = 1,
+        /// <summary>
+        /// Time Material.
+        /// </summary>
+        [EnumMember(Value = "time_material")]
+        TimeMaterial
+    }
+
+    #endregion
+
     #region Contract
 
     /// <summary>

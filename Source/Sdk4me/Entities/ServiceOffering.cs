@@ -11,13 +11,34 @@ namespace Sdk4me
     {
         private List<Attachment> attachments;
         private float? availability;
+        private ChargeType? chargeTypeHigh;
+        private ChargeType? chargeTypeLow;
+        private ChargeType? chargeTypeMedium;
+        private ChargeType? chargeTypeRfc;
+        private ChargeType? chargeTypeRfi;
+        private ChargeType? chargeTypeTop;
         private string charges;
+        private List<AttachmentReference> chargesAttachments;
         private string continuity;
         private string limitations;
         private string name;
         private string penalties;
+        private List<AttachmentReference> penaltiesAttachments;
         private string performance;
         private string prerequisites;
+        private List<AttachmentReference> prerequisitesAttachments;
+        private float? rateHigh;
+        private string rateHighCurrency;
+        private float? rateLow;
+        private string rateLowCurrency;
+        private float? rateMedium;
+        private string rateMediumCurrency;
+        private float? rateRfc;
+        private string rateRfcCurrency;
+        private float? rateRfi;
+        private string rateRfiCurrency;
+        private float? rateTop;
+        private string rateTopCurrency;
         private int? recoveryTimeObjective;
         private int? recoveryPointObjective;
         private int? reliability;
@@ -63,6 +84,7 @@ namespace Sdk4me
         private Calendar supportHoursRfi;
         private Calendar supportHoursTop;
         private string termination;
+        private List<AttachmentReference> terminationAttachments;
         private string timeZone;
 
         #region Attachments
@@ -93,6 +115,90 @@ namespace Sdk4me
 
         #endregion
 
+        #region Charge type high
+
+        /// <summary>
+        /// Defines how a high incident must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_high")]
+        public ChargeType? ChargeTypeHigh
+        {
+            get => chargeTypeHigh;
+            set => chargeTypeHigh = SetValue("charge_type_high", chargeTypeHigh, value);
+        }
+
+        #endregion
+
+        #region Charge type low
+
+        /// <summary>
+        /// Defines how a low incident must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_low")]
+        public ChargeType? ChargeTypeLow
+        {
+            get => chargeTypeLow;
+            set => chargeTypeLow = SetValue("charge_type_low", chargeTypeLow, value);
+        }
+
+        #endregion
+
+        #region Charge type medium
+
+        /// <summary>
+        /// Defines how a medium incident must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_medium")]
+        public ChargeType? ChargeTypeMedium
+        {
+            get => chargeTypeMedium;
+            set => chargeTypeMedium = SetValue("charge_type_medium", chargeTypeMedium, value);
+        }
+
+        #endregion
+
+        #region Charge type rfc
+
+        /// <summary>
+        /// Defines how a RFC must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_rfc")]
+        public ChargeType? ChargeTypeRfc
+        {
+            get => chargeTypeRfc;
+            set => chargeTypeRfc = SetValue("charge_type_rfc", chargeTypeRfc, value);
+        }
+
+        #endregion
+
+        #region Charge type rfi
+
+        /// <summary>
+        /// Defines how a RFI must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_rfi")]
+        public ChargeType? ChargeTypeRfi
+        {
+            get => chargeTypeRfi;
+            set => chargeTypeRfi = SetValue("charge_type_rfi", chargeTypeRfi, value);
+        }
+
+        #endregion
+
+        #region Charge type top
+
+        /// <summary>
+        /// Defines how a top incident must be charged: as a Fixed Price or in Time and Materials.
+        /// </summary>
+        [JsonProperty("charge_type_top")]
+        public ChargeType? ChargeTypeTop
+        {
+            get => chargeTypeTop;
+            set => chargeTypeTop = SetValue("charge_type_top", chargeTypeTop, value);
+        }
+
+        #endregion
+
         #region Charges
 
         /// <summary>
@@ -103,6 +209,37 @@ namespace Sdk4me
         {
             get => charges;
             set => charges = SetValue("charges", charges, value);
+        }
+
+        #endregion
+
+        #region Charges attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded charges attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferenceChargesAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (chargesAttachments == null)
+                chargesAttachments = new List<AttachmentReference>();
+
+            chargesAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("charges_attachments");
+        }
+
+        [JsonProperty("charges_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> ChargesAttachments
+        {
+            get => chargesAttachments;
         }
 
         #endregion
@@ -163,6 +300,37 @@ namespace Sdk4me
 
         #endregion
 
+        #region Penalties attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded penalties attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferencePenaltiesAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (penaltiesAttachments == null)
+                penaltiesAttachments = new List<AttachmentReference>();
+
+            penaltiesAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("penalties_attachments");
+        }
+
+        [JsonProperty("penalties_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> PenaltiesAttachment
+        {
+            get => penaltiesAttachments;
+        }
+
+        #endregion
+
         #region Performance
 
         /// <summary>
@@ -187,6 +355,205 @@ namespace Sdk4me
         {
             get => prerequisites;
             set => prerequisites = SetValue("prerequisites", prerequisites, value);
+        }
+
+        #endregion
+
+        #region Prerequisites attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded prerequisites attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferencePrerequisitesAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (prerequisitesAttachments == null)
+                prerequisitesAttachments = new List<AttachmentReference>();
+
+            prerequisitesAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("prerequisites_attachments");
+        }
+
+        [JsonProperty("prerequisites_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> PrerequisitesAttachments
+        {
+            get => prerequisitesAttachments;
+        }
+
+        #endregion
+
+        #region Rate high
+
+        /// <summary>
+        /// Defines the fixed price rate for a high incident.
+        /// </summary>
+        [JsonProperty("rate_high")]
+        public float? RateHigh
+        {
+            get => rateHigh;
+            set => rateHigh = SetValue("rate_high", rateHigh, value);
+        }
+
+        #endregion
+
+        #region Rate high currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a high incident.
+        /// </summary>
+        [JsonProperty("rate_high_currency")]
+        public string RateHighCurrency
+        {
+            get => rateHighCurrency;
+            set => rateHighCurrency = SetValue("rate_high_currency", rateHighCurrency, value);
+        }
+
+        #endregion
+
+        #region Rate low
+
+        /// <summary>
+        /// Defines the fixed price rate for a low incident.
+        /// </summary>
+        [JsonProperty("rate_low")]
+        public float? RateLow
+        {
+            get => rateLow;
+            set => rateLow = SetValue("rate_low", rateLow, value);
+        }
+
+        #endregion
+
+        #region Rate low currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a low incident.
+        /// </summary>
+        [JsonProperty("rate_low_currency")]
+        public string RateLowCurrency
+        {
+            get => rateLowCurrency;
+            set => rateLowCurrency = SetValue("rate_low_currency", rateLowCurrency, value);
+        }
+
+        #endregion
+
+        #region Rate medium
+
+        /// <summary>
+        /// Defines the fixed price rate for a medium incident.
+        /// </summary>
+        [JsonProperty("rate_medium")]
+        public float? RateMedium
+        {
+            get => rateMedium;
+            set => rateMedium = SetValue("rate_medium", rateMedium, value);
+        }
+
+        #endregion
+
+        #region Rate medium currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a medium incident.
+        /// </summary>
+        [JsonProperty("rate_medium_currency")]
+        public string RateMediumCurrency
+        {
+            get => rateMediumCurrency;
+            set => rateMediumCurrency = SetValue("rate_medium_currency", rateMediumCurrency, value);
+        }
+
+        #endregion
+
+        #region Rate rfc
+
+        /// <summary>
+        /// Defines the fixed price rate for a RFC.
+        /// </summary>
+        [JsonProperty("rate_rfc")]
+        public float? RateRfc
+        {
+            get => rateRfc;
+            set => rateRfc = SetValue("rate_rfc", rateRfc, value);
+        }
+
+        #endregion
+
+        #region Rate rfc currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a RFC.
+        /// </summary>
+        [JsonProperty("rate_rfc_currency")]
+        public string RateRfcCurrency
+        {
+            get => rateRfcCurrency;
+            set => rateRfcCurrency = SetValue("rate_rfc_currency", rateRfcCurrency, value);
+        }
+
+        #endregion
+
+        #region Rate rfi
+
+        /// <summary>
+        /// Defines the fixed price rate for a RFI.
+        /// </summary>
+        [JsonProperty("rate_rfi")]
+        public float? RateRfi
+        {
+            get => rateRfi;
+            set => rateRfi = SetValue("rate_rfi", rateRfi, value);
+        }
+
+        #endregion
+
+        #region Rate rfi currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a RFI.
+        /// </summary>
+        [JsonProperty("rate_rfi_currency")]
+        public string RateRfiCurrency
+        {
+            get => rateRfiCurrency;
+            set => rateRfiCurrency = SetValue("rate_rfi_currency", rateRfiCurrency, value);
+        }
+
+        #endregion
+
+        #region Rate top
+
+        /// <summary>
+        /// Defines the fixed price rate for a top incident.
+        /// </summary>
+        [JsonProperty("rate_top")]
+        public float? RateTop
+        {
+            get => rateTop;
+            set => rateTop = SetValue("rate_top", rateTop, value);
+        }
+
+        #endregion
+
+        #region Rate top currency
+
+        /// <summary>
+        /// Defines the currency for the fixed price rate of a top incident.
+        /// </summary>
+        [JsonProperty("rate_top_currency")]
+        public string RateTopCurrency
+        {
+            get => rateTopCurrency;
+            set => rateTopCurrency = SetValue("rate_top_currency", rateTopCurrency, value);
         }
 
         #endregion
@@ -790,7 +1157,7 @@ namespace Sdk4me
         #region Remarks attachment
 
         /// <summary>
-        /// Write-only. Add a reference to an uploaded information attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// Write-only. Add a reference to an uploaded remarks attachment. Use <see cref="Attachments"/> to get the existing attachments.
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>
@@ -930,6 +1297,37 @@ namespace Sdk4me
         {
             get => termination;
             set => termination = SetValue("termination", termination, value);
+        }
+
+        #endregion
+
+        #region Termination attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded termination attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferenceTerminationAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (terminationAttachments == null)
+                terminationAttachments = new List<AttachmentReference>();
+
+            terminationAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("termination_attachments");
+        }
+
+        [JsonProperty("termination_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> TerminationAttachments
+        {
+            get => terminationAttachments;
         }
 
         #endregion
