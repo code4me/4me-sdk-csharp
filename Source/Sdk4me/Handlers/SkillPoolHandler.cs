@@ -94,5 +94,64 @@ namespace Sdk4me
         }
 
         #endregion
+
+        #region Effort classes
+
+        /// <summary>
+        /// Get all related effort classes.
+        /// </summary>
+        /// <param name="skillPool">The skill pool.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of effort classes.</returns>
+        public List<EffortClass> GetEffortClasses(SkillPool skillPool, params string[] fieldNames)
+        {
+            return GetChildHandler<EffortClass>(skillPool, "effort_classes").Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Get all related effort classes.
+        /// </summary>
+        /// <param name="filter">The predefined filter.</param>
+        /// <param name="skillPool">The skill pool.</param>
+        /// <param name="fieldNames">The field names to return.</param>
+        /// <returns>A collection of effort classes.</returns>
+        public List<EffortClass> GetEffortClasses(PredefinedEnabledDisabledFilter filter, SkillPool skillPool, params string[] fieldNames)
+        {
+            return GetChildHandler<EffortClass>(skillPool, $"effort_classes/{filter.To4meString()}").Get(fieldNames);
+        }
+
+        /// <summary>
+        /// Add a effort class.
+        /// </summary>
+        /// <param name="skillPool">The skill pool.</param>
+        /// <param name="effortClass">The effort class to add.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool AddEffortClass(SkillPool skillPool, EffortClass effortClass)
+        {
+            return CreateRelation(skillPool, "effort_classes", effortClass);
+        }
+
+        /// <summary>
+        /// Remove a effort class.
+        /// </summary>
+        /// <param name="skillPool">The skill pool.</param>
+        /// <param name="effortClass">The effort class to remove.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool RemoveSkillPool(SkillPool skillPool, EffortClass effortClass)
+        {
+            return DeleteRelation(skillPool, "effort_classes", effortClass);
+        }
+
+        /// <summary>
+        /// Remove all effort classes.
+        /// </summary>
+        /// <param name="skillPool">The skill pool.</param>
+        /// <returns>True in case of success; otherwise false.</returns>
+        public bool RemoveSkillPools(SkillPool skillPool)
+        {
+            return DeleteAllRelations(skillPool, "effort_classes");
+        }
+
+        #endregion
     }
 }
