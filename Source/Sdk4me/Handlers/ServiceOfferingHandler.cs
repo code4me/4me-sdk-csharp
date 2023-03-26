@@ -163,7 +163,7 @@ namespace Sdk4me
         /// <param name="serviceOffering">The service offering.</param>
         /// <param name="effortClassRate">The effort class rate to remove.</param>
         /// <returns>True in case of success; otherwise false.</returns>
-        public bool DeleteStandardServiceRequest(ServiceOffering serviceOffering, EffortClassRate effortClassRate)
+        public bool DeleteEffortClassRate(ServiceOffering serviceOffering, EffortClassRate effortClassRate)
         {
             return GetChildHandler<EffortClassRate>(serviceOffering, "effort_class_rates").Delete(effortClassRate);
         }
