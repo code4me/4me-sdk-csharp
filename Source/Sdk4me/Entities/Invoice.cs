@@ -17,9 +17,10 @@ namespace Sdk4me
         private Workflow workflow;
         private Contract contract;
         private string currency;
-        private InvoiceDepreciationMethod depreciationMethod;
+        private InvoiceDepreciationMethod? depreciationMethod;
         private DateTime? depreciationStart;
         private string description;
+        private string financialID;
         private FirstLineSupportAgreement flsa;
         private DateTime invoiceDate;
         private string invoiceNr;
@@ -164,7 +165,7 @@ namespace Sdk4me
         /// Whether or not the invoice should be depreciated and if so, which depreciation method is to be applied. When creating a new invoice and a value is not specified for this field, and the invoice is related to a configuration item, the value is set to the depreciation method of the product of the configuration item. 
         /// </summary>
         [JsonProperty("depreciation_method")]
-        public InvoiceDepreciationMethod DepreciationMethod
+        public InvoiceDepreciationMethod? DepreciationMethod
         {
             get => depreciationMethod;
             set => depreciationMethod = SetValue("depreciation_method", depreciationMethod, value);
@@ -214,6 +215,20 @@ namespace Sdk4me
 
         [JsonProperty("flsa_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? FlsaID => flsa?.ID;
+
+        #endregion
+
+        #region Financial ID
+
+        /// <summary>
+        /// The unique identifier by which the invoice is known in the financial system.
+        /// </summary>
+        [JsonProperty("financialID")]
+        public string FinancialID
+        {
+            get => financialID;
+            set => financialID = SetValue("financialID", financialID, value);
+        }
 
         #endregion
 
@@ -278,7 +293,7 @@ namespace Sdk4me
         /// <summary>
         /// The Project field is set to the project for which the costs specified in the Amount field were incurred.
         /// </summary>
-        [JsonProperty("project")]
+        [JsonProperty("project"), Sdk4meIgnoreInFieldSelection()]
         public Project Project
         {
             get => project;
