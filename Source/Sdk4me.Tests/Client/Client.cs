@@ -13,16 +13,30 @@ namespace Sdk4me.Tests
             if (client != null)
                 return client;
 
-            //get account and token
+            //get all information
             IConfigurationProvider secretProvider = new ConfigurationBuilder().AddUserSecrets<ConnectionSecret>().Build().Providers.First();
-            if (!secretProvider.TryGet("Account", out string account) || !secretProvider.TryGet("Token", out string token))
+            if (!secretProvider.TryGet("Account", out string account)
+                || !secretProvider.TryGet("Token", out string token)
+                || !secretProvider.TryGet("ClientID", out string clientID)
+                || !secretProvider.TryGet("ClientSecret", out string clientSecret))
             {
-                Assert.Fail("No account of token information available via the user secret file");
+                Assert.Fail("Missing information in the user secret file");
                 return null;
             }
 
-            //connect to the client
-            client = new(new AuthenticationToken(token), account, EnvironmentType.Demo, 25, 3);
+            if (!string.IsNullOrEmpty(clientID) && !string.IsNullOrWhiteSpace(clientSecret))
+            {
+                client = new(new AuthenticationToken(clientID, clientSecret), account, EnvironmentType.Demo, EnvironmentRegion.EU, 5);
+            }
+            else if (!string.IsNullOrEmpty(token))
+            {
+                client = new(new AuthenticationToken(token), account, EnvironmentType.Demo, EnvironmentRegion.EU, 5);
+            }
+            else
+            {
+                Assert.Fail("Invalid information in the user secret file");
+                return null;
+            }
             return client;
         }
     }
