@@ -2817,7 +2817,12 @@ namespace Sdk4me
         /// App offering.
         /// </summary>
         [EnumMember(Value = "app_offering")]
-        AppOffering
+        AppOffering,
+        /// <summary>
+        /// Knowledge article template.
+        /// </summary>
+        [EnumMember(Value = "knowledge_article_template")]
+        KnowledgeArticleTemplate
     }
 
     /// <summary>
