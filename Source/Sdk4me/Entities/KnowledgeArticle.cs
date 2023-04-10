@@ -7,7 +7,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me <see href="https://developer.4me.com/v1/knowledge_articles/">knowledge article</see> object.
     /// </summary>
-    public class KnowledgeArticle : BaseItem
+    public class KnowledgeArticle : CustomFieldsBaseItem
     {
         private DateTime? archiveDate;
         private List<Attachment> attachments;
@@ -27,6 +27,7 @@ namespace Sdk4me
         private string sourceID;
         private KnowledgeArticleStatus status;
         private string subject;
+        private KnowledgeArticleTemplate template;
         private int timesApplied;
         private Person updatedBy;
 
@@ -321,6 +322,23 @@ namespace Sdk4me
 
         #endregion
 
+        #region Knowledge article template
+
+        /// <summary>
+        /// The template field is used to select the knowledge article templates on which the knowledge article is based.
+        /// </summary>
+        [JsonProperty("template")]
+        public KnowledgeArticleTemplate KnowledgeArticleTemplate
+        {
+            get => template;
+            set => template = SetValue("template_id", template, value);
+        }
+
+        [JsonProperty("template_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? KnowledgeArticleTemplateID => template?.ID;
+
+        #endregion
+
         #region Times applied
 
         /// <summary>
@@ -356,6 +374,7 @@ namespace Sdk4me
         {
             createdBy?.ResetPropertySerializationCollection();
             service?.ResetPropertySerializationCollection();
+            template?.ResetPropertySerializationCollection();
             updatedBy?.ResetPropertySerializationCollection();
             base.ResetPropertySerializationCollection();
         }

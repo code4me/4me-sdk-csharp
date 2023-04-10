@@ -354,6 +354,19 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/knowledge_article_templates/">knowledge article template</see> API endpoint.
+        /// </summary>
+        public KnowledgeArticleTemplateHandler KnowledgeArticleTemplates
+        {
+            get
+            {
+                if (!handlers.ContainsKey("knowledge_article_templates"))
+                    handlers.Add("knowledge_article_templates", new KnowledgeArticleTemplateHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (KnowledgeArticleTemplateHandler)handlers["knowledge_article_templates"];
+            }
+        }
+
+        /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/people/me/">Me</see> API endpoint.
         /// </summary>
         public MeHandler Me
