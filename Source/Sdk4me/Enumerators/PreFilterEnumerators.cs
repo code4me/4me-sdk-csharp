@@ -371,10 +371,6 @@
         /// <summary>
         /// All requests which requested for person belonged to the same organization as the API user at the time the request was created.
         /// </summary>
-        RequestsOfMyOrganization,
-        /// <summary>
-        /// All requests that are assigned to one of the teams that the API user is a member of.
-        /// </summary>
         AssignedToMyTeam,
         /// <summary>
         /// All requests that are assigned to the API user.
