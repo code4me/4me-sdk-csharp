@@ -143,6 +143,16 @@ namespace Sdk4me
         [Obsolete("Change manager is deprecated use workflow manager instead.")]
         [EnumMember(Value = "change_manager")]
         ChangeManager = 0x00080000,
+        /// <summary>
+        /// The 4me Workflow Automator auditor.
+        /// </summary>
+        [EnumMember(Value = "workflow_automator_auditor")]
+        WorkflowAutomatorAuditor = 0x00100000,
+        /// <summary>
+        /// The 4me Workflow Automator specialist.
+        /// </summary>
+        [EnumMember(Value = "workflow_automator_specialist")]
+        WorkflowAutomatorSpecialist = 0x00200000,
     }
 
     /// <summary>
