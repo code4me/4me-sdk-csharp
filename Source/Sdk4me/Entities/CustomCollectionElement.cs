@@ -6,7 +6,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me <see href="https://developer.4me.com/v1/custom_collection_elements/">custom collection element</see> object.
     /// </summary>
-    public class CustomCollectionElement : BaseItem
+    public class CustomCollectionElement : CustomFieldsBaseItem
     {
         private List<Attachment> attachments;
         private List<AttachmentReference> informationAttachments;
