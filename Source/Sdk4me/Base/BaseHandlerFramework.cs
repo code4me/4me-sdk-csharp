@@ -576,7 +576,7 @@ namespace Sdk4me
 
             HttpWebRequest requestMessage = CreateHttpRequest(httpMethod, requestUrl);
             using (HttpWebResponse responseMessage = SendHttpRequest(requestMessage))
-                return responseMessage.StatusCode == HttpStatusCode.NoContent || responseMessage.StatusCode == HttpStatusCode.NoContent;
+                return responseMessage.StatusCode == HttpStatusCode.OK || responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 
         #endregion
