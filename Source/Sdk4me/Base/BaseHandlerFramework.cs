@@ -854,6 +854,7 @@ namespace Sdk4me
             GetAuthenticationToken();
             retval.Headers["Authorization"] = $"{currentToken.TokenType} {currentToken?.Token}";
             retval.Headers.Add("X-4me-Account", accountID);
+            retval.SetUserAgent("Sdk4me");
             return retval;
         }
 

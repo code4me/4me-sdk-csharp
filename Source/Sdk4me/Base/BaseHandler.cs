@@ -27,7 +27,7 @@ namespace Sdk4me
         private readonly string applicationJsonMediaType = "application/json";
         private readonly DateTime epochDateTimeMinValue = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private readonly string allFieldNames = null;
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client;
         private readonly JsonSerializer serializer = new JsonSerializer();
         private readonly string url;
         private readonly string oauth2Url;
@@ -169,6 +169,10 @@ namespace Sdk4me
 
             //get all field names for the current type
             allFieldNames = new T().GetAllFieldNames();
+
+            //initialize client
+            client = new HttpClient();
+            client.SetUserAgent("Sdk4me");
         }
 
         #endregion
