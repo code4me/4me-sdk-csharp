@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sdk4me
 {
@@ -20,6 +21,7 @@ namespace Sdk4me
         private ServiceLevelCoverage? coverage;
         private Organization customer;
         private AccountReference customerAccount;
+        private List<Person> customerRepresentatives;
         private DateTime? expiryDate;
         private string name;
         private DateTime? noticeDate;
@@ -191,6 +193,40 @@ namespace Sdk4me
 
         [JsonProperty("customer_account_id"), Sdk4meIgnoreInFieldSelection()]
         internal string CustomerAccountID => customerAccount.ID;
+
+        #endregion
+
+        #region Customer Representatives
+
+        /// <summary>
+        /// <br>Writeonly references to People</br>
+        /// <br>This method is used add a person to the list of customer representatives of the SLA.</br>
+        /// <br>In general, it is preferred to use the specific customer representatives methods of the <see cref="ServiceLevelAgreementHandler"/> to retrieve and manipulate the SLA's customer representatives.</br>
+        /// <br>However, since it is required to specify at least one customer representative when a SLA is activated, this method must be used when creating a new, active, SLA.</br>
+        /// </summary>
+        /// <param name="person">Add a person the write-only customer representatives list.</param>
+        public void AddCustomerRepresentative(Person person)
+        {
+            if (person != null)
+            {
+                if (customerRepresentatives == null)
+                {
+                    customerRepresentatives = new List<Person> { person };
+                }
+                else
+                {
+                    if (!customerRepresentatives.Any(x => x.ID == person.ID))
+                        customerRepresentatives.Add(person);
+                }
+                base.PropertySerializationCollection.Add("customer_representative_ids");
+            }
+        }
+
+        [JsonProperty("customer_representative_ids"), Sdk4meIgnoreInFieldSelection()]
+        internal List<long> CustomerRepresentativeIDs
+        {
+            get => customerRepresentatives.Select(customerRepresentatives => customerRepresentatives.ID).ToList();
+        }
 
         #endregion
 
