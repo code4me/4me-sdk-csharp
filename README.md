@@ -54,7 +54,7 @@ A custom, Sdk4meException, is implemented. It will convert the API exception res
 using Sdk4me;
 
 AuthenticationToken token = new AuthenticationToken("clientID", "ClientSecret");
-Sdk4meClient client = new Sdk4meClient(token, "accountID");
+Sdk4meClient client = new Sdk4meClient(token, "accountID",  EnvironmentType.Production);
 Person me = client.Me.Get();
 Console.WriteLine($"{me.Name} ({me.PrimaryEmail})");
 ```
@@ -77,7 +77,7 @@ This will return the default fields for a [request](https://developer.4me.com/v1
 
 ### Pagination
 ```csharp
-Sdk4meClient client = new Sdk4meClient(token, accountID,
+Sdk4meClient client = new Sdk4meClient(token, accountID, EnvironmentType.Production,
     itemsPerRequest: 100, maximumRecursiveRequests: 1000);
 ```
 or
@@ -237,7 +237,7 @@ The client will delete the first information attachment.
 try
 {
     AuthenticationToken token = new AuthenticationToken("TheBearerToken");
-    Sdk4meClient client = new Sdk4meClient(token);
+    Sdk4meClient client = new Sdk4meClient(token, "account-name", EnvironmentType.Production);
     Person person = client.People.Get(new Filter("SourceID", FilterCondition.Equality, "123456"), "Team", "ThrowAnExceptionField").FirstOrDefault();
     List<Team> teams = client.People.GetTeams(person);
     foreach (Team team in teams)
@@ -257,5 +257,5 @@ AuthenticationTokenCollection tokens = new AuthenticationTokenCollection()
     new AuthenticationToken("clientID", "ClientSecret"),
     new AuthenticationToken("PersonalAccessToken")
 };
-Sdk4meClient client = new Sdk4meClient(tokens, "account-name", EnvironmentType.Production, EnvironmentRegion.Global);
+Sdk4meClient client = new Sdk4meClient(tokens, "account-name", EnvironmentType.Production, EnvironmentRegion.EU);
 ```
