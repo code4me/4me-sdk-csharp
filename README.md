@@ -2,9 +2,12 @@
 # C# SDK for 4me
 A .NET client for accessing the [4me v1 REST API](https://developer.4me.com/)
 
+### Important
+For new development, it is recommended to use [.NET SDK for 4me GraphQL](https://github.com/code4me/4me-sdk-graphql-dotnet).<br>
+The [C# SDK for 4me](https://github.com/code4me/4me-sdk-csharp) provides access to most REST API endpoints, while the [.NET SDK for 4me GraphQL](https://github.com/code4me/4me-sdk-graphql-dotnet) exposes the full functionality available in the 4me GraphQL API.
+
 ### Licensing
 The C# SDK for 4me uses the [Newtonsoft.Json framework](https://github.com/JamesNK/Newtonsoft.Json) NuGet Package, which is a high-performance JSON framework for .NET and available under [MIT licensing](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md).
-
 
 # Getting started
 The solution has 2 main objects, BaseItem which is a data type with the minimum object attributes for a 4me data object; and the BaseHandler which contains all methods to handle http requests and responses to and from the 4me REST API.
