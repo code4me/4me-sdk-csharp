@@ -55,7 +55,7 @@ namespace Sdk4me
         /// <param name="relatedConfigurationItem">The related configuration item.</param>
         /// <param name="relationType">The relation type.</param>
         /// <returns>A configuration item relation.</returns>
-        public ConfigurationItemRelation AddConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItem relatedConfigurationItem, ConfigurationitemRelationType relationType)
+        public ConfigurationItemRelation AddConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItem relatedConfigurationItem, ConfigurationItemRelationType relationType)
         {
             return AddConfigurationItemRelation(configurationItem, new ConfigurationItemRelation() { ConfigurationItem = relatedConfigurationItem, RelationType = relationType });
         }

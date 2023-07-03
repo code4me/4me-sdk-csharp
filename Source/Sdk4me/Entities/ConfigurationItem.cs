@@ -16,7 +16,7 @@ namespace Sdk4me
         private DateTime? inUseSince;
         private string label;
         private DateTime? licenseExpiryDate;
-        private ConfigurationitemLicenseType? licenseType;
+        private ConfigurationItemLicenseType? licenseType;
         private string location;
         private string name;
         private int? nrOfCores;
@@ -149,7 +149,7 @@ namespace Sdk4me
         /// The License type field is used to select the type of license that the license certificate covers. 
         /// </summary>
         [JsonProperty("license_type")]
-        public ConfigurationitemLicenseType? LicenseType
+        public ConfigurationItemLicenseType? LicenseType
         {
             get => licenseType;
             set => licenseType = SetValue("license_type", licenseType, value);

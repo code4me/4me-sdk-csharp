@@ -10,7 +10,7 @@ namespace Sdk4me
     public class ConfigurationItemRelation : BaseItem
     {
         private ConfigurationItem configurationItem;
-        private ConfigurationitemRelationType relationType;
+        private ConfigurationItemRelationType relationType;
 
         #region Created at (override)
 
@@ -63,7 +63,7 @@ namespace Sdk4me
         /// The type of the relation.
         /// </summary>
         [JsonProperty("relation_type"), Sdk4meIgnoreInFieldSelection()]
-        public ConfigurationitemRelationType RelationType
+        public ConfigurationItemRelationType RelationType
         {
             get => relationType;
             set => relationType = SetValue("relation_type", relationType, value);
@@ -83,7 +83,7 @@ namespace Sdk4me
         /// </summary>
         /// <param name="configurationItem">The related configuration item.</param>
         /// <param name="relationType">The type of the relation.</param>
-        public ConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationitemRelationType relationType)
+        public ConfigurationItemRelation(ConfigurationItem configurationItem, ConfigurationItemRelationType relationType)
         {
             ConfigurationItem = configurationItem;
             RelationType = relationType;

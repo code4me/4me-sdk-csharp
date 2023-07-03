@@ -13,7 +13,7 @@ namespace Sdk4me
         private bool allowRepeat;
         private bool disabled;
         private Calendar calendar;
-        private List<ReserverationOfferingFilters> filterCollection;
+        private List<ReservationOfferingFilters> filterCollection;
         private ReservationOfferingStatus initialStatus;
         private TimeSpan? maxAdvanceDuration;
         private TimeSpan maxDuration;
@@ -78,19 +78,19 @@ namespace Sdk4me
         /// <summary>
         /// The Filters field allows filters to be selected that people, who are selecting a configuration item of the reservation offering, can use to limit the list of configuration items to only those that meet specific criteria, such as the configuration item’s product or site.
         /// </summary>
-        public ReserverationOfferingFilters Filters
+        public ReservationOfferingFilters Filters
         {
             get
             {
-                ReserverationOfferingFilters retval = ReserverationOfferingFilters.None;
-                foreach (ReserverationOfferingFilters filter in filterCollection)
+                ReservationOfferingFilters retval = ReservationOfferingFilters.None;
+                foreach (ReservationOfferingFilters filter in filterCollection)
                     retval |= filter;
                 return retval;
             }
             set
             {
-                List<ReserverationOfferingFilters> items = Enum.GetValues(value.GetType()).Cast<Enum>().Where(value.HasFlag).Cast<ReserverationOfferingFilters>().ToList();
-                items.Remove(ReserverationOfferingFilters.None);
+                List<ReservationOfferingFilters> items = Enum.GetValues(value.GetType()).Cast<Enum>().Where(value.HasFlag).Cast<ReservationOfferingFilters>().ToList();
+                items.Remove(ReservationOfferingFilters.None);
                 if (!Enumerable.SequenceEqual(filterCollection, items))
                 {
                     filterCollection = items;
@@ -100,7 +100,7 @@ namespace Sdk4me
         }
 
         [JsonProperty("filters")]
-        internal List<ReserverationOfferingFilters> FilterCollection
+        internal List<ReservationOfferingFilters> FilterCollection
         {
             get => filterCollection;
             set => filterCollection = value;

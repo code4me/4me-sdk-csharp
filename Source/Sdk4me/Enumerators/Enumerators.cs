@@ -517,7 +517,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me configuration item license status.
     /// </summary>
-    public enum ConfigurationitemLicenseType
+    public enum ConfigurationItemLicenseType
     {
         /// <summary>
         /// A concurrent user license.
@@ -692,7 +692,7 @@ namespace Sdk4me
     /// <summary>
     /// A 4me configuration item relation type.
     /// </summary>
-    public enum ConfigurationitemRelationType
+    public enum ConfigurationItemRelationType
     {
         /// <summary>
         /// A parent relation.
@@ -1878,7 +1878,7 @@ namespace Sdk4me
     /// A 4me reservation offering filter.
     /// </summary>
     [Flags]
-    public enum ReserverationOfferingFilters
+    public enum ReservationOfferingFilters
     {
         /// <summary>
         /// None.
@@ -2832,7 +2832,12 @@ namespace Sdk4me
         /// Knowledge article template.
         /// </summary>
         [EnumMember(Value = "knowledge_article_template")]
-        KnowledgeArticleTemplate
+        KnowledgeArticleTemplate,
+        /// <summary>
+        /// Shop article.
+        /// </summary>
+        [EnumMember(Value = "shop_article")]
+        ShopArticle
     }
 
     /// <summary>
