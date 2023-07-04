@@ -2837,7 +2837,12 @@ namespace Sdk4me
         /// Shop article.
         /// </summary>
         [EnumMember(Value = "shop_article")]
-        ShopArticle
+        ShopArticle,
+        /// <summary>
+        /// Team.
+        /// </summary>
+        [EnumMember(Value = "team")]
+        Team
     }
 
     /// <summary>
