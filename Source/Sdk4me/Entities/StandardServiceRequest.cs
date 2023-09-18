@@ -14,7 +14,9 @@ namespace Sdk4me
         private string rateCurrency;
         private RequestTemplate requestTemplate;
         private TimeSpan? responseTarget;
+        private bool? responseTargetBestEffort;
         private TimeSpan? resolutionTarget;
+        private bool? resolutionTargetBestEffort;
         private Calendar supportHours;
         private ServiceLevelAgreementNotificationScheme slaNotificationScheme;
 
@@ -97,6 +99,20 @@ namespace Sdk4me
 
         #endregion
 
+        #region Response target best effort
+
+        /// <summary>
+        /// Response target is Best Effort when the request template has been applied to the request and the requester is covered by an SLA that is based on the service offering.
+        /// </summary>
+        [JsonProperty("response_target_best_effort")]
+        public bool? ResponseTargetBestEffort
+        {
+            get => responseTargetBestEffort;
+            set => responseTargetBestEffort = SetValue("response_target_best_effort", responseTargetBestEffort, value);
+        }
+
+        #endregion
+
         #region Resolution target
 
         /// <summary>
@@ -113,6 +129,20 @@ namespace Sdk4me
         {
             get => resolutionTarget != null ? Convert.ToInt32(resolutionTarget.Value.TotalMinutes) : (int?)null;
             set => resolutionTarget = value != null ? TimeSpan.FromMinutes(value.Value) : (TimeSpan?)null;
+        }
+
+        #endregion
+
+        #region Resolution target best effort
+
+        /// <summary>
+        /// Resolution target is Best Effort when the request template has been applied to the request and the requester is covered by an SLA that is based on the service offering.
+        /// </summary>
+        [JsonProperty("resolution_target_best_effort")]
+        public bool? ResolutionTargetBestEffort
+        {
+            get => resolutionTargetBestEffort;
+            set => resolutionTargetBestEffort = SetValue("resolution_target_best_effort", resolutionTargetBestEffort, value);
         }
 
         #endregion
