@@ -9,10 +9,9 @@ namespace Sdk4me
     public class TimeEntry : BaseItem
     {
         private string activityID;
-        private string billingID;
+        private string agreementID;
         private float charge;
         private string chargeCurrency;
-        private string chargeID;
         private float chargeRate;
         private ChargeType? chargeType;
         private bool correction;
@@ -27,7 +26,8 @@ namespace Sdk4me
         private Organization organization;
         private Person person;
         private Problem problem;
-        private Task projectTask;
+        private ProjectTask projectTask;
+        private string rateID;
         private Request request;
         private Service service;
         private ServiceInstance serviceInstance;
@@ -51,16 +51,16 @@ namespace Sdk4me
 
         #endregion
 
-        #region BillingID
+        #region AgreementID
 
         /// <summary>
-        /// The Billing ID is the unique identifier by which all the activities that are performed through the coverage of the SLA are known in the billing system of the service provider. The billing ID can be used to support integrations between the billing system of the service provider and the 4me account in which the activities are performed.
+        /// The Agreement ID is the unique identifier by which all the activities that are performed through the coverage of the SLA are known in the billing system of the service provider. The billing ID can be used to support integrations between the billing system of the service provider and the 4me account in which the activities are performed.
         /// </summary>
-        [JsonProperty("billingID")]
-        public string BillingID
+        [JsonProperty("agreementID")]
+        public string AgreementID
         {
-            get => billingID;
-            internal set => billingID = value;
+            get => agreementID;
+            internal set => agreementID = value;
         }
 
         #endregion
@@ -89,20 +89,6 @@ namespace Sdk4me
         {
             get => chargeCurrency;
             internal set => chargeCurrency = value;
-        }
-
-        #endregion
-
-        #region ChargeID
-
-        /// <summary>
-        /// The Charge ID is the unique identifier by which an effort class that is linked to a time entry when an activity was performed through the coverage of the SLA is known in the billing system of the service provider. The effort class represents the type of effort that was performed when working on an activity. Some examples of effort classes are ‘Billable - Normal Hours’, ‘Billable overtime’, ‘Non Billable’ or ‘Senior System Engineer’. The Charge ID can be used to support integrations between the billing system of the service provider and the 4me account in which the activities are performed. In the billing system the Charge IDs will be linked to the rates that have been agreed on in the service contract.
-        /// </summary>
-        [JsonProperty("chargeID")]
-        public string ChargeID
-        {
-            get => chargeID;
-            internal set => chargeID = value;
         }
 
         #endregion
@@ -324,7 +310,7 @@ namespace Sdk4me
         /// The Project Task field shows the project task in which the Time spent field was filled out to cause the time entry to be generated.
         /// </summary>
         [JsonProperty("project_task"), Sdk4meIgnoreInFieldSelection()]
-        public Task ProjectTask
+        public ProjectTask ProjectTask
         {
             get => projectTask;
             set => projectTask = SetValue("project_task_id", projectTask, value);
@@ -332,6 +318,20 @@ namespace Sdk4me
 
         [JsonProperty("project_task_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? ProjectTaskID => projectTask?.ID;
+
+        #endregion
+
+        #region RateID
+
+        /// <summary>
+        /// The Rate ID is the unique identifier by which an effort class that is linked to a time entry when an activity was performed through the coverage of the SLA is known in the billing system of the service provider. The effort class represents the type of effort that was performed when working on an activity. Some examples of effort classes are ‘Billable - Normal Hours’, ‘Billable overtime’, ‘Non Billable’ or ‘Senior System Engineer’. The Rate ID can be used to support integrations between the billing system of the service provider and the 4me account in which the activities are performed. In the billing system the Rate IDs will be linked to the rates that have been agreed on in the service contract.
+        /// </summary>
+        [JsonProperty("rateID")]
+        public string RateID
+        {
+            get => rateID;
+            internal set => rateID = value;
+        }
 
         #endregion
 

@@ -4,11 +4,11 @@ using System;
 namespace Sdk4me
 {
     /// <summary>
-    /// A 4me <see href="https://developer.4me.com/v1/service_level_agreements/effort_class_chargeIDs/">Service Level Agreements - Effort Class Charge ID</see> object.
+    /// A 4me <see href="https://developer.4me.com/v1/service_level_agreements/effort_class_rateIDs/">Service Level Agreements - Effort Class Charge ID</see> object.
     /// </summary>
-    public class EffortClassChargeID : BaseItem
+    public class EffortClassRateID : BaseItem
     {
-        private string chargeID;
+        private string rateID;
         private EffortClass effortClass;
 
         #region Created at (override)
@@ -39,16 +39,16 @@ namespace Sdk4me
 
         #endregion
 
-        #region ChargeID
+        #region RateID
 
         /// <summary>
-        /// The Charge ID is the unique identifier by which an effort class that is linked to a time entry when an activity was performed through the coverage of the SLA is known in the billing system of the service provider.
+        /// The Rate ID is the unique identifier by which an effort class that is linked to a time entry when an activity was performed through the coverage of the SLA is known in the billing system of the service provider.
         /// </summary>
-        [JsonProperty("chargeID")]
-        public string ChargeID
+        [JsonProperty("rateID")]
+        public string RateID
         {
-            get => chargeID;
-            set => chargeID = SetValue("chargeID", chargeID, value);
+            get => rateID;
+            set => rateID = SetValue("rateID", rateID, value);
         }
 
         #endregion

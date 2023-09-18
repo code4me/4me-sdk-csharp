@@ -23,8 +23,10 @@ namespace Sdk4me.Extensions
             "systemID",
             "supplier_requestID",
             "billingID",
+            "agreementID",
             "activityID",
-            "chargeID"
+            "chargeID",
+            "RateID"
         };
 
         /// <summary>

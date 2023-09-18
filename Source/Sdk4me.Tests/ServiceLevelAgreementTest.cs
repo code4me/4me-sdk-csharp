@@ -22,9 +22,9 @@ namespace Sdk4me.Tests
             ServiceLevelAgreement serviceLevelAgreement = serviceLevelAgreements[Random.Shared.Next(serviceLevelAgreements.Count)];
             Trace.WriteLine($"Continue relation tests on service level agreement: {serviceLevelAgreement.Name}");
 
-            List<EffortClassChargeID> effortClassChargeID = client.ServiceLevelAgreements.GetEffortClassChargeIDs(serviceLevelAgreement, "*");
+            List<EffortClassRateID> effortClassChargeID = client.ServiceLevelAgreements.GetEffortClassRateIDs(serviceLevelAgreement, "*");
             Assert.IsNotNull(effortClassChargeID);
-            Assert.IsInstanceOfType(effortClassChargeID, typeof(List<EffortClassChargeID>));
+            Assert.IsInstanceOfType(effortClassChargeID, typeof(List<EffortClassRateID>));
 
             List<StandardServiceRequestActivityID> standardServiceRequestActivityIDs = client.ServiceLevelAgreements.GetStandardServiceRequestActivityIDs(serviceLevelAgreement, "*");
             Assert.IsNotNull(standardServiceRequestActivityIDs);

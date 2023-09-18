@@ -83,50 +83,50 @@ namespace Sdk4me
 
         #endregion
 
-        #region Effort class charge ID
+        #region Effort class rate ID
 
         /// <summary>
-        /// Get all related effort class charge IDs.
+        /// Get all related effort class rate IDs.
         /// </summary>
         /// <param name="serviceLevelAgreement">The service level agreement.</param>
         /// <param name="fieldNames">The field names to return.</param>
-        /// <returns>A collection of effort class charge IDs.</returns>
-        public List<EffortClassChargeID> GetEffortClassChargeIDs(ServiceLevelAgreement serviceLevelAgreement, params string[] fieldNames)
+        /// <returns>A collection of effort class rate IDs.</returns>
+        public List<EffortClassRateID> GetEffortClassRateIDs(ServiceLevelAgreement serviceLevelAgreement, params string[] fieldNames)
         {
-            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs", SortOrder.None).Get(fieldNames);
+            return GetChildHandler<EffortClassRateID>(serviceLevelAgreement, "effort_class_rateIDs", SortOrder.None).Get(fieldNames);
         }
 
         /// <summary>
         /// Add an effort class charge ID.
         /// </summary>
         /// <param name="serviceLevelAgreement">The service level agreement.</param>
-        /// <param name="effortClassChargeID">The effort class charge ID to add.</param>
+        /// <param name="effortClassRateID">The effort class rate ID to add.</param>
         /// <returns>The updated effort class charge ID.</returns>
-        public EffortClassChargeID AddEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        public EffortClassRateID AddEffortClassRateID(ServiceLevelAgreement serviceLevelAgreement, EffortClassRateID effortClassRateID)
         {
-            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Insert(effortClassChargeID);
+            return GetChildHandler<EffortClassRateID>(serviceLevelAgreement, "effort_class_rateIDs").Insert(effortClassRateID);
         }
 
         /// <summary>
         /// Update an effort class charge ID.
         /// </summary>
         /// <param name="serviceLevelAgreement">The service level agreement.</param>
-        /// <param name="effortClassChargeID">The effort class charge ID to update.</param>
+        /// <param name="effortClassRateID">The effort class rate ID to update.</param>
         /// <returns>The updated effort class charge ID.</returns>
-        public EffortClassChargeID UpdateEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        public EffortClassRateID UpdateEffortClassRateID(ServiceLevelAgreement serviceLevelAgreement, EffortClassRateID effortClassRateID)
         {
-            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Update(effortClassChargeID);
+            return GetChildHandler<EffortClassRateID>(serviceLevelAgreement, "effort_class_rateIDs").Update(effortClassRateID);
         }
 
         /// <summary>
         /// Delete an effort class charge ID.
         /// </summary>
         /// <param name="serviceLevelAgreement">The person.</param>
-        /// <param name="effortClassChargeID">The effort class charge ID to delete.</param>
+        /// <param name="effortClassRateID">The effort class rate ID to delete.</param>
         /// <returns>True in case of success; otherwise false.</returns>
-        public bool DeleteEffortClassChargeID(ServiceLevelAgreement serviceLevelAgreement, EffortClassChargeID effortClassChargeID)
+        public bool DeleteEffortClassRateID(ServiceLevelAgreement serviceLevelAgreement, EffortClassRateID effortClassRateID)
         {
-            return GetChildHandler<EffortClassChargeID>(serviceLevelAgreement, "effort_class_chargeIDs").Delete(effortClassChargeID);
+            return GetChildHandler<EffortClassRateID>(serviceLevelAgreement, "effort_class_rateIDs").Delete(effortClassRateID);
         }
 
         #endregion

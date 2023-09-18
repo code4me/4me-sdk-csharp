@@ -17,7 +17,7 @@ namespace Sdk4me
         private string activityidRfc;
         private string activityidRfi;
         private List<Attachment> attachments;
-        private string billingID;
+        private string agreementID;
         private ServiceLevelCoverage? coverage;
         private Organization customer;
         private AccountReference customerAccount;
@@ -134,16 +134,16 @@ namespace Sdk4me
 
         #endregion
 
-        #region BillingID
+        #region AgreementID
 
         /// <summary>
-        /// The Billing ID is the unique identifier by which all the activities that are performed through the coverage of the SLA are known in the billing system of the service provider.
+        /// The Agreement ID is the unique identifier by which all the activities that are performed through the coverage of the SLA are known in the billing system of the service provider.
         /// </summary>
-        [JsonProperty("billingID")]
-        public string BillingID
+        [JsonProperty("agreementID")]
+        public string AgreementID
         {
-            get => billingID;
-            set => billingID = SetValue("billingID", billingID, value);
+            get => agreementID;
+            set => agreementID = SetValue("agreementID", agreementID, value);
         }
 
         #endregion
