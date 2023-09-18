@@ -27,6 +27,7 @@ namespace Sdk4me
         private string location;
         private Person manager;
         private string name;
+        private bool oauthPersonEnablement;
         private Organization organization;
         private string pictureUri;
         private string primaryEmail;
@@ -310,6 +311,20 @@ namespace Sdk4me
         {
             get => name;
             set => name = SetValue("name", name, value);
+        }
+
+        #endregion
+
+        #region OAuth person enablement
+
+        /// <summary>
+        /// An enabled OAuth person is mentionable and visible in suggest fields, just like a real person.
+        /// </summary>
+        [JsonProperty("oauth_person_enablement")]
+        public bool OauthPersonEnablement
+        {
+            get => oauthPersonEnablement;
+            set => oauthPersonEnablement = SetValue("oauth_person_enablement", oauthPersonEnablement, value);
         }
 
         #endregion
