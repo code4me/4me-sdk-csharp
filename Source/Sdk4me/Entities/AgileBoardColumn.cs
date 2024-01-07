@@ -8,6 +8,7 @@ namespace Sdk4me
     public class AgileBoardColumn : BaseItem
     {
         private AgileBoardColumnAction actionType;
+        private bool clearMember;
         private bool deleted;
         private AgileBoardColumnDialogType dialogType;
         private Person member;
@@ -27,6 +28,20 @@ namespace Sdk4me
         {
             get => actionType;
             set => actionType = SetValue("action_type", actionType, value);
+        }
+
+        #endregion
+
+        #region Clear member
+
+        /// <summary>
+        /// The Clear member box is used to indicated that the member field should be cleared of items that are moved into the column. Only applicable when the action_type is equal to assign.
+        /// </summary>
+        [JsonProperty("clear_member")]
+        public bool ClearMember
+        {
+            get => clearMember;
+            internal set => clearMember = value;
         }
 
         #endregion
