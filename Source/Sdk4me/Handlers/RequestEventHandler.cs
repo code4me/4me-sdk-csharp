@@ -172,6 +172,18 @@ namespace Sdk4me
                 else if (throwExecption)
                     throw new Sdk4meException("Missing or invalid value (ID) in problem reference.");
             }
+            
+            //add requested by
+            if (@event.RequestedBy != null)
+            {
+                if (@event.RequestedBy.ID != 0)
+                    Append(builder, "requested_for_id", @event.RequestedBy.ID);
+                else if (!string.IsNullOrEmpty(@event.RequestedBy.PrimaryEmail))
+                    Append(builder, "requested_for", @event.RequestedBy.PrimaryEmail);
+                else if (throwExecption)
+                    throw new Sdk4meException("Missing or invalid value (ID or PrimaryEmail) in requested by reference.");
+            }
+
 
             //add requested for
             if (@event.RequestedFor != null)

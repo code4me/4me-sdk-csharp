@@ -84,6 +84,14 @@ namespace Sdk4me
         /// </summary>
         public Problem Problem { get; set; }
 
+
+        /// <summary>
+        /// <para>Used to specify the person who is to be selected in the Requested by field of the request.</para>
+        /// <br>The <see cref="Person"/>.ID value will be used during creation. When 0, it will use the <see cref="Person"/>.Name.</br>
+        /// <br>By default set to the current user.</br>
+        /// </summary>
+        public Person RequestedBy { get; set; }
+
         /// <summary>
         /// <para>Used to specify the person who is to be selected in the Requested for field of the request.</para>
         /// <br>The <see cref="Person"/>.ID value will be used during creation. When 0, it will use the <see cref="Person"/>.Name.</br>
