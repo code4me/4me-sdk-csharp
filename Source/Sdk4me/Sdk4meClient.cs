@@ -354,6 +354,19 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/notes/note_reactions/">note reaction</see> API endpoint.
+        /// </summary>
+        public NoteReactionHandler NoteReactions
+        {
+            get
+            {
+                if (!handlers.ContainsKey("note_reactions"))
+                    handlers.Add("note_reactions", new NoteReactionHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (NoteReactionHandler)handlers["note_reactions"];
+            }
+        }
+
+        /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/knowledge_article_templates/">knowledge article template</see> API endpoint.
         /// </summary>
         public KnowledgeArticleTemplateHandler KnowledgeArticleTemplates
