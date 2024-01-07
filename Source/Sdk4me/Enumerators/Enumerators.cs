@@ -138,12 +138,6 @@ namespace Sdk4me
         [EnumMember(Value = "financial_manager")]
         FinancialManager = 0x00040000,
         /// <summary>
-        /// A change manager.
-        /// </summary>
-        [Obsolete("Change manager is deprecated use workflow manager instead.")]
-        [EnumMember(Value = "change_manager")]
-        ChangeManager = 0x00080000,
-        /// <summary>
         /// The 4me Workflow Automator auditor.
         /// </summary>
         [EnumMember(Value = "workflow_automator_auditor")]
@@ -1754,12 +1748,6 @@ namespace Sdk4me
         /// </summary>
         [EnumMember(Value = "accepted")]
         Accepted,
-        /// <summary>
-        /// Change pending.
-        /// </summary>
-        [Obsolete("To continue using the id change_pending in the REST API, GraphQL API, Export API and Webhooks API, enable the account setting “Use deprecated change_pending status in API responses”.")]
-        [EnumMember(Value = "change_pending")]
-        ChangePending,
         /// <summary>
         /// In progress.
         /// </summary>

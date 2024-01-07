@@ -62,15 +62,15 @@
     public enum PredefinedWorkflowFilter
     {
         /// <summary>
-        /// All completed changes.
+        /// All completed workflows.
         /// </summary>
         Completed,
         /// <summary>
-        /// All open changes.
+        /// All open workflows.
         /// </summary>
         Open,
         /// <summary>
-        /// All changes where the manager is the API user.
+        /// All workflows where the manager is the API user.
         /// </summary>
         ManagedByMe
     }
