@@ -2,6 +2,7 @@
 using Sdk4me.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace Sdk4me
 {
@@ -15,6 +16,8 @@ namespace Sdk4me
         private DateTime? endAt;
         private string message;
         private BroadcastMessageType messageType;
+        private string remarks;
+        private List<AttachmentReference> remarksAttachments;
         private string source;
         private string sourceID;
         private List<ServiceInstance> serviceInstances;
@@ -90,6 +93,51 @@ namespace Sdk4me
         {
             get => messageType;
             set => messageType = SetValue("message_type", messageType, value);
+        }
+
+        #endregion
+
+        #region Remarks
+
+        /// <summary>
+        /// The Remarks field is used to add any additional information about the broadcast that might prove useful.
+        /// </summary>
+        [JsonProperty("remarks")]
+        public string Remarks
+        {
+            get => remarks;
+            set => remarks = SetValue("remarks", remarks, value);
+        }
+
+        #endregion
+
+        #region Remarks attachment
+
+        /// <summary>
+        /// Write-only. Add a reference to an uploaded attachment. Use <see cref="Attachment"/> to get the existing attachments.
+        /// </summary>
+        /// <param name="key">The attachment key.</param>
+        /// <param name="fileSize">The attachment file size.</param>
+        /// <param name="inline">True if this an in-line attachment; otherwise false.</param>
+        public void ReferenceRemarksAttachment(string key, long fileSize, bool inline = false)
+        {
+            if (remarksAttachments == null)
+                remarksAttachments = new List<AttachmentReference>();
+
+            remarksAttachments.Add(new AttachmentReference()
+            {
+                Key = key,
+                FileSize = fileSize,
+                Inline = inline
+            });
+
+            base.PropertySerializationCollection.Add("remarks_attachments");
+        }
+
+        [JsonProperty("remarks_attachments"), Sdk4meIgnoreInFieldSelection()]
+        internal List<AttachmentReference> RemarksAttachments
+        {
+            get => remarksAttachments;
         }
 
         #endregion
