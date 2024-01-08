@@ -21,13 +21,12 @@ namespace Sdk4me
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
     /// <typeparam name="X">The predefined filter enumerator.</typeparam>
-    public abstract class BaseHandler<T, X> : IBaseHandler where T : BaseItem, new() where X : Enum
+    public abstract class BaseHandler<T, X> : BaseHandlerHttpClient, IBaseHandler where T : BaseItem, new() where X : Enum
     {
         private readonly bool traceEnabled = Trace.Listeners != null && Trace.Listeners.Count > 0;
         private readonly string applicationJsonMediaType = "application/json";
         private readonly DateTime epochDateTimeMinValue = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private readonly string allFieldNames = null;
-        private readonly HttpClient client;
         private readonly JsonSerializer serializer = new JsonSerializer();
         private readonly string url;
         private readonly string oauth2Url;
@@ -169,10 +168,6 @@ namespace Sdk4me
 
             //get all field names for the current type
             allFieldNames = new T().GetAllFieldNames();
-
-            //initialize client
-            client = new HttpClient();
-            client.SetUserAgent("Sdk4me");
         }
 
         #endregion
@@ -645,7 +640,7 @@ namespace Sdk4me
                 using (HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, storageFacility.UploadUri) { Content = multipartContent })
                 {
                     WriteDebug(requestMessage);
-                    using (HttpResponseMessage responseMessage = client.Send(requestMessage))
+                    using (HttpResponseMessage responseMessage = HttpClient.Send(requestMessage))
                     {
                         using (StreamReader reader = new StreamReader(responseMessage.Content.ReadAsStream()))
                         {
@@ -837,7 +832,7 @@ namespace Sdk4me
                 using (HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, oauth2Url))
                 {
                     requestMessage.Content = new FormUrlEncodedContent(new Dictionary<string, string>() { { "grant_type", "client_credentials" }, { "client_id", currentToken.ClientID }, { "client_secret", currentToken.ClientSecret } });
-                    using (HttpResponseMessage responseMessage = client.Send(requestMessage))
+                    using (HttpResponseMessage responseMessage = HttpClient.Send(requestMessage))
                     {
                         responseMessage.EnsureSuccessStatusCode();
                         string content = responseMessage.Content.ReadAsStringAsync().Result;
@@ -865,7 +860,7 @@ namespace Sdk4me
 
             if (content is null)
             {
-                retval = client.Send(requestMessage);
+                retval = HttpClient.Send(requestMessage);
             }
             else
             {
@@ -875,7 +870,7 @@ namespace Sdk4me
                     WriteDebug(data);
 
                 requestMessage.Content = new StringContent(data, Encoding.UTF8, applicationJsonMediaType);
-                retval = client.Send(requestMessage);
+                retval = HttpClient.Send(requestMessage);
             }
 
             if (!retval.IsSuccessStatusCode && retval.Content.Headers.ContentType.MediaType == applicationJsonMediaType)
@@ -905,7 +900,7 @@ namespace Sdk4me
 
             if (item is null)
             {
-                retval = client.Send(requestMessage);
+                retval = HttpClient.Send(requestMessage);
             }
             else
             {
@@ -934,7 +929,7 @@ namespace Sdk4me
                     httpContent.Headers.ContentType = new MediaTypeHeaderValue(applicationJsonMediaType);
                     requestMessage.Content = httpContent;
 
-                    retval = client.Send(requestMessage);
+                    retval = HttpClient.Send(requestMessage);
                 }
             }
 
