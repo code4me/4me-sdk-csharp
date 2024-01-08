@@ -289,7 +289,7 @@ namespace Sdk4me
         #region Remarks attachment
 
         /// <summary>
-        /// Write-only. Add a reference to an uploaded information attachment. Use <see cref="Attachments"/> to get the existing attachments.
+        /// Write-only. Add a reference to an uploaded information attachment.
         /// </summary>
         /// <param name="key">The attachment key.</param>
         /// <param name="fileSize">The attachment file size.</param>
