@@ -570,6 +570,21 @@
     }
 
     /// <summary>
+    /// Predefined shop article category filter.
+    /// </summary>
+    public enum PredefinedShopArticleCategoryFilter
+    {
+        /// <summary>
+        /// List all shop article categories registered in the directory account of the support domain account from which the data is requested.
+        /// </summary>
+        directory,
+        /// <summary>
+        /// List all shop article categories registered in the account from which the data is requested.
+        /// </summary>
+        support_domain
+    }
+
+    /// <summary>
     /// Predefined shop order line filter.
     /// </summary>
     public enum PredefinedShopOrderLineFilter

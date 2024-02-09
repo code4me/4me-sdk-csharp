@@ -9,6 +9,7 @@ namespace Sdk4me
     public class ShopArticle : BaseItem
     {
         private Calendar calendar;
+        private ShopArticleCategory category;
         private int deliveryDuration;
         private bool disabled;
         private DateTime? endAt;
@@ -46,6 +47,23 @@ namespace Sdk4me
 
         [JsonProperty("calendar_id"), Sdk4meIgnoreInFieldSelection()]
         internal long? CalendarID => calendar?.ID;
+
+        #endregion
+
+        #region Category
+
+        /// <summary>
+        /// The Category field can be used to relate the shop article to a category.
+        /// </summary>
+        [JsonProperty("category")]
+        public ShopArticleCategory Category
+        {
+            get => category;
+            set => category = SetValue("category_id", category, value);
+        }
+
+        [JsonProperty("category_id"), Sdk4meIgnoreInFieldSelection()]
+        internal long? CategoryID => category?.ID;
 
         #endregion
 
@@ -369,6 +387,7 @@ namespace Sdk4me
         internal override void ResetPropertySerializationCollection()
         {
             calendar?.ResetPropertySerializationCollection();
+            category?.ResetPropertySerializationCollection();
             fulfillmentTemplate?.ResetPropertySerializationCollection();
             product?.ResetPropertySerializationCollection();
             uiExtension?.ResetPropertySerializationCollection();

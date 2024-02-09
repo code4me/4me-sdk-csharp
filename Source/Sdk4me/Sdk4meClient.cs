@@ -731,6 +731,19 @@ namespace Sdk4me
         }
 
         /// <summary>
+        /// The 4me <see href="https://developer.4me.com/v1/shop_article_categories/">shop article category</see> API endpoint.
+        /// </summary>
+        public ShopArticleCategoryHandler ShopArticleCategories
+        {
+            get
+            {
+                if (!handlers.ContainsKey("shop_article_categories"))
+                    handlers.Add("shop_article_categories", new ShopArticleCategoryHandler(authenticationTokens, accountID, environment, environmentRegion, itemsPerRequest, maximumRecursiveRequests));
+                return (ShopArticleCategoryHandler)handlers["shop_article_categories"];
+            }
+        }
+
+        /// <summary>
         /// The 4me <see href="https://developer.4me.com/v1/shop_order_lines/">shop order line</see> API endpoint.
         /// </summary>
         public ShopOrderLineHandler ShopOrderLines

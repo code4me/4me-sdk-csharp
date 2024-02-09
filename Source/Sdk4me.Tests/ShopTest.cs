@@ -30,6 +30,15 @@ namespace Sdk4me.Tests
         }
 
         [TestMethod]
+        public void GetShopArticleCategories()
+        {
+            Sdk4meClient client = Client.Get();
+            List<ShopArticleCategory> shopArticleCategories = client.ShopArticleCategories.Get("*");
+            Assert.IsNotNull(shopArticleCategories);
+            Assert.IsInstanceOfType(shopArticleCategories, typeof(List<ShopArticleCategory>));
+        }
+
+        [TestMethod]
         public void GetAllArticles()
         {
             Sdk4meClient client = Client.Get();
@@ -46,5 +55,6 @@ namespace Sdk4me.Tests
             Assert.IsNotNull(auditTrails);
             Assert.IsInstanceOfType(auditTrails, typeof(List<AuditTrail>));
         }
+
     }
 }
