@@ -498,7 +498,7 @@ namespace Sdk4me
         [EnumMember(Value = "active")]
         Active,
         /// <summary>
-        /// Contact expired.
+        /// Contract expired.
         /// </summary>
         [EnumMember(Value = "expired")]
         Expired
@@ -749,6 +749,11 @@ namespace Sdk4me
         /// </summary>
         [EnumMember(Value = "chat_workchat")]
         ChatWorkChat,
+        /// <summary>
+        /// Emergency.
+        /// </summary>
+        [EnumMember(Value = "emergency")]
+        Emergency,
         /// <summary>
         /// A teams chat contact.
         /// </summary>
